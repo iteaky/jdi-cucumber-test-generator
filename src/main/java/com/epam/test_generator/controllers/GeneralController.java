@@ -20,4 +20,10 @@ public class GeneralController {
         return "/stepSuggestions";
     }
 
+    @ApiOperation(value = "", hidden = true)
+    @RequestMapping(value = "/vue-ui")
+    public String getVueUiPage() {
+        return "/index";
+    }
+
 }
