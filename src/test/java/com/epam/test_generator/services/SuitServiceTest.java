@@ -6,6 +6,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.anyList;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyListOf;
 import static org.mockito.Mockito.anyLong;
@@ -17,6 +18,7 @@ import com.epam.test_generator.dao.interfaces.CaseVersionDAO;
 import com.epam.test_generator.dao.interfaces.SuitDAO;
 import com.epam.test_generator.dto.SuitDTO;
 import com.epam.test_generator.dto.SuitRowNumberUpdateDTO;
+import com.epam.test_generator.dto.SuitUpdateDTO;
 import com.epam.test_generator.entities.Project;
 import com.epam.test_generator.entities.Suit;
 import com.epam.test_generator.services.exceptions.BadRequestException;
@@ -42,6 +44,7 @@ public class SuitServiceTest {
 
     private static final long SIMPLE_PROJECT_ID = 0L;
     private static final long SIMPLE_SUIT_ID = 1L;
+    private static final long INVALID_PROJECT_ID = -1L;
     @InjectMocks
     private SuitService suitService;
     @Mock
@@ -121,33 +124,43 @@ public class SuitServiceTest {
     public void add_Suit_Success() {
         when(projectService.getProjectByProjectId(anyLong())).thenReturn(expectedProject);
         when(suitDAO.save(any(Suit.class))).thenReturn(expectedSuit);
+        when(suitTransformer.toDto(expectedSuit)).thenReturn(expectedSuitDTO);
 
         expectedSuitDTO.setId(null);
-        Long actual = suitService.addSuit(1L, expectedSuitDTO);
-        assertEquals(expectedSuit.getId(), actual);
-        verify(caseVersionDAO).save(eq(expectedSuit.getCases()));
+        SuitDTO actualAddedSuitDTO = suitService.addSuit(1L, expectedSuitDTO);
+        assertEquals(expectedSuitDTO, actualAddedSuitDTO);
 
+        verify(caseVersionDAO).save(eq(expectedSuit.getCases()));
+        verify(suitTransformer).toDto(eq(expectedSuit));
     }
 
     @Test
     public void update_Suit_Success() throws MethodArgumentNotValidException {
-        final SuitDTO newSuitDTO = new SuitDTO(SIMPLE_SUIT_ID, "new name", "desc1");
-        when(cascadeUpdateService.cascadeSuitCasesUpdate(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID, newSuitDTO)).thenReturn(null);
-        when(projectService.getProjectByProjectId(anyLong())).thenReturn(expectedProject);
+        when(cascadeUpdateService.cascadeSuitCasesUpdate(SIMPLE_PROJECT_ID,
+            SIMPLE_SUIT_ID, expectedSuitDTO)).thenReturn(anyList());
+        when(projectService.getProjectByProjectId(SIMPLE_PROJECT_ID)).thenReturn(expectedProject);
         when(suitDAO.findOne(anyLong())).thenReturn(expectedSuit);
-        when(suitDAO.save(any(Suit.class))).thenAnswer(invocationOnMock -> {
-            expectedSuitDTO.setName("new name");
-            return null;
-        });
+        when(suitDAO.save(expectedSuit)).thenReturn(expectedSuit);
+        when(suitTransformer.toDto(expectedSuit)).thenReturn(expectedSuitDTO);
 
-        suitService.updateSuit(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID, newSuitDTO);
-        assertEquals(expectedSuitDTO.getName(), newSuitDTO.getName());
+        SuitUpdateDTO expectedUpdatedSuitDTOwithFailedStepIds =
+            new SuitUpdateDTO(expectedSuitDTO, Collections.emptyList());
+        SuitUpdateDTO actualUpdatedSuitDTOwithFailedStepIds =
+            suitService.updateSuit(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID, expectedSuitDTO);
+
+        assertEquals(expectedUpdatedSuitDTOwithFailedStepIds, actualUpdatedSuitDTOwithFailedStepIds);
+        verify(cascadeUpdateService).cascadeSuitCasesUpdate(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID,
+            expectedSuitDTO);
+        verify(projectService).getProjectByProjectId(eq(SIMPLE_PROJECT_ID));
+        verify(suitDAO).findOne(eq(SIMPLE_SUIT_ID));
+        verify(suitDAO).save(eq(expectedSuit));
+        verify(suitTransformer).toDto(eq(expectedSuit));
     }
 
     @Test(expected = NotFoundException.class)
     public void update_Suit_NotFoundException() throws MethodArgumentNotValidException {
-        final SuitDTO newSuitDTO = new SuitDTO(SIMPLE_SUIT_ID, "new name", "desc1");
-        when(cascadeUpdateService.cascadeSuitCasesUpdate(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID, newSuitDTO)).thenReturn(null);
+        when(cascadeUpdateService.cascadeSuitCasesUpdate(SIMPLE_PROJECT_ID,
+            SIMPLE_SUIT_ID, expectedSuitDTO)).thenReturn(null);
         when(suitDAO.findOne(anyLong())).thenReturn(null);
 
         suitService.updateSuit(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID, new SuitDTO());
@@ -155,25 +168,28 @@ public class SuitServiceTest {
 
     @Test(expected = NotFoundException.class)
     public void updateSuitInProject_InvalidProjectId_NotFound() throws MethodArgumentNotValidException {
-        final SuitDTO newSuitDTO = new SuitDTO(SIMPLE_SUIT_ID, "new name", "desc1");
-        when(cascadeUpdateService.cascadeSuitCasesUpdate(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID, newSuitDTO)).thenReturn(null);
+        when(cascadeUpdateService.cascadeSuitCasesUpdate(SIMPLE_PROJECT_ID,
+            SIMPLE_SUIT_ID, expectedSuitDTO)).thenReturn(null);
         when(projectService.getProjectByProjectId(SIMPLE_PROJECT_ID)).thenReturn(expectedProject);
         when(suitTransformer.fromDto(any())).thenReturn(expectedSuit);
         when(suitDAO.findOne(anyLong())).thenReturn(expectedSuit);
-        suitService.updateSuit(777L, SIMPLE_SUIT_ID, expectedSuitDTO);
+        suitService.updateSuit(INVALID_PROJECT_ID, SIMPLE_SUIT_ID, expectedSuitDTO);
     }
 
     @Test
     public void remove_Suit_Success() {
         when(projectService.getProjectByProjectId(anyLong())).thenReturn(expectedProject);
         when(suitDAO.findOne(anyLong())).thenReturn(expectedSuit);
+        when(suitTransformer.toDto(expectedSuit)).thenReturn(expectedSuitDTO);
 
-        suitService.removeSuit(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID);
+        SuitDTO actualRemovedSuitDTO = suitService.removeSuit(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID);
+
+        assertEquals(expectedSuitDTO, actualRemovedSuitDTO);
 
         verify(suitDAO).delete(anyLong());
         verify(suitDAO).findOne(eq(SIMPLE_SUIT_ID));
-
         verify(caseVersionDAO).delete(eq(expectedSuit.getCases()));
+        verify(suitTransformer).toDto(eq(expectedSuit));
     }
 
     @Test(expected = NotFoundException.class)
@@ -188,7 +204,7 @@ public class SuitServiceTest {
         when(projectService.getProjectByProjectId(SIMPLE_PROJECT_ID)).thenReturn(expectedProject);
         when(suitDAO.findOne(anyLong())).thenReturn(expectedSuit);
         when(suitTransformer.toDto(any())).thenReturn(expectedSuitDTO);
-        suitService.removeSuit(777L, SIMPLE_SUIT_ID);
+        suitService.removeSuit(INVALID_PROJECT_ID, SIMPLE_SUIT_ID);
     }
 
     @Test
@@ -203,11 +219,11 @@ public class SuitServiceTest {
         final SuitRowNumberUpdateDTO update = new SuitRowNumberUpdateDTO(5L, 2);
         final SuitRowNumberUpdateDTO update1 = new SuitRowNumberUpdateDTO(4L, 1);
 
-        List<SuitRowNumberUpdateDTO> rowNumbers = new ArrayList<>(
+        final List<SuitRowNumberUpdateDTO> rowNumbers = new ArrayList<>(
             Arrays.asList(update, update1)
         );
 
-        List<Suit> suits = Lists.newArrayList(new Suit(
+        final List<Suit> allProjectsSuits = Lists.newArrayList(new Suit(
                 4L,
                 "name",
                 "description",
@@ -224,13 +240,75 @@ public class SuitServiceTest {
                 2,
                 new HashSet<>(),
                 1
+            ),
+            new Suit(
+                6L,
+                "name3",
+                "description3",
+                new ArrayList<>(),
+                1,
+                new HashSet<>(),
+                3
             ));
 
-        when(suitDAO.findByIdInOrderById(Sets.newHashSet(5L, 4L))).thenReturn(suits);
-        suitService.updateSuitRowNumber(rowNumbers);
+        expectedProject.setSuits(allProjectsSuits);
 
-        assertThat(1, is(equalTo(suits.get(0).getRowNumber())));
-        assertThat(2, is(equalTo(suits.get(1).getRowNumber())));
+        when(projectService.getProjectByProjectId(anyLong())).thenReturn(expectedProject);
+
+        final List<SuitRowNumberUpdateDTO> actualUpdatedSuitDTOs = suitService
+            .updateSuitRowNumber(SIMPLE_PROJECT_ID, rowNumbers);
+
+        assertThat(1, is(equalTo(allProjectsSuits.get(0).getRowNumber())));
+        assertThat(2, is(equalTo(allProjectsSuits.get(1).getRowNumber())));
+        assertEquals(rowNumbers, actualUpdatedSuitDTOs);
+
+        final List<Suit> expectedUpdatedSuits = Lists
+            .newArrayList(allProjectsSuits.get(0), allProjectsSuits.get(1));
+
+        verify(suitDAO).save(eq(expectedUpdatedSuits));
+    }
+
+    @Test(expected = BadRequestException.class)
+    public void updateSuitRowNumber_throwsException_thereIsNoSuchSuitInProjectWithSuchId() {
+        final SuitRowNumberUpdateDTO update = new SuitRowNumberUpdateDTO(5L, 2);
+        final SuitRowNumberUpdateDTO update1 = new SuitRowNumberUpdateDTO(4L, 1);
+        final SuitRowNumberUpdateDTO update2 = new SuitRowNumberUpdateDTO(7L, 3);
+
+        final List<SuitRowNumberUpdateDTO> rowNumbers = new ArrayList<>(
+                Arrays.asList(update, update1, update2)
+        );
+
+        final List<Suit> allProjectsSuits = Lists.newArrayList(new Suit(
+                        4L,
+                        "name",
+                        "description",
+                        new ArrayList<>(),
+                        3,
+                        new HashSet<>(),
+                        2
+                ),
+                new Suit(
+                        5L,
+                        "name2",
+                        "description2",
+                        new ArrayList<>(),
+                        2,
+                        new HashSet<>(),
+                        1
+                ),
+                new Suit(
+                        6L,
+                        "name3",
+                        "description3",
+                        new ArrayList<>(),
+                        1,
+                        new HashSet<>(),
+                        3
+                ));
+
+        expectedProject.setSuits(allProjectsSuits);
+        when(projectService.getProjectByProjectId(anyLong())).thenReturn(expectedProject);
+        suitService.updateSuitRowNumber(SIMPLE_PROJECT_ID, rowNumbers);
     }
 
 
@@ -243,7 +321,9 @@ public class SuitServiceTest {
         );
 
         when(suitDAO.findByIdInOrderById(Sets.newHashSet(5L, 4L))).thenReturn(new ArrayList<>());
-        suitService.updateSuitRowNumber(rowNumbers);
+        when(projectService.getProjectByProjectId(anyLong())).thenReturn(expectedProject);
+
+        suitService.updateSuitRowNumber(SIMPLE_PROJECT_ID, rowNumbers);
     }
 
     @Test(expected = BadRequestException.class)
@@ -254,7 +334,7 @@ public class SuitServiceTest {
             new SuitRowNumberUpdateDTO(null, null)
         );
 
-        suitService.updateSuitRowNumber(rowNumbers);
+        suitService.updateSuitRowNumber(SIMPLE_PROJECT_ID, rowNumbers);
     }
 
     @Test(expected = BadRequestException.class)
@@ -272,13 +352,16 @@ public class SuitServiceTest {
             new HashSet<>(),
             2));
 
-        when(suitDAO.findByIdInOrderById(Sets.newHashSet(5L, 4L))).thenReturn(retrievedListOfSuits);
-        suitService.updateSuitRowNumber(rowNumbers);
+        when(suitDAO.findByIdInOrderById(Sets.newHashSet(5L, 4L)))
+            .thenReturn(retrievedListOfSuits);
+        when(projectService.getProjectByProjectId(anyLong())).thenReturn(expectedProject);
+
+        suitService.updateSuitRowNumber(SIMPLE_PROJECT_ID, rowNumbers);
     }
 
     @Test(expected = NotFoundException.class)
     public void getSuitsFromProject_inValidId_NotFound() {
         when(projectService.getProjectByProjectId(SIMPLE_PROJECT_ID)).thenReturn(expectedProject);
-        suitService.getSuitsFromProject(777L);
+        suitService.getSuitsFromProject(INVALID_PROJECT_ID);
     }
 }
