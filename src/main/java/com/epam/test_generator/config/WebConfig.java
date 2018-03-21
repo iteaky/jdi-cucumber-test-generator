@@ -1,6 +1,9 @@
 package com.epam.test_generator.config;
 
+import java.util.Properties;
 import javax.annotation.Resource;
+import net.rcarz.jiraclient.BasicCredentials;
+import net.rcarz.jiraclient.JiraClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -8,11 +11,11 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.env.Environment;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.springframework.web.servlet.ViewResolver;
-import org.springframework.web.servlet.config.annotation.*;
-import org.springframework.web.servlet.view.InternalResourceViewResolver;
-
-import java.util.Properties;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 /**
  * Configuration class customizing the default Java-based configuration for Spring MVC.
@@ -21,8 +24,8 @@ import java.util.Properties;
 @Configuration
 @EnableWebMvc
 @ComponentScan("com.epam.test_generator")
-@PropertySource(value = "classpath:config.properties")
 @PropertySource(value = "classpath:email.properties")
+@PropertySource(value = "classpath:jira.properties")
 public class WebConfig extends WebMvcConfigurerAdapter {
 
     @Resource
@@ -37,6 +40,15 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     @Bean
     public static PropertySourcesPlaceholderConfigurer propertyConfigInDev() {
         return new PropertySourcesPlaceholderConfigurer();
+    }
+
+    @Bean
+    public JiraClient jiraClient() {
+        String uri = environment.getProperty("jira.uri");
+        String name = environment.getProperty("jira.login");
+        String pass = environment.getProperty("jira.password");
+        BasicCredentials creds = new BasicCredentials(name,pass);
+        return new JiraClient(uri, creds);
     }
 
     /**
@@ -71,20 +83,6 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     }
 
     /**
-     * Set up custom {@link ViewResolver} - an object that can resolve views by name.
-     * @return view resolver bean
-     */
-    @Bean(name = "viewResolver")
-    public ViewResolver getViewResolver() {
-        InternalResourceViewResolver resourceViewResolver = new InternalResourceViewResolver();
-
-        resourceViewResolver.setPrefix("/WEB-INF/static/views");
-        resourceViewResolver.setSuffix(".html");
-
-        return resourceViewResolver;
-    }
-
-    /**
      * Configure cross origin requests processing.
      * @param registry assists with the registration of CorsConfiguration mapped to a path pattern
      */
@@ -102,11 +100,11 @@ public class WebConfig extends WebMvcConfigurerAdapter {
      */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/static/**")
-            .addResourceLocations("/WEB-INF/static/");
+        registry.addResourceHandler("/static/views/vue-static/**")
+            .addResourceLocations("/WEB-INF/vue-static/");
+        registry.addResourceHandler("/index.html")
+            .addResourceLocations("/WEB-INF/index.html");
         registry.addResourceHandler("swagger-ui.html")
             .addResourceLocations("classpath:/META-INF/resources/");
-        registry.addResourceHandler("/webjars/**")
-            .addResourceLocations("classpath:/META-INF/resources/webjars/");
     }
 }

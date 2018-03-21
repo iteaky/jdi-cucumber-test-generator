@@ -1,28 +1,32 @@
 package com.epam.test_generator.services;
 
-import static com.epam.test_generator.services.utils.UtilsService.checkNotNull;
-import static com.epam.test_generator.services.utils.UtilsService.suitBelongsToProject;
-
 import com.epam.test_generator.dao.interfaces.CaseVersionDAO;
+import com.epam.test_generator.dao.interfaces.RemovedIssueDAO;
 import com.epam.test_generator.dao.interfaces.SuitDAO;
 import com.epam.test_generator.dto.StepDTO;
 import com.epam.test_generator.dto.SuitDTO;
 import com.epam.test_generator.dto.SuitRowNumberUpdateDTO;
 import com.epam.test_generator.dto.SuitUpdateDTO;
 import com.epam.test_generator.entities.Project;
+import com.epam.test_generator.entities.RemovedIssue;
 import com.epam.test_generator.entities.Status;
 import com.epam.test_generator.entities.Suit;
 import com.epam.test_generator.services.exceptions.BadRequestException;
 import com.epam.test_generator.transformers.SuitTransformer;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
+import static com.epam.test_generator.services.utils.UtilsService.checkNotNull;
+import static com.epam.test_generator.services.utils.UtilsService.suitBelongsToProject;
+
 
 @Transactional
 @Service
@@ -43,8 +47,16 @@ public class SuitService {
     @Autowired
     private CascadeUpdateService cascadeUpdateService;
 
-    public List<SuitDTO> getSuits() {
+    @Autowired
+    private RemovedIssueDAO removedIssueDAO;
+
+    public List<SuitDTO> getSuitsDTO() {
         return suitTransformer.toDtoList(suitDAO.findAll());
+    }
+
+
+    public List<Suit> getSuits() {
+        return suitDAO.findAll();
     }
 
     public Suit getSuit(long projectId, long suitId) {
@@ -65,6 +77,7 @@ public class SuitService {
 
     /**
      * Adds suit specified in suitDTO to project by id
+     *
      * @param projectId if of project where to add case
      * @param suitDTO suit info
      * @return {@link SuitDTO} of added suit
@@ -72,8 +85,9 @@ public class SuitService {
     public SuitDTO addSuit(Long projectId, SuitDTO suitDTO) {
         Project project = projectService.getProjectByProjectId(projectId);
         checkNotNull(project);
-
+        suitDTO.setJiraProjectKey(project.getJiraKey());
         Suit suit = suitDAO.save(suitTransformer.fromDto(suitDTO));
+        suit.setLastModifiedDate(LocalDateTime.now());
 
         project.getSuits().add(suit);
 
@@ -84,30 +98,44 @@ public class SuitService {
         return addedSuitDTO;
     }
 
+
+    public Suit getSuitByJiraKey(String key) {
+        Suit project = suitDAO.findByJiraKey(key);
+        checkNotNull(project);
+
+        return project;
+    }
+
     /**
      * Updates suit by id with info specified in suitDTO
+     *
      * @param projectId id of project
      * @param suitId id of suit to update
      * @param suitDTO info to update
      * @return {@link SuitUpdateDTO} which contains {@link SuitDTO} and {@link List<Long>}
      * (in fact id of {@link StepDTO} with FAILED {@link Status} which belong this suit)
      */
-    public SuitUpdateDTO updateSuit(long projectId, long suitId, SuitDTO suitDTO) throws MethodArgumentNotValidException {
-        final List<Long> failedStepIds = cascadeUpdateService.cascadeSuitCasesUpdate(projectId, suitId, suitDTO);
+    public SuitUpdateDTO updateSuit(long projectId, long suitId, SuitDTO suitDTO)
+        throws MethodArgumentNotValidException {
+        final List<Long> failedStepIds = cascadeUpdateService
+            .cascadeSuitCasesUpdate(projectId, suitId, suitDTO);
         Suit suit = getSuit(projectId, suitId);
         final SuitDTO simpleSuitDTO = getSimpleSuitDTO(suitDTO);
 
         suitTransformer.mapDTOToEntity(simpleSuitDTO, suit);
-        suit = suitDAO.save(suit);
+        suit.setLastModifiedDate(LocalDateTime.now());
+        suitDAO.save(suit);
 
         SuitDTO updatedSuitDTO = suitTransformer.toDto(suit);
-        SuitUpdateDTO updatedSuitDTOwithFailedStepIds = new SuitUpdateDTO(updatedSuitDTO, failedStepIds);
+        SuitUpdateDTO updatedSuitDTOwithFailedStepIds = new SuitUpdateDTO(updatedSuitDTO,
+            failedStepIds);
 
         return updatedSuitDTOwithFailedStepIds;
     }
 
     /**
      * Removes suit from project by id
+     *
      * @param projectId id of project where to delete case
      * @param suitId id of case to delete
      * @return {@link SuitDTO) of removed suit
@@ -115,6 +143,11 @@ public class SuitService {
     public SuitDTO removeSuit(long projectId, long suitId) {
         Suit suit = getSuit(projectId, suitId);
         checkNotNull(suit);
+
+        if (suit.getJiraKey() != null) {
+            removedIssueDAO.save(new RemovedIssue(suit.getJiraKey()));
+        }
+
         suitDAO.delete(suitId);
 
         caseVersionDAO.delete(suit.getCases());
@@ -134,11 +167,11 @@ public class SuitService {
 
     /**
      * Updates suit's rowNumbers by suit's ids specified in List of SuitRowNumberUpdateDTOs
+     *
      * @param rowNumberUpdates List of SuitRowNumberUpdateDTOs
      * @return list of {@link SuitRowNumberUpdateDTO} to check on the frontend
      */
-    public List<SuitRowNumberUpdateDTO> updateSuitRowNumber(
-        long projectId, List<SuitRowNumberUpdateDTO> rowNumberUpdates) {
+    public List<SuitRowNumberUpdateDTO> updateSuitRowNumber(List<SuitRowNumberUpdateDTO> rowNumberUpdates) {
         if (rowNumberUpdates.isEmpty()) {
             throw new BadRequestException("The list has not to be empty");
         }
@@ -161,10 +194,7 @@ public class SuitService {
             throw new BadRequestException("One or more of the rowNumbers is a duplicate");
         }
 
-
-        final Project currentProject = projectService.getProjectByProjectId(projectId);
-        final List<Suit> suits = retrieveSuitsFromProjectBySuitIds(currentProject, patch.keySet());
-
+        final List<Suit> suits = suitDAO.findByIdInOrderById(patch.keySet());
 
         if (suits.size() != patch.size()) {
             throw new BadRequestException(
@@ -177,17 +207,6 @@ public class SuitService {
         suitDAO.save(suits);
 
         return rowNumberUpdates;
-    }
-
-    private List<Suit> retrieveSuitsFromProjectBySuitIds(Project currentProject,
-                                                         Set<Long> suitsIds) {
-        final List<Suit> neededSuits = currentProject.getSuits().stream()
-            .filter(s -> suitsIds.contains(s.getId()))
-            .collect(Collectors.toList());
-        if (neededSuits.size() != suitsIds.size()) {
-            throw new BadRequestException("Some Id of suit doesn't belong to current Project");
-        }
-        return neededSuits;
     }
 
     private SuitDTO getSimpleSuitDTO(SuitDTO suitDTO) {

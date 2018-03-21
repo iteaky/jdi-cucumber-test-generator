@@ -1,5 +1,7 @@
 package com.epam.test_generator.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -30,9 +32,14 @@ public class SuitDTO {
     @Max(value = 5)
     private Integer priority;
 
+    @JsonFormat(pattern = "yyyy-MM-dd@HH:mm:ss")
     private Date creationDate;
 
     private Set<TagDTO> tags;
+
+    private String jiraProjectKey;
+
+    private String jiraKey;
 
     @NotNull
     @Min(value = 1)
@@ -69,6 +76,22 @@ public class SuitDTO {
         this.priority = priority;
         this.tags = tags;
         this.rowNumber = rowNumber;
+    }
+
+    public String getJiraProjectKey() {
+        return jiraProjectKey;
+    }
+
+    public void setJiraProjectKey(String jiraProjectKey) {
+        this.jiraProjectKey = jiraProjectKey;
+    }
+
+    public String getJiraKey() {
+        return jiraKey;
+    }
+
+    public void setJiraKey(String jiraKey) {
+        this.jiraKey = jiraKey;
     }
 
     public Long getId() {

@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -63,7 +64,6 @@ public class JenkinsControllerTest {
     public void getJobs_Jobs_StatusOK() throws Exception {
         when(jenkinsJobService.getJobs()).thenReturn(jobsList);
         mockMvc.perform(get("/jenkins/job/"))
-            .andDo(print())
             .andExpect(status().isOk())
             .andExpect(content().string(jobsList.toString()));
     }
@@ -72,7 +72,6 @@ public class JenkinsControllerTest {
     public void getJobs_Jobs_StatusInternalServerError() throws Exception {
         when(jenkinsJobService.getJobs()).thenThrow(Exception.class);
         mockMvc.perform(get("/jenkins/job/"))
-            .andDo(print())
             .andExpect(status().isInternalServerError());
     }
 
@@ -85,13 +84,12 @@ public class JenkinsControllerTest {
         String json = mapper.writeValueAsString(jobDTO);
         mockMvc.perform(
             post("/jenkins/job/execute").contentType(MediaType.APPLICATION_JSON).content(json))
-            .andDo(print()).andExpect(status().isOk())
+            .andExpect(status().isOk())
             .andExpect(content().string(mapper.writeValueAsString(executeJenkinsJobResponse)));
 
         verify(jenkinsJobService).runJob(eq(jobName));
         verifyNoMoreInteractions(jenkinsJobService);
     }
-
 
     @Test
     public void executeJob_JobWithoutJobName_StatusBadRequest() throws Exception {
@@ -101,12 +99,12 @@ public class JenkinsControllerTest {
         String json = mapper.writeValueAsString(jobDTO);
         mockMvc.perform(
             post("/jenkins/job/execute").contentType(MediaType.APPLICATION_JSON).content(json))
-            .andDo(print()).andExpect(status().isBadRequest());
+            .andExpect(status().isBadRequest());
         verifyNoMoreInteractions(jenkinsJobService);
     }
 
     @Test
-    public void executeJob_UnexpectedException_StatusInternalServerError() throws Exception {
+    public void executeJob_UnexpectedException_StatusInternalServerErro() throws Exception {
         ExecuteJenkinsJobDTO jobDTO = new ExecuteJenkinsJobDTO();
         jobDTO.setJobName(jobName);
 
@@ -114,7 +112,7 @@ public class JenkinsControllerTest {
         String json = mapper.writeValueAsString(jobDTO);
         mockMvc.perform(
             post("/jenkins/job/execute").contentType(MediaType.APPLICATION_JSON).content(json))
-            .andDo(print()).andExpect(status().isInternalServerError());
+            .andExpect(status().isInternalServerError());
 
         verify(jenkinsJobService).runJob(eq(jobName));
         verifyNoMoreInteractions(jenkinsJobService);
