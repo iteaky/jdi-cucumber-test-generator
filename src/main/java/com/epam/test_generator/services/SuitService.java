@@ -63,8 +63,7 @@ public class SuitService {
         Project project = projectService.getProjectByProjectId(projectId);
         checkNotNull(project);
 
-        Suit suit = suitDAO.findOne(suitId);
-        checkNotNull(suit);
+        Suit suit = suitDAO.findById(suitId).orElseThrow(NullPointerException::new);
 
         suitBelongsToProject(project, suit);
 
@@ -148,7 +147,7 @@ public class SuitService {
             removedIssueDAO.save(new RemovedIssue(suit.getJiraKey()));
         }
 
-        suitDAO.delete(suitId);
+        suitDAO.deleteById(suitId);
 
         caseVersionDAO.delete(suit.getCases());
 
@@ -204,7 +203,7 @@ public class SuitService {
             suit.setRowNumber(patch.get(suit.getId()));
         }
 
-        suitDAO.save(suits);
+        suitDAO.saveAll(suits);
 
         return rowNumberUpdates;
     }

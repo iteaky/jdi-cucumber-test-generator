@@ -4,7 +4,6 @@ import com.epam.test_generator.controllers.ProjectController;
 import com.epam.test_generator.entities.Case;
 import com.epam.test_generator.entities.Project;
 import com.epam.test_generator.entities.Suit;
-import com.epam.test_generator.entities.User;
 import java.util.List;
 import java.util.Set;
 import javax.validation.Valid;

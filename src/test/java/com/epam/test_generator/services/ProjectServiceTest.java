@@ -26,6 +26,7 @@ import com.google.common.collect.Sets;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -34,7 +35,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.security.core.Authentication;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -231,22 +232,23 @@ public class ProjectServiceTest {
 
     @Test
     public void getProjectByProjectId_ValidProjectId_Success() {
-        when(projectDAO.findOne(simpleProject1.getId())).thenReturn(simpleProject1);
+        when(projectDAO.findById(simpleProject1.getId()))
+            .thenReturn(Optional.ofNullable(simpleProject1));
 
         Project expectedProject = projectService
             .getProjectByProjectId(simpleProject1.getId());
         assertEquals(expectedProject, simpleProject1);
 
-        verify(projectDAO).findOne(eq(simpleProject1.getId()));
+        verify(projectDAO).findById(eq(simpleProject1.getId()));
     }
 
     @Test(expected = NotFoundException.class)
     public void getProjectByProjectId_InvalidProjectId_NotFoundException() {
-        when(projectDAO.findOne(simpleProject1.getId())).thenReturn(null);
+        when(projectDAO.findById(simpleProject1.getId())).thenReturn(null);
 
         projectService.getProjectByProjectId(simpleProject1.getId());
 
-        verify(projectDAO).findOne(eq(simpleProject1.getId()));
+        verify(projectDAO).findById(eq(simpleProject1.getId()));
 
     }
 
@@ -260,7 +262,8 @@ public class ProjectServiceTest {
             null,
             false
         ));
-        when(projectDAO.findOne(simpleProject1.getId())).thenReturn(simpleProject1);
+        when(projectDAO.findById(simpleProject1.getId()))
+            .thenReturn(Optional.ofNullable(simpleProject1));
         when(userService.getUserByEmail(simpleUser1.getEmail())).thenReturn(simpleUser1);
         when(projectService.getProjectByProjectId(simpleProject1.getId())).thenReturn(simpleProject1);
         when(projectFullTransformer.toDto(simpleProject1)).thenReturn(simpleProjectFullDTO1);
@@ -283,7 +286,8 @@ public class ProjectServiceTest {
             null,
             false
         ));
-        when(projectDAO.findOne(simpleProject1.getId())).thenReturn(simpleProject1);
+        when(projectDAO.findById(simpleProject1.getId()))
+            .thenReturn(Optional.ofNullable(simpleProject1));
         when(userService.getUserByEmail(simpleUser1.getEmail())).thenReturn(simpleUser1);
         when(projectService.getProjectByProjectId(simpleProject1.getId())).thenReturn(simpleProject1);
         projectService.getAuthUserFullProject(simpleProjectFullDTO1.getId(), authentication);
@@ -316,36 +320,41 @@ public class ProjectServiceTest {
 
     @Test
     public void update_Project_Success() {
-        when(projectDAO.findOne(SIMPLE_PROJECT_ID)).thenReturn(simpleProject1);
+        when(projectDAO.findById(SIMPLE_PROJECT_ID))
+            .thenReturn(Optional.ofNullable(simpleProject1));
         projectService.updateProject(SIMPLE_PROJECT_ID, simpleProject1DTO);
         verify(projectDAO).save(simpleProject1);
     }
 
     @Test(expected = NotFoundException.class)
     public void updateProject_InvalidProjectId_NotFound() {
-        when(projectDAO.findOne(SIMPLE_PROJECT_ID)).thenReturn(simpleProject1);
+        when(projectDAO.findById(SIMPLE_PROJECT_ID))
+            .thenReturn(Optional.ofNullable(simpleProject1));
         projectService.updateProject(777L, simpleProject1DTO);
         verify(projectDAO).save(simpleProject1);
     }
 
     @Test
     public void remove_Project_Success() {
-        when(projectDAO.findOne(SIMPLE_PROJECT_ID)).thenReturn(simpleProject1);
+        when(projectDAO.findById(SIMPLE_PROJECT_ID))
+            .thenReturn(Optional.ofNullable(simpleProject1));
         projectService.removeProject(SIMPLE_PROJECT_ID);
-        verify(projectDAO).delete(SIMPLE_PROJECT_ID);
+        verify(projectDAO).deleteById(SIMPLE_PROJECT_ID);
     }
 
     @Test(expected = NotFoundException.class)
     public void removeProject_InvalidProjectId_NotFound() {
 
-        when(projectDAO.findOne(SIMPLE_PROJECT_ID)).thenReturn(simpleProject1);
+        when(projectDAO.findById(SIMPLE_PROJECT_ID))
+            .thenReturn(Optional.ofNullable(simpleProject1));
         projectService.removeProject(777L);
     }
 
     @Test
     public void addUserToProject_ValidUser_Success() {
         simpleProject1.setUsers(new HashSet<>());
-        when(projectDAO.findOne(SIMPLE_PROJECT_ID)).thenReturn(simpleProject1);
+        when(projectDAO.findById(SIMPLE_PROJECT_ID))
+            .thenReturn(Optional.ofNullable(simpleProject1));
         when(userService.getUserById(SIMPLE_USER_ID)).thenReturn(simpleUser1);
 
         assertFalse(simpleProject1.getUsers().contains(simpleUser1));
@@ -356,7 +365,8 @@ public class ProjectServiceTest {
 
     @Test(expected = NotFoundException.class)
     public void addUserToProject_InvalidProjectId_NotFound() {
-        when(projectDAO.findOne(SIMPLE_PROJECT_ID)).thenReturn(simpleProject1);
+        when(projectDAO.findById(SIMPLE_PROJECT_ID))
+            .thenReturn(Optional.ofNullable(simpleProject1));
         when(userService.getUserById(SIMPLE_USER_ID)).thenReturn(simpleUser1);
 
         projectService.addUserToProject(777L, SIMPLE_USER_ID);
@@ -364,7 +374,8 @@ public class ProjectServiceTest {
 
     @Test(expected = NotFoundException.class)
     public void addUserToProject_InvalidUserId_NotFound() {
-        when(projectDAO.findOne(SIMPLE_PROJECT_ID)).thenReturn(simpleProject1);
+        when(projectDAO.findById(SIMPLE_PROJECT_ID))
+            .thenReturn(Optional.ofNullable(simpleProject1));
         when(userService.getUserById(SIMPLE_USER_ID)).thenReturn(simpleUser1);
 
         projectService.addUserToProject(SIMPLE_PROJECT_ID, 666L);
@@ -373,7 +384,8 @@ public class ProjectServiceTest {
     @Test
     public void removeUserFromProject_ValidUser_Success() {
         simpleProject1.setUsers(Sets.newHashSet(simpleUser1));
-        when(projectDAO.findOne(SIMPLE_PROJECT_ID)).thenReturn(simpleProject1);
+        when(projectDAO.findById(SIMPLE_PROJECT_ID))
+            .thenReturn(Optional.ofNullable(simpleProject1));
         when(userService.getUserById(SIMPLE_USER_ID)).thenReturn(simpleUser1);
 
         assertTrue(simpleProject1.getUsers().contains(simpleUser1));
@@ -385,7 +397,8 @@ public class ProjectServiceTest {
     @Test (expected = NotFoundException.class)
     public void removeUserFromProject_InvalidProjectId_NotFound() {
         simpleProject1.setUsers(Sets.newHashSet(simpleUser1));
-        when(projectDAO.findOne(SIMPLE_PROJECT_ID)).thenReturn(simpleProject1);
+        when(projectDAO.findById(SIMPLE_PROJECT_ID))
+            .thenReturn(Optional.ofNullable(simpleProject1));
         when(userService.getUserById(SIMPLE_USER_ID)).thenReturn(simpleUser1);
 
         projectService.removeUserFromProject(777L, SIMPLE_USER_ID);
@@ -394,7 +407,8 @@ public class ProjectServiceTest {
     @Test (expected = NotFoundException.class)
     public void removeUserFromProject_InvalidUserId_NotFound() {
         simpleProject1.setUsers(Sets.newHashSet(simpleUser1));
-        when(projectDAO.findOne(SIMPLE_PROJECT_ID)).thenReturn(simpleProject1);
+        when(projectDAO.findById(SIMPLE_PROJECT_ID))
+            .thenReturn(Optional.ofNullable(simpleProject1));
         when(userService.getUserById(SIMPLE_USER_ID)).thenReturn(simpleUser1);
 
         projectService.removeUserFromProject(SIMPLE_PROJECT_ID, 666L);
@@ -402,7 +416,8 @@ public class ProjectServiceTest {
 
     @Test
     public void closeProject_ValidProjectId_Success() {
-        when(projectDAO.findOne(SIMPLE_PROJECT_ID)).thenReturn(simpleProject1);
+        when(projectDAO.findById(SIMPLE_PROJECT_ID))
+            .thenReturn(Optional.ofNullable(simpleProject1));
         assertTrue(simpleProject1.isActive());
         projectService.closeProject(SIMPLE_PROJECT_ID);
         assertFalse(simpleProject1.isActive());
@@ -411,14 +426,16 @@ public class ProjectServiceTest {
 
     @Test(expected = NotFoundException.class)
     public void closeProject_InvalidProjectId_NotFound() {
-        when(projectDAO.findOne(SIMPLE_PROJECT_ID)).thenReturn(simpleProject1);
+        when(projectDAO.findById(SIMPLE_PROJECT_ID))
+            .thenReturn(Optional.ofNullable(simpleProject1));
         projectService.closeProject(777L);
     }
 
     @Test(expected = ProjectClosedException.class)
     public void closeProject_ProjectIsClosed_FailReadOnly() {
         simpleProject1.setActive(false);
-        when(projectDAO.findOne(SIMPLE_PROJECT_ID)).thenReturn(simpleProject1);
+        when(projectDAO.findById(SIMPLE_PROJECT_ID))
+            .thenReturn(Optional.ofNullable(simpleProject1));
         projectService.closeProject(SIMPLE_PROJECT_ID);
     }
 

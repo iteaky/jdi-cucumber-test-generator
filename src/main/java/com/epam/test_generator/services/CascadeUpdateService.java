@@ -74,12 +74,10 @@ public class CascadeUpdateService {
     private void addCasesToSuit(long projectId, long suitId, List<CaseDTO> casesForCreate) {
             for (CaseDTO caseDTO : casesForCreate) {
                 if (caseDTO.getSteps() != null){
-                    final Optional<StepDTO> existedCase = caseDTO.getSteps().stream()
+                    caseDTO.getSteps().stream()
                         .filter(s -> s.getId() != 0)
-                        .findAny();
-                    if (existedCase.isPresent()) {
-                        throw new BadRequestException("Non-existed step is expected!");
-                    }
+                        .findAny().orElseThrow(
+                        () -> new BadRequestException("Non-existed step is expected!"));
                 }
             }
             for (CaseDTO caseDTO : casesForCreate) {

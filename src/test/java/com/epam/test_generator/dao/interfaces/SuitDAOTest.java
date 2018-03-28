@@ -44,7 +44,7 @@ public class SuitDAOTest {
 
         final Suit newSuit = retrieveSuit();
 
-        final Set<Tag> tagsWithIds = suitDAO.findOne(id).getTags();
+        final Set<Tag> tagsWithIds = suitDAO.findById(id).get().getTags();
         final Set<Tag> tagsWithoutIds = newSuit.getTags();
 
         assertEquals(tagsWithIds.size(), tagsWithoutIds.size());
@@ -54,7 +54,7 @@ public class SuitDAOTest {
         newSuit.setId(id);
         newSuit.setTags(unsavedTagsWithIds);
 
-        assertEquals(newSuit, suitDAO.findOne(id));
+        assertEquals(newSuit, suitDAO.findById(id).get());
     }
 
     @Test
@@ -99,7 +99,7 @@ public class SuitDAOTest {
             suit.getTags().add(tag);
         }
 
-        List<Suit> savedSuits = suitDAO.save(suits);
+        List<Suit> savedSuits = suitDAO.saveAll(suits);
 
         assertEquals(suits.size(), savedSuits.size());
 
@@ -120,7 +120,7 @@ public class SuitDAOTest {
 
         final Suit newSuit = retrieveSuit();
 
-        final Set<Tag> tagsWithIds = suitDAO.findOne(id).getTags();
+        final Set<Tag> tagsWithIds = suitDAO.findById(id).get().getTags();
         final Set<Tag> tagsWithoutIds = newSuit.getTags();
 
         assertEquals(tagsWithIds.size(), tagsWithoutIds.size());
@@ -144,7 +144,7 @@ public class SuitDAOTest {
 
         final Suit newSuit = retrieveSuit();
 
-        final Set<Tag> tagsWithIds = suitDAO.findOne(id).getTags();
+        final Set<Tag> tagsWithIds = suitDAO.findById(id).get().getTags();
         final Set<Tag> tagsWithoutIds = newSuit.getTags();
 
         assertEquals(tagsWithIds.size(), tagsWithoutIds.size());
@@ -182,7 +182,7 @@ public class SuitDAOTest {
 
         final Suit newSuit = retrieveSuit();
 
-        final Set<Tag> tagsWithIds = suitDAO.findOne(id).getTags();
+        final Set<Tag> tagsWithIds = suitDAO.findById(id).get().getTags();
         final Set<Tag> tagsWithoutIds = newSuit.getTags();
 
         assertEquals(tagsWithIds.size(), tagsWithoutIds.size());
@@ -205,29 +205,29 @@ public class SuitDAOTest {
             new Suit(null, "2", "2", new ArrayList<>(), 2, new HashSet<>(), 2),
             new Suit(null, "3", "3", new ArrayList<>(), 3, new HashSet<>(), 3)
         ));
-        suitDAO.save(suits);
+        suitDAO.saveAll(suits);
 
-        final Suit suit1 = suitDAO.findOne(suits.get(0).getId());
+        final Suit suit1 = suitDAO.findById(suits.get(0).getId()).get();
         suit1.setRowNumber(3);
-        final Suit suit2 = suitDAO.findOne(suits.get(1).getId());
+        final Suit suit2 = suitDAO.findById(suits.get(1).getId()).get();
         suit2.setRowNumber(1);
-        final Suit suit3 = suitDAO.findOne(suits.get(2).getId());
+        final Suit suit3 = suitDAO.findById(suits.get(2).getId()).get();
         suit3.setRowNumber(2);
 
-        suitDAO.save(Arrays.asList(suit1, suit2, suit3));
+        suitDAO.saveAll(Arrays.asList(suit1, suit2, suit3));
 
-        assertThat(3, is(equalTo(suitDAO.findOne(suits.get(0).getId()).getRowNumber())));
-        assertThat(1, is(equalTo(suitDAO.findOne(suits.get(1).getId()).getRowNumber())));
-        assertThat(2, is(equalTo(suitDAO.findOne(suits.get(2).getId()).getRowNumber())));
+        assertThat(3, is(equalTo(suitDAO.findById(suits.get(0).getId()).get().getRowNumber())));
+        assertThat(1, is(equalTo(suitDAO.findById(suits.get(1).getId()).get().getRowNumber())));
+        assertThat(2, is(equalTo(suitDAO.findById(suits.get(2).getId()).get().getRowNumber())));
     }
 
     @Test
     public void removeById_Suit_Success() {
         Suit originalSuit = retrieveSuit();
         long id = suitDAO.save(originalSuit).getId();
-        suitDAO.delete(id);
+        suitDAO.deleteById(id);
 
-        Assert.assertTrue(!suitDAO.exists(id));
+        Assert.assertTrue(!suitDAO.existsById(id));
     }
 
     @Test
@@ -236,12 +236,12 @@ public class SuitDAOTest {
         Suit savedSuit = suitDAO.save(originalSuit);
         suitDAO.delete(originalSuit);
 
-        Assert.assertTrue(!suitDAO.exists(savedSuit.getId()));
+        Assert.assertTrue(!suitDAO.existsById(savedSuit.getId()));
     }
 
     @Test
     public void addList_Suits_Success() {
-        final List<Suit> savedSuits = suitDAO.save(retrieveSuiteList());
+        final List<Suit> savedSuits = suitDAO.saveAll(retrieveSuiteList());
 
         final List<Suit> newSuits = retrieveSuiteList();
 
@@ -256,9 +256,9 @@ public class SuitDAOTest {
 
     @Test
     public void removeList_Suits_Success() {
-        List<Suit> savedSuits = suitDAO.save(retrieveSuiteList());
+        List<Suit> savedSuits = suitDAO.saveAll(retrieveSuiteList());
 
-        suitDAO.delete(savedSuits);
+        suitDAO.deleteAll(savedSuits);
 
         Assert.assertTrue(suitDAO.findAll().isEmpty());
     }

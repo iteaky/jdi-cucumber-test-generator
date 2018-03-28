@@ -37,7 +37,7 @@ public class CaseDAOTest {
         Case newCase = retrieveCase();
         newCase.setId(id);
 
-        Assert.assertEquals(newCase, caseDAO.findOne(id));
+        Assert.assertEquals(newCase, caseDAO.findById(id).get());
     }
 
     @Test
@@ -66,7 +66,7 @@ public class CaseDAOTest {
         newCase.setId(id);
         newCase.setName("modified name");
 
-        Assert.assertEquals(newCase.getName(), caseDAO.findOne(id).getName());
+        Assert.assertEquals(newCase.getName(), caseDAO.findById(id).get().getName());
 
     }
 
@@ -81,7 +81,7 @@ public class CaseDAOTest {
         newCase.setId(id);
         newCase.setDescription("modified description");
 
-        Assert.assertEquals(newCase, caseDAO.findOne(id));
+        Assert.assertEquals(newCase, caseDAO.findById(id).get());
     }
 
     @Test
@@ -96,7 +96,7 @@ public class CaseDAOTest {
         newCase.setPriority(5);
         caseDAO.save(newCase);
 
-        Assert.assertEquals(newCase, caseDAO.findOne(id));
+        Assert.assertEquals(newCase, caseDAO.findById(id).get());
     }
 
     @Test
@@ -115,16 +115,16 @@ public class CaseDAOTest {
         newCase.setCreationDate(calendar.getTime());
         newCase.setId(id);
 
-        Assert.assertEquals(newCase, caseDAO.findOne(id));
+        Assert.assertEquals(newCase, caseDAO.findById(id).get());
     }
 
     @Test
     public void removeById_Case_Success() {
         Case originalCase = retrieveCase();
         long id = caseDAO.save(originalCase).getId();
-        caseDAO.delete(id);
+        caseDAO.deleteById(id);
 
-        Assert.assertTrue(!caseDAO.exists(id));
+        Assert.assertTrue(!caseDAO.existsById(id));
     }
 
     @Test
@@ -132,14 +132,15 @@ public class CaseDAOTest {
         Case savedCase = caseDAO.save(retrieveCase());
         caseDAO.delete(savedCase);
 
-        Assert.assertTrue(!caseDAO.exists(savedCase.getId()));
+        Assert.assertTrue(!caseDAO.existsById(savedCase.getId()));
     }
 
     @Test
     public void addList_Cases_Success() {
         List<Case> cases = retrieveCaseList();
 
-        List<Long> ids = caseDAO.save(cases).stream().map(Case::getId).collect(Collectors.toList());
+        List<Long> ids = caseDAO.saveAll(cases).stream().map(Case::getId)
+            .collect(Collectors.toList());
 
         List<Case> newCases = retrieveCaseList();
         newCases.get(0).setId(ids.get(0));
@@ -151,9 +152,9 @@ public class CaseDAOTest {
 
     @Test
     public void removeList_Cases_Success() {
-        List<Case> savedCases = caseDAO.save(retrieveCaseList());
+        List<Case> savedCases = caseDAO.saveAll(retrieveCaseList());
 
-        caseDAO.delete(savedCases);
+        caseDAO.deleteAll(savedCases);
 
         Assert.assertTrue(caseDAO.findAll().isEmpty());
     }

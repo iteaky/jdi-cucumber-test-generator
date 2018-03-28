@@ -10,7 +10,7 @@ public interface JenkinsServerFactory {
 
     void updateCredentials();
 
-    public static class JenkinsCredentials {
+    class JenkinsCredentials {
 
         private final String url;
         private final String password;

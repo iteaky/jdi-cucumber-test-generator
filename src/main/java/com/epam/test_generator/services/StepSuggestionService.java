@@ -32,8 +32,8 @@ public class StepSuggestionService {
     }
 
     public StepSuggestionDTO getStepsSuggestion(long stepSuggestionId) {
-        StepSuggestion stepSuggestion = stepSuggestionDAO.findOne(stepSuggestionId);
-        checkNotNull(stepSuggestion);
+        StepSuggestion stepSuggestion = stepSuggestionDAO.findById(stepSuggestionId)
+            .orElseThrow(NullPointerException::new);
 
         return stepSuggestionTransformer.toDto(stepSuggestion);
     }
@@ -63,7 +63,8 @@ public class StepSuggestionService {
      * @param stepSuggestionDTO info to update
      */
     public void updateStepSuggestion(Long stepSuggestionId, StepSuggestionDTO stepSuggestionDTO) {
-        StepSuggestion stepSuggestion = stepSuggestionDAO.findOne(stepSuggestionId);
+        StepSuggestion stepSuggestion = stepSuggestionDAO.findById(stepSuggestionId)
+            .orElseThrow(NullPointerException::new);
         checkNotNull(stepSuggestion);
         stepSuggestionTransformer.mapDTOToEntity(stepSuggestionDTO, stepSuggestion);
 
@@ -75,9 +76,10 @@ public class StepSuggestionService {
      * @param stepSuggestionId id of step suggestion to delete
      */
     public void removeStepSuggestion(Long stepSuggestionId) {
-        StepSuggestion stepSuggestion = stepSuggestionDAO.findOne(stepSuggestionId);
+        StepSuggestion stepSuggestion = stepSuggestionDAO.findById(stepSuggestionId)
+            .orElseThrow(NullPointerException::new);
         checkNotNull(stepSuggestion);
 
-        stepSuggestionDAO.delete(stepSuggestionId);
+        stepSuggestionDAO.deleteById(stepSuggestionId);
     }
 }

@@ -1,8 +1,14 @@
 package com.epam.test_generator.dao.interfaces;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import com.epam.test_generator.DatabaseConfigForTests;
 import com.epam.test_generator.entities.Role;
 import com.epam.test_generator.entities.User;
+import java.util.ArrayList;
+import java.util.List;
+import javax.transaction.Transactional;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,13 +16,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {DatabaseConfigForTests.class})
@@ -56,7 +55,7 @@ public class UserDAOTest {
         aUser.setName("new Name");
         userDAO.save(aUser);
 
-        final User aUserWithUpdatedName = userDAO.findById(savedAUser.getId());
+        final User aUserWithUpdatedName = userDAO.findById(savedAUser.getId()).get();
 
         assertNotNull(aUserWithUpdatedName);
 
@@ -82,7 +81,7 @@ public class UserDAOTest {
         aUser.setSurname("new Surname");
         userDAO.save(aUser);
 
-        final User aUserWithUpdatedSurname = userDAO.findById(savedAUser.getId());
+        final User aUserWithUpdatedSurname = userDAO.findById(savedAUser.getId()).get();
 
         assertNotNull(aUserWithUpdatedSurname);
 
@@ -106,7 +105,7 @@ public class UserDAOTest {
         User user = new User();
 
         userDAO.save(user);
-        assertEquals(user, userDAO.findById(user.getId()));
+        assertEquals(user, userDAO.findById(user.getId()).get());
     }
 
     @Test
@@ -116,7 +115,7 @@ public class UserDAOTest {
         for (int i = 0; i < 10; i++) {
             users.add(new User());
         }
-        userDAO.save(users);
+        userDAO.saveAll(users);
         assertEquals(users.size(), userDAO.findAll().size() - previousSize);
     }
 

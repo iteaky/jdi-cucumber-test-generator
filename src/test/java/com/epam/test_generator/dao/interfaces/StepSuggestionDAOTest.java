@@ -31,7 +31,7 @@ public class StepSuggestionDAOTest {
         StepSuggestion newStepSuggestion = retrieveStepSuggestion();
         newStepSuggestion.setId(id);
 
-        Assert.assertEquals(newStepSuggestion, stepSuggestionDAO.findOne(id));
+        Assert.assertEquals(newStepSuggestion, stepSuggestionDAO.findById(id).get());
     }
 
     @Test
@@ -46,7 +46,7 @@ public class StepSuggestionDAOTest {
         newStepSuggestion.setId(id);
         newStepSuggestion.setContent("new content");
 
-        Assert.assertEquals(newStepSuggestion, stepSuggestionDAO.findOne(id));
+        Assert.assertEquals(newStepSuggestion, stepSuggestionDAO.findById(id).get());
     }
 
     @Test
@@ -61,7 +61,7 @@ public class StepSuggestionDAOTest {
         newStepSuggestion.setId(id);
         newStepSuggestion.setType(StepType.AND);
 
-        Assert.assertEquals(newStepSuggestion, stepSuggestionDAO.findOne(id));
+        Assert.assertEquals(newStepSuggestion, stepSuggestionDAO.findById(id).get());
     }
 
     @Test
@@ -69,9 +69,9 @@ public class StepSuggestionDAOTest {
         StepSuggestion originalStepSuggestion = retrieveStepSuggestion();
         long id = stepSuggestionDAO.save(originalStepSuggestion).getId();
 
-        stepSuggestionDAO.delete(id);
+        stepSuggestionDAO.deleteById(id);
 
-        Assert.assertTrue(!stepSuggestionDAO.exists(id));
+        Assert.assertTrue(!stepSuggestionDAO.existsById(id));
     }
 
     @Test
@@ -82,7 +82,7 @@ public class StepSuggestionDAOTest {
 
         stepSuggestionDAO.delete(originalStepSuggestion);
 
-        Assert.assertTrue(!stepSuggestionDAO.exists(id));
+        Assert.assertTrue(!stepSuggestionDAO.existsById(id));
     }
 
     @Test
@@ -91,7 +91,8 @@ public class StepSuggestionDAOTest {
 
         int expectedSize = stepSuggestionDAO.findAll().size();
 
-        List<Long> ids = stepSuggestionDAO.save(stepSuggestions).stream().map(StepSuggestion::getId)
+        List<Long> ids = stepSuggestionDAO.saveAll(stepSuggestions).stream()
+            .map(StepSuggestion::getId)
             .collect(Collectors.toList());
 
         List<StepSuggestion> newStepSuggestions = retrieveStepSuggestionList();
@@ -111,9 +112,9 @@ public class StepSuggestionDAOTest {
 
         final int expectedSize = stepSuggestionDAO.findAll().size();
 
-        stepSuggestionDAO.save(stepSuggestions);
+        stepSuggestionDAO.saveAll(stepSuggestions);
 
-        stepSuggestionDAO.delete(stepSuggestions);
+        stepSuggestionDAO.deleteAll(stepSuggestions);
 
         Assert.assertEquals(expectedSize, stepSuggestionDAO.findAll().size());
     }

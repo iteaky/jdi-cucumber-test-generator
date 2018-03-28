@@ -17,12 +17,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class StepSuggestionServiceTest {
@@ -69,19 +70,19 @@ public class StepSuggestionServiceTest {
         StepSuggestionDTO expectedDTO = new StepSuggestionDTO(SIMPLE_STEP_SUGGESTION_ID,
             "StepSuggestion 1", StepType.GIVEN);
 
-        when(stepSuggestionDAO.findOne(anyLong())).thenReturn(expected);
+        when(stepSuggestionDAO.findById(anyLong())).thenReturn(Optional.ofNullable(expected));
         when(stepSuggestionTransformer.toDto(any(StepSuggestion.class))).thenReturn(expectedDTO);
 
         assertEquals(stepSuggestionService.getStepsSuggestion(SIMPLE_STEP_SUGGESTION_ID),
             expectedDTO);
 
-        verify(stepSuggestionDAO).findOne(anyLong());
+        verify(stepSuggestionDAO).findById(anyLong());
         verify(stepSuggestionTransformer).toDto(any(StepSuggestion.class));
     }
 
     @Test(expected = NotFoundException.class)
     public void get_StepSuggestionById_NotFoundException() {
-        when(stepSuggestionDAO.findOne(anyLong())).thenReturn(null);
+        when(stepSuggestionDAO.findById(anyLong())).thenReturn(null);
 
         stepSuggestionService.getStepsSuggestion(SIMPLE_STEP_SUGGESTION_ID);
     }
@@ -128,7 +129,7 @@ public class StepSuggestionServiceTest {
             StepType.WHEN);
         StepSuggestion expected = new StepSuggestion(2L, "StepSuggestion 2", StepType.WHEN);
 
-        when(stepSuggestionDAO.findOne(anyLong())).thenReturn(expected);
+        when(stepSuggestionDAO.findById(anyLong())).thenReturn(Optional.ofNullable(expected));
         when(stepSuggestionService.getStepsSuggestion(anyLong())).thenReturn(expectedDTO);
 
         stepSuggestionService.updateStepSuggestion(SIMPLE_STEP_SUGGESTION_ID, expectedDTO);
@@ -140,7 +141,7 @@ public class StepSuggestionServiceTest {
 
     @Test(expected = NotFoundException.class)
     public void update_StepSuggestion_NotFoundException() {
-        when(stepSuggestionDAO.findOne(anyLong())).thenReturn(null);
+        when(stepSuggestionDAO.findById(anyLong())).thenReturn(null);
 
         stepSuggestionService
             .updateStepSuggestion(SIMPLE_STEP_SUGGESTION_ID, new StepSuggestionDTO());
@@ -148,17 +149,18 @@ public class StepSuggestionServiceTest {
 
     @Test
     public void remove_StepSuggestion_Success() {
-        when(stepSuggestionDAO.findOne(anyLong())).thenReturn(listSteps.get(0));
+        when(stepSuggestionDAO.findById(anyLong()))
+            .thenReturn(Optional.ofNullable(listSteps.get(0)));
 
         stepSuggestionService.removeStepSuggestion(SIMPLE_AUTOCOMPLETE_ID);
 
-        verify(stepSuggestionDAO).findOne(anyLong());
-        verify(stepSuggestionDAO).delete(SIMPLE_AUTOCOMPLETE_ID);
+        verify(stepSuggestionDAO).findById(anyLong());
+        verify(stepSuggestionDAO).deleteById(SIMPLE_AUTOCOMPLETE_ID);
     }
 
     @Test(expected = NotFoundException.class)
     public void remove_StepSuggestion_NotFoundException() {
-        when(stepSuggestionDAO.findOne(anyLong())).thenReturn(null);
+        when(stepSuggestionDAO.findById(anyLong())).thenReturn(null);
 
         stepSuggestionService.removeStepSuggestion(SIMPLE_AUTOCOMPLETE_ID);
     }

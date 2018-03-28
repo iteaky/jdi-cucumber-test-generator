@@ -9,7 +9,7 @@ public interface JenkinsJobService {
 
     ExecuteJenkinsJobResponse runJob(String jobName);
 
-    public static class CommonJenkinsJobResponse {
+    class CommonJenkinsJobResponse {
 
         @Override
         public boolean equals(Object o) {
@@ -58,7 +58,7 @@ public interface JenkinsJobService {
         }
     }
 
-    public static class ExecuteJenkinsJobResponse extends CommonJenkinsJobResponse {
+    class ExecuteJenkinsJobResponse extends CommonJenkinsJobResponse {
 
         private String queueUrl;
         private Long queueExecutableId;

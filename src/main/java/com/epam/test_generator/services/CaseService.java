@@ -63,8 +63,7 @@ public class CaseService {
     public Case getCase(Long projectId, Long suitId, Long caseId) {
         Suit suit = suitService.getSuit(projectId, suitId);
 
-        Case caze = caseDAO.findOne(caseId);
-        checkNotNull(caze);
+        Case caze = caseDAO.findById(caseId).orElseThrow(NullPointerException::new);
 
         caseBelongsToSuit(caze, suit);
 
@@ -143,8 +142,7 @@ public class CaseService {
     public CaseUpdateDTO updateCase(Long projectId, Long suitId, Long caseId, EditCaseDTO editCaseDTO) {
         Suit suit = suitService.getSuit(projectId, suitId);
 
-        Case caze = caseDAO.findOne(caseId);
-        checkNotNull(caze);
+        Case caze = caseDAO.findById(caseId).orElseThrow(NullPointerException::new);
 
         caseBelongsToSuit(caze, suit);
 
@@ -180,15 +178,14 @@ public class CaseService {
     public CaseDTO removeCase(Long projectId, Long suitId, Long caseId) {
         Suit suit = suitService.getSuit(projectId, suitId);
 
-        Case caze = caseDAO.findOne(caseId);
-        checkNotNull(caze);
+        Case caze = caseDAO.findById(caseId).orElseThrow(NullPointerException::new);
 
         caseBelongsToSuit(caze, suit);
 
         saveIssueToDeleteInJira(caze);
 
         suit.getCases().remove(caze);
-        caseDAO.delete(caseId);
+        caseDAO.deleteById(caseId);
 
         caseVersionDAO.delete(caze);
 
@@ -213,7 +210,7 @@ public class CaseService {
             .filter(caze -> caseIds.stream()
                 .anyMatch(id -> id.equals(caze.getId())))
             .forEach(caze -> {
-                caseDAO.delete(caze.getId());
+                caseDAO.deleteById(caze.getId());
                 caseVersionDAO.delete(caze);
                 removedCases.add(caze);
                 saveIssueToDeleteInJira(caze);
@@ -235,8 +232,7 @@ public class CaseService {
     public List<CaseVersionDTO> getCaseVersions(Long projectId, Long suitId, Long caseId) {
         Suit suit = suitService.getSuit(projectId, suitId);
 
-        Case caze = caseDAO.findOne(caseId);
-        checkNotNull(caze);
+        Case caze = caseDAO.findById(caseId).orElseThrow(NullPointerException::new);
 
         caseBelongsToSuit(caze, suit);
 
@@ -256,7 +252,7 @@ public class CaseService {
     public CaseDTO restoreCase(Long projectId, Long suitId, Long caseId, String commitId) {
         Suit suit = suitService.getSuit(projectId, suitId);
 
-        Case caze = caseDAO.findOne(caseId);
+        Case caze = caseDAO.findById(caseId).orElseThrow(NullPointerException::new);
         checkNotNull(caze);
 
         caseBelongsToSuit(caze, suit);

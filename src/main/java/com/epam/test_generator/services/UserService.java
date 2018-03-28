@@ -45,8 +45,9 @@ public class UserService {
     @Autowired
     private TokenDAO tokenDAO;
 
+
     public User getUserById(Long id) {
-        return userDAO.findById(id);
+        return userDAO.findById(id).orElse(null);
 
     }
 

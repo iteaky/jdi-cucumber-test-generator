@@ -2,7 +2,6 @@ package com.epam.test_generator.dao.interfaces;
 
 
 import com.epam.test_generator.DatabaseConfigForTests;
-import com.epam.test_generator.dao.interfaces.RoleDAO;
 import com.epam.test_generator.entities.Role;
 import org.junit.Assert;
 import org.junit.Test;

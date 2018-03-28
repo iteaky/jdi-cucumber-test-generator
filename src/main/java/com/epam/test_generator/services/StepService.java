@@ -68,8 +68,7 @@ public class StepService {
 
         caseBelongsToSuit(caze, suit);
 
-        Step step = stepDAO.findOne(stepId);
-        checkNotNull(step);
+        Step step = stepDAO.findById(stepId).orElseThrow(NullPointerException::new);
 
         stepBelongsToCase(step, caze);
 
@@ -116,8 +115,7 @@ public class StepService {
 
         caseBelongsToSuit(caze, suit);
 
-        Step step = stepDAO.findOne(stepId);
-        checkNotNull(step);
+        Step step = stepDAO.findById(stepId).orElseThrow(NullPointerException::new);
 
         stepBelongsToCase(step, caze);
 
@@ -142,13 +140,12 @@ public class StepService {
 
         caseBelongsToSuit(caze, suit);
 
-        Step step = stepDAO.findOne(stepId);
-        checkNotNull(step);
+        Step step = stepDAO.findById(stepId).orElseThrow(NullPointerException::new);
 
         stepBelongsToCase(step, caze);
 
         caze.getSteps().remove(step);
-        stepDAO.delete(stepId);
+        stepDAO.deleteById(stepId);
 
         caseVersionDAO.save(caze);
     }

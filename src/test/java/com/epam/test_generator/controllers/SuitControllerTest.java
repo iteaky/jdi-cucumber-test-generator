@@ -13,7 +13,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -30,7 +29,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -243,7 +242,7 @@ public class SuitControllerTest {
     public void add_SuitWithNullName_StatusBadRequest() throws Exception {
         suitDTO.setId(null);
         suitDTO.setName(null);
-        when(suitService.addSuit(anyLong(), any(SuitDTO.class))).thenThrow(new RuntimeException());
+//        when(suitService.addSuit(anyLong(), any(SuitDTO.class))).thenThrow(new RuntimeException());
 
         mockMvc.perform(post("/projects/" + SIMPLE_PROJECT_ID + "/suits")
             .contentType(MediaType.APPLICATION_JSON)
@@ -257,7 +256,7 @@ public class SuitControllerTest {
     public void add_SuitWithMoreThanTheRequiredPriority_StatusBadRequest() throws Exception {
         suitDTO.setId(null);
         suitDTO.setPriority(6);
-        when(suitService.addSuit(anyLong(), any(SuitDTO.class))).thenThrow(new RuntimeException());
+//        when(suitService.addSuit(anyLong(), any(SuitDTO.class))).thenThrow(new RuntimeException());
 
         mockMvc.perform(post("/projects/" + SIMPLE_PROJECT_ID + "/suits")
             .contentType(MediaType.APPLICATION_JSON)
@@ -271,7 +270,7 @@ public class SuitControllerTest {
     public void add_SuitWithLessThanTheRequiredPriority_StatusbadRequest() throws Exception {
         suitDTO.setId(null);
         suitDTO.setPriority(-1);
-        when(suitService.addSuit(anyLong(), any(SuitDTO.class))).thenThrow(new RuntimeException());
+//        when(suitService.addSuit(anyLong(), any(SuitDTO.class))).thenThrow(new RuntimeException());
 
         mockMvc.perform(post("/projects/" + SIMPLE_PROJECT_ID + "/suits")
             .contentType(MediaType.APPLICATION_JSON)

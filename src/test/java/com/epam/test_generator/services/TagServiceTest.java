@@ -22,13 +22,14 @@ import com.epam.test_generator.transformers.TagTransformer;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TagServiceTest {
@@ -157,7 +158,7 @@ public class TagServiceTest {
         when(suitTransformer.fromDto(any(SuitDTO.class))).thenReturn(suit);
         when(caseService.getCase(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID,SIMPLE_CASE_ID)).thenReturn(caze);
         when(caseTransformer.fromDto(any(CaseDTO.class))).thenReturn(caze);
-        when(tagDAO.findOne(anyLong())).thenReturn(expectedTag);
+        when(tagDAO.findById(anyLong())).thenReturn(Optional.ofNullable(expectedTag));
         when(tagDAO.save(any(Tag.class))).thenReturn(expectedTag);
 
         tagService.updateTag(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID, SIMPLE_CASE_ID, SIMPLE_TAG_ID, expectedTagDTO);
@@ -165,7 +166,7 @@ public class TagServiceTest {
 
         verify(suitService).getSuit(eq(SIMPLE_PROJECT_ID),eq(SIMPLE_SUIT_ID));
         verify(caseService).getCase(eq(SIMPLE_PROJECT_ID),eq(SIMPLE_SUIT_ID),eq(SIMPLE_CASE_ID));
-        verify(tagDAO).findOne(eq(SIMPLE_TAG_ID));
+        verify(tagDAO).findById(eq(SIMPLE_TAG_ID));
         verify(tagDAO).save(any(Tag.class));
         verify(caseVersionDAO).save(eq(caze));
     }
@@ -192,7 +193,7 @@ public class TagServiceTest {
         when(suitTransformer.fromDto(any(SuitDTO.class))).thenReturn(suit);
         when(caseService.getCase(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID,SIMPLE_CASE_ID)).thenReturn(caze);
         when(caseTransformer.fromDto(any(CaseDTO.class))).thenReturn(caze);
-		when(tagDAO.findOne(anyLong())).thenReturn(null);
+        when(tagDAO.findById(anyLong())).thenReturn(null);
 
         tagService.updateTag(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID, SIMPLE_CASE_ID, SIMPLE_TAG_ID, new TagDTO());
     }
@@ -203,11 +204,11 @@ public class TagServiceTest {
         when(suitTransformer.fromDto(any(SuitDTO.class))).thenReturn(suit);
         when(caseService.getCase(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID,SIMPLE_CASE_ID)).thenReturn(caze);
         when(caseTransformer.fromDto(any(CaseDTO.class))).thenReturn(caze);
-        when(tagDAO.findOne(anyLong())).thenReturn(expectedTag);
+        when(tagDAO.findById(anyLong())).thenReturn(Optional.ofNullable(expectedTag));
 
         tagService.removeTag(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID, SIMPLE_CASE_ID, SIMPLE_TAG_ID);
 
-        verify(tagDAO).delete(SIMPLE_TAG_ID);
+        verify(tagDAO).deleteById(SIMPLE_TAG_ID);
         verify(caseVersionDAO).save(eq(caze));
     }
 
@@ -233,7 +234,7 @@ public class TagServiceTest {
         when(suitTransformer.fromDto(any(SuitDTO.class))).thenReturn(suit);
         when(caseService.getCase(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID,SIMPLE_CASE_ID)).thenReturn(caze);
         when(caseTransformer.fromDto(any(CaseDTO.class))).thenReturn(caze);
-		when(tagDAO.findOne(anyLong())).thenReturn(null);
+        when(tagDAO.findById(anyLong())).thenReturn(null);
 
         tagService.removeTag(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID, SIMPLE_CASE_ID, SIMPLE_TAG_ID);
     }

@@ -2,7 +2,6 @@ package com.epam.test_generator.controllers;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
-import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
@@ -12,7 +11,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -28,7 +26,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.test.web.servlet.MockMvc;
@@ -65,7 +63,7 @@ public class ProjectControllerTest {
         mockMvc.perform(get("/projects"))
             .andExpect(status().isOk());
 
-        verify(projectService).getAuthenticatedUserProjects(anyObject());
+        verify(projectService).getAuthenticatedUserProjects(any());
     }
 
     @Test
@@ -75,17 +73,18 @@ public class ProjectControllerTest {
         mockMvc.perform(get("/projects/" + SIMPLE_PROJECT_ID))
             .andExpect(status().isOk());
 
-        verify(projectService).getAuthUserFullProject(eq(SIMPLE_PROJECT_ID), anyObject());
+        verify(projectService).getAuthUserFullProject(eq(SIMPLE_PROJECT_ID), any());
     }
 
     @Test
     public void getProject_IncorrectProjectId_StatusNotFound() throws Exception {
-        when(projectService.getAuthUserFullProject(anyLong(), anyObject())).thenThrow(new NotFoundException());
+        when(projectService.getAuthUserFullProject(anyLong(), any()))
+            .thenThrow(new NotFoundException());
 
         mockMvc.perform(get("/projects/" + SIMPLE_PROJECT_ID))
             .andExpect(status().isNotFound());
 
-        verify(projectService).getAuthUserFullProject(eq(SIMPLE_PROJECT_ID), anyObject());
+        verify(projectService).getAuthUserFullProject(eq(SIMPLE_PROJECT_ID), any());
     }
 
     @Test

@@ -8,13 +8,15 @@ import net.rcarz.jiraclient.RestException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+
 
 import java.util.Arrays;
 import java.util.List;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
@@ -73,7 +75,6 @@ public class JiraProjectDAOTest {
 
     @Test
     public void getEmptyListOfProjects_JiraProjects_Success() throws Exception {
-        when(client.getProject(anyString())).thenThrow(new JiraException("a",new RestException("a",404,"bad")));
         List<JiraProject> resultProjects = jiraProjectDAO.getAllProjects();
         Assert.assertTrue(resultProjects.isEmpty());
     }

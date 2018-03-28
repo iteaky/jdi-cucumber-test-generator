@@ -1,10 +1,14 @@
 package com.epam.test_generator.entities;
 
 
-import java.util.List;
-import org.codehaus.jackson.annotate.JsonIgnore;
-
-import javax.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 /**
  * This class represents user essence. User is a person who uses system. Besides simple fields like personal information,

@@ -16,8 +16,9 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class SwaggerConfig {
 
     /**
-     * Set up custom {@link Docket} - a builder which is intended to be the
-     * primary interface into the swagger-springmvc framework.
+     * Set up custom {@link Docket} - a builder which is intended to be the primary interface into
+     * the swagger-springmvc framework.
+     *
      * @return docket bean
      */
     @Bean
@@ -43,3 +44,4 @@ public class SwaggerConfig {
             new ArrayList<>());
     }
 }
+

@@ -33,8 +33,8 @@ public class JenkinsServerFactoryImpl implements JenkinsServerFactory {
     @Override
     @PostConstruct
     public void updateCredentials() {
-        this.defaultCredentials = new JenkinsCredentials("http://ecse00100b3d.epam.com:8888/",
-            "admin", "admin");
+        this.defaultCredentials = new JenkinsCredentials("",
+            "", "");
         //TODO consider where we save credentials
     }
 }

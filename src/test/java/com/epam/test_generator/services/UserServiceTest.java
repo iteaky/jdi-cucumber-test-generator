@@ -24,12 +24,13 @@ import com.epam.test_generator.transformers.UserTransformer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -87,11 +88,10 @@ public class UserServiceTest {
     }
 
     @Test
-    public void getUser_ById_Valid() throws Exception {
-        when(userDAO.findById(anyLong())).thenReturn(user);
+    public void getUser_ById_Valid() throws RuntimeException {
+        when(userDAO.findById(anyLong())).thenReturn(Optional.ofNullable(user));
         User userById = sut.getUserById(1L);
         assertNotNull(userById);
-
     }
 
     @Test
@@ -167,7 +167,7 @@ public class UserServiceTest {
         user.setLocked(false);
         user.setAttempts(0);
 
-        when(userDAO.findById(anyLong())).thenReturn(user);
+        when(userDAO.findById(anyLong())).thenReturn(Optional.ofNullable(user));
 
         sut.updateFailureAttempts(1L);
         sut.updateFailureAttempts(1L);
@@ -189,7 +189,7 @@ public class UserServiceTest {
         user.setLocked(false);
         user.setAttempts(4);
 
-        when(userDAO.findById(anyLong())).thenReturn(user);
+        when(userDAO.findById(anyLong())).thenReturn(Optional.ofNullable(user));
 
         actualAttempts = sut.updateFailureAttempts(1L);
         verify(userDAO, times(1)).save(any(User.class));
@@ -205,7 +205,7 @@ public class UserServiceTest {
         user.setLocked(true);
         user.setAttempts(4);
 
-        when(userDAO.findById(anyLong())).thenReturn(user);
+        when(userDAO.findById(anyLong())).thenReturn(Optional.ofNullable(user));
 
         sut.invalidateAttempts(1L);
         assertEquals(expectedAttempts, (long) user.getAttempts());

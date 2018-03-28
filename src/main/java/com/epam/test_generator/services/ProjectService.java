@@ -11,7 +11,6 @@ import com.epam.test_generator.transformers.ProjectTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
-
 import javax.transaction.Transactional;
 import java.util.List;
 
@@ -55,8 +54,7 @@ public class ProjectService {
     }
 
     public Project getProjectByProjectId(Long projectId) {
-        Project project = projectDAO.findOne(projectId);
-        checkNotNull(project);
+        Project project = projectDAO.findById(projectId).orElseThrow(NullPointerException::new);
         return project;
     }
 
@@ -110,8 +108,7 @@ public class ProjectService {
      * @param projectDTO update info
      */
     public void updateProject(Long projectId, ProjectDTO projectDTO) {
-        Project project = projectDAO.findOne(projectId);
-        checkNotNull(project);
+        Project project = projectDAO.findById(projectId).orElseThrow(NullPointerException::new);
         checkProjectIsActive(project);
 
         projectTransformer.mapDTOToEntity(projectDTO, project);
@@ -124,9 +121,8 @@ public class ProjectService {
      * @param projectId id of project to delete
      */
     public void removeProject(Long projectId) {
-        Project project = projectDAO.findOne(projectId);
-        checkNotNull(project);
-        projectDAO.delete(projectId);
+        Project project = projectDAO.findById(projectId).orElseThrow(NullPointerException::new);
+        projectDAO.deleteById(projectId);
     }
 
     /**
@@ -135,8 +131,7 @@ public class ProjectService {
      * @param userId id of user to add
      */
     public void addUserToProject(long projectId, long userId) {
-        Project project = projectDAO.findOne(projectId);
-        checkNotNull(project);
+        Project project = projectDAO.findById(projectId).orElseThrow(NullPointerException::new);
         checkProjectIsActive(project);
         User user = userService.getUserById(userId);
         checkNotNull(user);
@@ -151,8 +146,7 @@ public class ProjectService {
      * @param userId id of user to remove
      */
     public void removeUserFromProject(long projectId, long userId) {
-        Project project = projectDAO.findOne(projectId);
-        checkNotNull(project);
+        Project project = projectDAO.findById(projectId).orElseThrow(NullPointerException::new);
         checkProjectIsActive(project);
         User user = userService.getUserById(userId);
         checkNotNull(user);
@@ -166,8 +160,7 @@ public class ProjectService {
      * @param projectId id of project to close
      */
     public void closeProject(long projectId) {
-        Project project = projectDAO.findOne(projectId);
-        checkNotNull(project);
+        Project project = projectDAO.findById(projectId).orElseThrow(NullPointerException::new);
         checkProjectIsActive(project);
         project.setActive(false);
         projectDAO.save(project);

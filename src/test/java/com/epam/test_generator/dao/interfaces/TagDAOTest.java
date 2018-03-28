@@ -30,7 +30,7 @@ public class TagDAOTest {
         Tag newTag = retrieveTag();
         newTag.setId(id);
 
-        Assert.assertEquals(newTag, tagDAO.findOne(id));
+        Assert.assertEquals(newTag, tagDAO.findById(id).get());
     }
 
     @Test
@@ -40,7 +40,7 @@ public class TagDAOTest {
         long id = tagDAO.save(originalTag).getId();
         tagDAO.delete(originalTag);
 
-        Assert.assertTrue(!tagDAO.exists(id));
+        Assert.assertTrue(!tagDAO.existsById(id));
     }
 
     @Test
@@ -48,16 +48,16 @@ public class TagDAOTest {
         Tag originalTag = retrieveTag();
 
         long id = tagDAO.save(originalTag).getId();
-        tagDAO.delete(id);
+        tagDAO.deleteById(id);
 
-        Assert.assertTrue(!tagDAO.exists(id));
+        Assert.assertTrue(!tagDAO.existsById(id));
     }
 
     @Test
     public void addList_Tags_Success() {
         List<Tag> tags = retrieveTagList();
 
-        List<Long> ids = tagDAO.save(tags).stream().map(Tag::getId).collect(Collectors.toList());
+        List<Long> ids = tagDAO.saveAll(tags).stream().map(Tag::getId).collect(Collectors.toList());
 
         List<Tag> newTags = retrieveTagList();
         newTags.get(0).setId(ids.get(0));
@@ -71,9 +71,9 @@ public class TagDAOTest {
     public void removeList_Tags_Success() {
         List<Tag> tags = retrieveTagList();
 
-        tagDAO.save(tags);
+        tagDAO.saveAll(tags);
 
-        tagDAO.delete(tags);
+        tagDAO.deleteAll(tags);
 
         Assert.assertTrue(tagDAO.findAll().isEmpty());
     }

@@ -1,7 +1,6 @@
 package com.epam.test_generator.services;
 
 import com.epam.test_generator.dao.interfaces.CaseVersionDAO;
-import com.epam.test_generator.transformers.CaseTransformer;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -10,22 +9,15 @@ import static com.epam.test_generator.services.utils.UtilsService.caseBelongsToS
 import static com.epam.test_generator.services.utils.UtilsService.checkNotNull;
 import static com.epam.test_generator.services.utils.UtilsService.tagBelongsToCase;
 
-import com.epam.test_generator.dao.interfaces.CaseDAO;
-import com.epam.test_generator.dao.interfaces.CaseVersionDAO;
-import com.epam.test_generator.dao.interfaces.StepDAO;
-import com.epam.test_generator.dao.interfaces.SuitDAO;
 import com.epam.test_generator.dao.interfaces.TagDAO;
 import com.epam.test_generator.dto.TagDTO;
 import com.epam.test_generator.entities.Case;
 import com.epam.test_generator.entities.Suit;
 import com.epam.test_generator.entities.Tag;
-import com.epam.test_generator.transformers.SuitTransformer;
 import com.epam.test_generator.transformers.TagTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import static com.epam.test_generator.services.utils.UtilsService.*;
 
 @Transactional
 @Service
@@ -95,8 +87,7 @@ public class TagService {
 
         caseBelongsToSuit(caze, suit);
 
-        Tag tag = tagDAO.findOne(tagId);
-        checkNotNull(tag);
+        Tag tag = tagDAO.findById(tagId).orElseThrow(NullPointerException::new);
 
         tagBelongsToCase(tag, caze);
 
@@ -121,14 +112,13 @@ public class TagService {
 
         caseBelongsToSuit(caze, suit);
 
-        Tag tag = tagDAO.findOne(tagId);
-        checkNotNull(tag);
+        Tag tag = tagDAO.findById(tagId).orElseThrow(NullPointerException::new);
 
         tagBelongsToCase(tag, caze);
 
         caze.getTags().remove(tag);
 
-        tagDAO.delete(tagId);
+        tagDAO.deleteById(tagId);
 
         caseVersionDAO.save(caze);
     }

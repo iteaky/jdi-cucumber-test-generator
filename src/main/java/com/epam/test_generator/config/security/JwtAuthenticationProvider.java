@@ -5,7 +5,6 @@ import com.epam.test_generator.entities.Project;
 import com.epam.test_generator.entities.Role;
 import com.epam.test_generator.entities.User;
 import com.epam.test_generator.services.ProjectService;
-import com.epam.test_generator.services.TokenService;
 import com.epam.test_generator.services.LoginService;
 import com.epam.test_generator.services.UserService;
 import com.epam.test_generator.services.exceptions.TokenMalformedException;
@@ -35,6 +34,7 @@ import java.util.stream.Collectors;
 @Component
 public class JwtAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider {
 
+
     @Autowired
     private LoginService loginService;
 
@@ -44,11 +44,11 @@ public class JwtAuthenticationProvider extends AbstractUserDetailsAuthentication
     @Autowired
     private ProjectService projectService;
 
+
     @Override
     protected void additionalAuthenticationChecks(UserDetails userDetails,
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken)
         throws AuthenticationException {
-
     }
 
 
@@ -114,6 +114,5 @@ public class JwtAuthenticationProvider extends AbstractUserDetailsAuthentication
     @Override
     public boolean supports(Class<?> authentication) {
         return JwtAuthenticationToken.class.isAssignableFrom(authentication);
-
     }
 }

@@ -54,13 +54,13 @@ public class TestResultDAOTest {
 
     @Test
     public void save() {
-        final List<TestResult> save = testResultDAO.save(testResults);
+        final List<TestResult> save = testResultDAO.saveAll(testResults);
         assertThat(save.size(), is(equalTo(10)));
     }
 
     @Test
     public void findAllByProjectIdOrderByDateDesc() {
-        final List<TestResult> save = testResultDAO.save(testResults);
+        final List<TestResult> save = testResultDAO.saveAll(testResults);
         assertThat(save.size(), is(equalTo(10)));
 
         final Long projectId = save.get(0).getProject().getId();
@@ -82,7 +82,7 @@ public class TestResultDAOTest {
 
     @Test
     public void findAllByProjectIdAndDateBetweenOrderByDateDesc() {
-        final List<TestResult> save = testResultDAO.save(testResults);
+        final List<TestResult> save = testResultDAO.saveAll(testResults);
         assertThat(save.size(), is(equalTo(10)));
 
         final Long projectId = save.get(0).getProject().getId();

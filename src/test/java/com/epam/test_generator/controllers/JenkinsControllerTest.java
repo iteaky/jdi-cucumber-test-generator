@@ -10,8 +10,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -25,7 +24,6 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -70,7 +68,7 @@ public class JenkinsControllerTest {
 
     @Test
     public void getJobs_Jobs_StatusInternalServerError() throws Exception {
-        when(jenkinsJobService.getJobs()).thenThrow(Exception.class);
+        when(jenkinsJobService.getJobs()).thenThrow(RuntimeException.class);
         mockMvc.perform(get("/jenkins/job/"))
             .andExpect(status().isInternalServerError());
     }
@@ -94,8 +92,6 @@ public class JenkinsControllerTest {
     @Test
     public void executeJob_JobWithoutJobName_StatusBadRequest() throws Exception {
         ExecuteJenkinsJobDTO jobDTO = new ExecuteJenkinsJobDTO();
-
-        when(jenkinsJobService.runJob(jobName)).thenReturn(executeJenkinsJobResponse);
         String json = mapper.writeValueAsString(jobDTO);
         mockMvc.perform(
             post("/jenkins/job/execute").contentType(MediaType.APPLICATION_JSON).content(json))

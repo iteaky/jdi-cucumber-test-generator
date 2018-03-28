@@ -19,7 +19,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.statemachine.StateMachine;
@@ -94,7 +94,6 @@ public class StateMachineAdapterTest {
         Status status = Status.PASSED;
 
         List<Event> expectedEvents = Collections.singletonList(Event.EDIT);
-        ;
 
         Assert.assertEquals(expectedEvents, stateMachineAdapter.availableTransitions(status));
     }
@@ -106,7 +105,6 @@ public class StateMachineAdapterTest {
         Status status = Status.FAILED;
 
         List<Event> expectedEvents = Collections.singletonList(Event.EDIT);
-        ;
 
         Assert.assertEquals(expectedEvents, stateMachineAdapter.availableTransitions(status));
     }

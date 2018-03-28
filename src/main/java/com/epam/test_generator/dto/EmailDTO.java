@@ -1,7 +1,6 @@
 package com.epam.test_generator.dto;
 
-import org.hibernate.validator.constraints.Email;
-
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 
 

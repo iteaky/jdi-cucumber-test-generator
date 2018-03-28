@@ -40,9 +40,9 @@ public class IOService {
      * @throws IOException
      */
     public String generateFile(Long suitId, List<Long> caseIds) throws IOException {
-        Suit suit = suitDAO.findOne(suitId);
+        Suit suit = suitDAO.getOne(suitId);
         List<Case> cases = caseIds.stream()
-                .map(caseDAO::findOne)
+            .map(caseDAO::getOne)
                 .collect(Collectors.toList());
 
         return fileGenerator
