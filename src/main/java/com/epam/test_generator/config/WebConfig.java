@@ -101,6 +101,7 @@ public class WebConfig implements WebMvcConfigurer {
      * under web application root, the classpath, and others.
      * @param registry stores registrations of resource handlers
      */
+    
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/static/views/vue-static/**")
@@ -109,5 +110,5 @@ public class WebConfig implements WebMvcConfigurer {
             .addResourceLocations("/WEB-INF/index.html");
         registry.addResourceHandler("swagger-ui.html")
             .addResourceLocations("classpath:/META-INF/resources/");
-    }
+//    }
 }

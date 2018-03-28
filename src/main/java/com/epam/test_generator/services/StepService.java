@@ -1,7 +1,6 @@
 package com.epam.test_generator.services;
 
 import static com.epam.test_generator.services.utils.UtilsService.caseBelongsToSuit;
-import static com.epam.test_generator.services.utils.UtilsService.checkNotNull;
 import static com.epam.test_generator.services.utils.UtilsService.stepBelongsToCase;
 
 import com.epam.test_generator.dao.interfaces.CaseVersionDAO;

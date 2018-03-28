@@ -1,8 +1,8 @@
 package com.epam.test_generator.dto;
 
 import com.epam.test_generator.entities.Status;
-import com.fasterxml.jackson.annotation.JsonFormat;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
 import java.util.List;
 

@@ -1,7 +1,6 @@
 package com.epam.test_generator.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
