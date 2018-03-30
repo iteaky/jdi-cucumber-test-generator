@@ -1,5 +1,7 @@
 package com.epam.test_generator.dto;
 
+import com.epam.test_generator.entities.Tag;
+
 import java.io.Serializable;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -17,6 +19,10 @@ public class TagDTO implements Serializable {
 
     public TagDTO(String name) {
         this.name = name;
+    }
+
+    public TagDTO(Tag tag) {
+        this(tag.getName());
     }
 
     public Long getId() {
@@ -57,8 +63,8 @@ public class TagDTO implements Serializable {
     @Override
     public String toString() {
         return "TagDTO{" +
-            "name='" + name + '\'' +
-            '}';
+                "name='" + name + '\'' +
+                '}';
     }
 
 }

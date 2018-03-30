@@ -2,18 +2,19 @@ package com.epam.test_generator.services;
 
 import com.epam.test_generator.config.security.AuthenticatedUser;
 import com.epam.test_generator.dao.interfaces.ProjectDAO;
-import com.epam.test_generator.dto.ProjectDTO;
-import com.epam.test_generator.dto.ProjectFullDTO;
+import com.epam.test_generator.dto.CreateProjectDTO;
+import com.epam.test_generator.dto.GetProjectDTO;
+import com.epam.test_generator.dto.GetProjectFullDTO;
+import com.epam.test_generator.dto.UpdateProjectDTO;
 import com.epam.test_generator.entities.Project;
 import com.epam.test_generator.entities.User;
-import com.epam.test_generator.transformers.ProjectFullTransformer;
-import com.epam.test_generator.transformers.ProjectTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.epam.test_generator.services.utils.UtilsService.*;
 
@@ -25,32 +26,32 @@ public class ProjectService {
     private ProjectDAO projectDAO;
 
     @Autowired
-    private ProjectTransformer projectTransformer;
-
-    @Autowired
-    private ProjectFullTransformer projectFullTransformer;
-
-    @Autowired
     private UserService userService;
 
-    public List<ProjectDTO> getProjects() {
-        return projectTransformer.toDtoList(projectDAO.findAll());
+    public List<GetProjectDTO> getProjects() {
+        return projectDAO.findAll()
+                .stream()
+                .map(GetProjectDTO::new)
+                .collect(Collectors.toList());
     }
 
     /**
      * Returns list of {@link Project} to which current user has been assigned.
+     *
      * @param authentication {@link Authentication} objects that contains information
-     * about current authorized user.
+     *                       about current authorized user.
      * @return list of {@link Project} to which current user has been assigned.
      */
-    public List<ProjectDTO> getAuthenticatedUserProjects(Authentication authentication) {
+    public List<GetProjectDTO> getAuthenticatedUserProjects(Authentication authentication) {
         AuthenticatedUser userDetails = (AuthenticatedUser) authentication.getPrincipal();
-        return projectTransformer.toDtoList(getProjectsByUserId(userDetails.getId()));
+        return getProjectsByUserId(userDetails.getId())
+                .stream()
+                .map(GetProjectDTO::new)
+                .collect(Collectors.toList());
     }
 
     public List<Project> getProjectsByUserId(Long userId) {
-        User user = userService.getUserById(userId);
-        checkNotNull(user);
+        User user = checkNotNull(userService.getUserById(userId));
         return projectDAO.findByUsers(user);
     }
 
@@ -60,116 +61,81 @@ public class ProjectService {
         return project;
     }
 
-    public Project getProjectByJiraKey(String key) {
-        Project project = projectDAO.findByJiraKey(key);
-        checkNotNull(project);
-
-        return project;
-    }
-
-    public ProjectFullDTO getAuthUserFullProject(Long projectId, Authentication authentication) {
+    public GetProjectFullDTO getAuthUserFullProject(Long projectId, Authentication authentication) {
         AuthenticatedUser userDetails = (AuthenticatedUser) authentication.getPrincipal();
         User user = userService.getUserByEmail(userDetails.getEmail());
-        Project project = getProjectByProjectId(projectId);
-
-        userBelongsToProject(project, user);
-        return projectFullTransformer.toDto(project);
+        Project project = checkNotNull(projectDAO.getOne(projectId));
+        return new GetProjectFullDTO(project.returnIfUserHasAccess(user));
     }
 
     /**
      * Creates project specified in projectDTO for current authorized user
-     * @param projectDTO project info
+     *
+     * @param createProjectDTO     project info
      * @param authentication current authorized user
      * @return projectDTO
      */
-    public ProjectDTO createProject(ProjectDTO projectDTO, Authentication authentication) {
+    public GetProjectDTO createProject(CreateProjectDTO createProjectDTO, Authentication authentication) {
         AuthenticatedUser userDetails = (AuthenticatedUser) authentication.getPrincipal();
         User authUser = userService.getUserByEmail(userDetails.getEmail());
 
-        Project project = projectTransformer.fromDto(projectDTO);
+        Project project = new Project(createProjectDTO);
         project.addUser(authUser);
-        project.setActive(true);
         project = projectDAO.save(project);
 
-        return projectTransformer.toDto(project);
-    }
-
-    public Long createProjectwithoutPrincipal(ProjectDTO projectDTO) {
-
-        Project project = projectTransformer.fromDto(projectDTO);
-        project.setActive(true);
-
-        project = projectDAO.save(project);
-
-        return project.getId();
+        return new GetProjectDTO(project);
     }
 
     /**
      * Updates project by id with info specified in ProjectDTO
-     * @param projectId id of project to update
+     *
+     * @param projectId  id of project to update
      * @param projectDTO update info
      */
-    public void updateProject(Long projectId, ProjectDTO projectDTO) {
-        Project project = projectDAO.findOne(projectId);
-        checkNotNull(project);
-        checkProjectIsActive(project);
-
-        projectTransformer.mapDTOToEntity(projectDTO, project);
-        project.setId(projectId);
+    public void updateProject(Long projectId, UpdateProjectDTO projectDTO) {
+        Project project = checkNotNull(projectDAO.findOne(projectId));
+        project.update(projectDTO);
         projectDAO.save(project);
     }
 
     /**
      * Deletes project from database by id
+     *
      * @param projectId id of project to delete
      */
     public void removeProject(Long projectId) {
-        Project project = projectDAO.findOne(projectId);
-        checkNotNull(project);
+        checkNotNull(projectDAO.findOne(projectId));     /// ???
         projectDAO.delete(projectId);
     }
 
     /**
      * Adds user to existing project by user id
+     *
      * @param projectId id of project where to add user
-     * @param userId id of user to add
+     * @param userId    id of user to add
      */
     public void addUserToProject(long projectId, long userId) {
-        Project project = projectDAO.findOne(projectId);
-        checkNotNull(project);
-        checkProjectIsActive(project);
-        User user = userService.getUserById(userId);
-        checkNotNull(user);
-
-        project.getUsers().add(user);
+        Project project = checkNotNull(projectDAO.findOne(projectId));
+        User user = checkNotNull(userService.getUserById(userId));
+        project.addUser(user);
         projectDAO.save(project);
     }
 
     /**
      * Removes user from project by user id
+     *
      * @param projectId id of project
-     * @param userId id of user to remove
+     * @param userId    id of user to remove
      */
     public void removeUserFromProject(long projectId, long userId) {
-        Project project = projectDAO.findOne(projectId);
-        checkNotNull(project);
-        checkProjectIsActive(project);
-        User user = userService.getUserById(userId);
-        checkNotNull(user);
-
-        project.getUsers().remove(user);
+        Project project = checkNotNull(projectDAO.findOne(projectId));
+        project.removeUserById(userId);
         projectDAO.save(project);
     }
 
-    /**
-     * Sets project status to inactive and saves to database
-     * @param projectId id of project to close
-     */
-    public void closeProject(long projectId) {
-        Project project = projectDAO.findOne(projectId);
-        checkNotNull(project);
-        checkProjectIsActive(project);
-        project.setActive(false);
+    public void closeProject(Long projectId) {
+        Project project = checkNotNull(projectDAO.getOne(projectId));
+        project.close();
         projectDAO.save(project);
     }
 }

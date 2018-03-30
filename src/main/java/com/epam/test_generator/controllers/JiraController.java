@@ -1,6 +1,6 @@
 package com.epam.test_generator.controllers;
 
-import com.epam.test_generator.dto.ProjectDTO;
+import com.epam.test_generator.dto.CreateProjectDTO;
 import com.epam.test_generator.pojo.JiraFilter;
 import com.epam.test_generator.pojo.JiraProject;
 import com.epam.test_generator.pojo.JiraStory;
@@ -86,7 +86,7 @@ public class JiraController {
         .POST,
         consumes =
         "application/json")
-    public ResponseEntity<ProjectDTO> createProjectByFilters(
+    public ResponseEntity<CreateProjectDTO> createProjectByFilters(
         @PathVariable("jiraKey") String jiraProjectKey,
         @RequestBody List<JiraFilter> jiraFilters,
         @PathVariable("jiraSettingsId") Long id, Authentication auth) {

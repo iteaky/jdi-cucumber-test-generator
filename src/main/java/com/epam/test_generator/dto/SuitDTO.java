@@ -1,10 +1,13 @@
 package com.epam.test_generator.dto;
 
 import com.epam.test_generator.entities.Status;
+import com.epam.test_generator.entities.Suit;
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -76,6 +79,17 @@ public class SuitDTO {
         this.priority = priority;
         this.tags = tags;
         this.rowNumber = rowNumber;
+    }
+
+    public SuitDTO(Suit suit) {
+        this(suit.getId(),
+                suit.getName(),
+                suit.getDescription(),
+                suit.getCases().stream().map(CaseDTO::new).collect(Collectors.toList()),
+                suit.getPriority(),
+                suit.getTags().stream().map(TagDTO::new).collect(Collectors.toSet()),
+                suit.getRowNumber()
+        );
     }
 
     public String getJiraProjectKey() {

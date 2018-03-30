@@ -1,5 +1,7 @@
 package com.epam.test_generator.entities;
 
+import com.epam.test_generator.dto.TagDTO;
+
 import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -26,6 +28,11 @@ public class Tag implements Serializable {
         this.name = name;
     }
 
+    public Tag(TagDTO tagDTO) {
+        id = tagDTO.getId();
+        name = tagDTO.getName();
+    }
+
     public Long getId() {
         return id;
     }
@@ -45,8 +52,8 @@ public class Tag implements Serializable {
     @Override
     public String toString() {
         return "Tag{" +
-            "name='" + name + '\'' +
-            '}';
+                "name='" + name + '\'' +
+                '}';
     }
 
     @Override

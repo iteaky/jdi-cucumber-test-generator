@@ -1,7 +1,13 @@
 package com.epam.test_generator.entities;
 
+import com.epam.test_generator.dto.CreateProjectDTO;
+import com.epam.test_generator.dto.UpdateProjectDTO;
+import com.epam.test_generator.services.exceptions.BadRequestException;
+import com.epam.test_generator.services.exceptions.ProjectClosedException;
+
 import javax.persistence.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * This class represents Project essence. Besides simple fields like id, name and description,
@@ -26,6 +32,10 @@ public class Project {
 
     private String description;
 
+    public void setSuits(List<Suit> suits) {
+        this.suits = suits;
+    }
+
     @OneToMany(cascade = {CascadeType.ALL})
     private List<Suit> suits = new ArrayList<>();
 
@@ -47,73 +57,41 @@ public class Project {
         this.active = active;
     }
 
-    public Project(String name, String description) {
-        this.name = name;
-        this.description = description;
+    public Project(CreateProjectDTO createProjectDTO) {
+        this.name = createProjectDTO.getName();
+        this.description = createProjectDTO.getDescription();
+        this.users = createProjectDTO.getUsers().stream().map(User::new).collect(Collectors.toSet());
+        this.suits = createProjectDTO.getSuits().stream().map(Suit::new).collect(Collectors.toList());
+        this.active = isActive();
+        this.jiraKey = createProjectDTO.getJiraKey();
     }
 
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public List<Suit> getSuits() {
         return suits;
-    }
-
-    public void setSuits(List<Suit> suits) {
-        this.suits = suits;
     }
 
     public Set<User> getUsers() {
         return users;
     }
 
-    public void addUser(User user) {
-        if (users == null) {
-            users = new HashSet<>();
-        }
-
-        users.add(user);
-    }
-
-    public void setUsers(Set<User> users) {
-        this.users = users;
-    }
-
     public boolean isActive() {
         return active;
     }
 
-    public void setActive(boolean active) {
-        this.active = active;
-    }
-
     public String getJiraKey() {
         return jiraKey;
-    }
-
-    public void setJiraKey(String jiraKey) {
-        this.jiraKey = jiraKey;
     }
 
 
@@ -154,4 +132,43 @@ public class Project {
         return Objects.hash(id, name, description, suits, users, active, jiraKey);
     }
 
+    public void close() {
+        throwIfNotActive();
+        active = false;
+    }
+
+    public void removeUserById(Long userId) {
+        throwIfNotActive();
+        users.removeIf(u -> u.getId().equals(userId));
+    }
+
+    public void addUser(User user) {
+        throwIfNotActive();
+        if (users == null) {
+            users = new HashSet<>();
+        }
+        users.add(user);
+    }
+
+    public void update(UpdateProjectDTO projectDTO) {
+        this.active = projectDTO.isActive(); /// ???
+        this.jiraKey = projectDTO.getJiraKey(); /// ???
+        //this.suits = projectDTO.getSuits();
+        this.name = projectDTO.getName();
+        this.description = projectDTO.getDescription();
+        this.users = projectDTO.getUsers().stream().map(User::new).collect(Collectors.toSet());
+    }
+
+    public Project returnIfUserHasAccess(User user) {
+        if (!users.contains(user)) {
+            throw new BadRequestException("Error: user does not access to project " + name);
+        }
+        return this;
+    }
+
+    private void throwIfNotActive() {
+        if (!active) {
+            throw new ProjectClosedException("project with id=" + id + " is closed (readonly)", id);
+        }
+    }
 }

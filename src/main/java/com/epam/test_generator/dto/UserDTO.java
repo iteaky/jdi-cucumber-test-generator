@@ -1,6 +1,8 @@
 package com.epam.test_generator.dto;
 
 import java.util.List;
+
+import com.epam.test_generator.entities.User;
 import org.hibernate.validator.constraints.Email;
 
 import javax.validation.constraints.NotNull;
@@ -60,6 +62,15 @@ public class UserDTO {
     }
 
     public UserDTO() {
+    }
+
+    public UserDTO(User user) {
+        this(user.getName(),
+                user.getSurname(),
+                user.getPassword(),
+                user.getRole().toString(),
+                user.getEmail());
+        this.id = user.getId();
     }
 
     public void setId(Long id) {

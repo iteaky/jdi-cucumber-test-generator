@@ -1,11 +1,14 @@
 package com.epam.test_generator.dto;
 
+import com.epam.test_generator.entities.Project;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-public class ProjectDTO {
+public class GetProjectDTO {
 
     private Long id;
 
@@ -22,63 +25,39 @@ public class ProjectDTO {
 
     private String jiraKey;
 
-    public ProjectDTO(String name, String description, boolean active, Set<UserDTO> users) {
-        this.name = name;
-        this.description = description;
-        this.active = active;
-        this.users = users;
+    public GetProjectDTO() {
     }
 
-    public ProjectDTO() {
-
+    public GetProjectDTO(Project project) {
+        this.id = project.getId();
+        this.name = project.getName();
+        this.active = project.isActive();
+        this.users = project.getUsers().stream().map(UserDTO::new).collect(Collectors.toSet());
+        this.jiraKey = project.getJiraKey();
     }
 
     public String getJiraKey() {
         return jiraKey;
     }
 
-    public void setJiraKey(String jiraKey) {
-        this.jiraKey = jiraKey;
-    }
-
     public Set<UserDTO> getUsers() {
         return users;
-    }
-
-    public void setUsers(Set<UserDTO> users) {
-        this.users = users;
     }
 
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public boolean isActive() {
         return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
     }
 
     @Override
@@ -86,10 +65,10 @@ public class ProjectDTO {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof ProjectDTO)) {
+        if (!(o instanceof GetProjectDTO)) {
             return false;
         }
-        ProjectDTO that = (ProjectDTO) o;
+        GetProjectDTO that = (GetProjectDTO) o;
         return active == that.active &&
             Objects.equals(id, that.id) &&
             Objects.equals(name, that.name) &&

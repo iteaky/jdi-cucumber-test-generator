@@ -1,8 +1,6 @@
 package com.epam.test_generator.controllers;
 
-import com.epam.test_generator.dto.ProjectDTO;
-import com.epam.test_generator.dto.ProjectFullDTO;
-import com.epam.test_generator.dto.ValidationErrorsDTO;
+import com.epam.test_generator.dto.*;
 import com.epam.test_generator.services.ProjectService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -37,12 +35,12 @@ public class ProjectController {
     @ApiOperation(value = "Get all projects of an authorized user", nickname = "getUserProjects")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "OK",
-            response = ProjectDTO.class, responseContainer = "List")
+            response = GetProjectDTO.class, responseContainer = "List")
     })
     @Secured({"ROLE_ADMIN", "ROLE_TEST_LEAD", "ROLE_TEST_ENGINEER", "ROLE_GUEST"})
     @RequestMapping(value = "/projects", method = RequestMethod.GET, produces = "application/json")
     @ApiImplicitParam(name = "Authorization", value = "add here your token", paramType = "header", dataType = "string", required = true)
-    public ResponseEntity<List<ProjectDTO>> getUserProjects(Authentication authentication) {
+    public ResponseEntity<List<GetProjectDTO>> getUserProjects(Authentication authentication) {
         return new ResponseEntity<>(projectService.getAuthenticatedUserProjects(authentication),
             HttpStatus.OK);
     }
@@ -50,7 +48,7 @@ public class ProjectController {
 
     @ApiOperation(value = "Get project by id", nickname = "getProject")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "OK", response = ProjectFullDTO.class),
+        @ApiResponse(code = 200, message = "OK", response = GetProjectFullDTO.class),
         @ApiResponse(code = 404, message = "Project not found")
     })
     @ApiImplicitParams({
@@ -60,7 +58,7 @@ public class ProjectController {
     })
     @Secured({"ROLE_ADMIN", "ROLE_TEST_LEAD", "ROLE_TEST_ENGINEER", "ROLE_GUEST"})
     @RequestMapping(value = "/projects/{projectId}", method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<ProjectFullDTO> getProject(@PathVariable("projectId") long projectId,
+    public ResponseEntity<GetProjectFullDTO> getProject(@PathVariable("projectId") long projectId,
                                                      Authentication authentication) {
 
         return new ResponseEntity<>(projectService.getAuthUserFullProject(projectId, authentication),
@@ -82,7 +80,7 @@ public class ProjectController {
     @Secured({"ROLE_ADMIN"})
     @RequestMapping(value = "/projects", method = RequestMethod.POST,
         consumes = "application/json", produces = "application/json")
-    public ResponseEntity<ProjectDTO> createProject(@RequestBody @Valid ProjectDTO projectDTO,
+    public ResponseEntity<GetProjectDTO> createProject(@RequestBody @Valid CreateProjectDTO projectDTO,
                                               Authentication authentication) {
 
         return new ResponseEntity<>(projectService.createProject(projectDTO, authentication),
@@ -107,7 +105,7 @@ public class ProjectController {
     @RequestMapping(value = "/projects/{projectId}", method = RequestMethod.PUT,
         consumes = "application/json")
     public ResponseEntity<Void> updateProject(@PathVariable("projectId") long projectId,
-                                              @RequestBody @Valid ProjectDTO projectDTO) {
+                                              @RequestBody @Valid UpdateProjectDTO projectDTO) {
         projectService.updateProject(projectId, projectDTO);
         return new ResponseEntity<>(HttpStatus.OK);
     }

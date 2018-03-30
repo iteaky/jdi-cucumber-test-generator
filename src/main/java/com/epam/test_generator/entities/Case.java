@@ -1,5 +1,6 @@
 package com.epam.test_generator.entities;
 
+import com.epam.test_generator.dto.CaseDTO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.data.domain.Persistable;
 import org.springframework.statemachine.annotation.WithStateMachine;
@@ -8,6 +9,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 /**
@@ -103,6 +105,24 @@ public class Case implements Serializable, Persistable<Long> {
         this.tags = tags;
         this.comment = comment;
         this.status = status;
+    }
+
+    public Case(CaseDTO caseDTO) {
+        id = caseDTO.getId();
+        name = caseDTO.getName();
+        description = caseDTO.getDescription();
+        jiraKey = caseDTO.getJiraKey();
+        jiraProjectKey = caseDTO.getJiraProjectKey();
+        jiraParentKey = caseDTO.getJiraParentKey();
+        //lastModifiedDate=caseDTO.getUpdateDate();
+        //lastJiraSyncDate=caseDTO.getUpdateDate();
+        steps = caseDTO.getSteps().stream().map(Step::new).collect(Collectors.toList());
+        creationDate = caseDTO.getCreationDate();
+        updateDate = caseDTO.getUpdateDate();
+        priority = caseDTO.getPriority();
+        status = caseDTO.getStatus();
+        tags = caseDTO.getTags().stream().map(Tag::new).collect(Collectors.toSet());
+        comment = caseDTO.getComment();
     }
 
     @Override

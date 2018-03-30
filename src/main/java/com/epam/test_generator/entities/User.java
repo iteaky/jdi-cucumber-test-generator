@@ -2,6 +2,8 @@ package com.epam.test_generator.entities;
 
 
 import java.util.List;
+
+import com.epam.test_generator.dto.UserDTO;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 import javax.persistence.*;
@@ -50,9 +52,21 @@ public class User {
         this.locked = false;
     }
 
+    public User(UserDTO userDTO) {
+        id = userDTO.getId();
+        name = userDTO.getName();
+        surname = userDTO.getSurname();
+        email = userDTO.getEmail();
+        password = userDTO.getPassword();
+        role = new Role(userDTO.getRole());
+        attempts = userDTO.getAttempts();
+        locked = userDTO.getLocked();
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
+
     public Long getId() {
         return id;
     }

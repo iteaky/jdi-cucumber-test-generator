@@ -1,9 +1,6 @@
 package com.epam.test_generator.controllers;
 
-import com.epam.test_generator.dto.ChangeUserRoleDTO;
-import com.epam.test_generator.dto.JiraSettingsDTO;
-import com.epam.test_generator.dto.ProjectDTO;
-import com.epam.test_generator.dto.UserDTO;
+import com.epam.test_generator.dto.*;
 import com.epam.test_generator.entities.JiraSettings;
 import com.epam.test_generator.services.AdminService;
 import com.epam.test_generator.services.JiraSettingsService;
@@ -65,12 +62,12 @@ public class AdminController {
     @ApiOperation(value = "Get all projects", nickname = "getProjects")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "OK",
-            response = ProjectDTO.class, responseContainer = "List")
+            response = CreateProjectDTO.class, responseContainer = "List")
     })
     @Secured("ROLE_ADMIN")
     @RequestMapping(value = "/admin/projects", method = RequestMethod.GET, produces = "application/json")
     @ApiImplicitParam(name = "Authorization", value = "add here your token", paramType = "header", dataType = "string", required = true)
-    public ResponseEntity<List<ProjectDTO>> getProjects() {
+    public ResponseEntity<List<GetProjectDTO>> getProjects() {
         return new ResponseEntity<>(projectService.getProjects(), HttpStatus.OK);
     }
 

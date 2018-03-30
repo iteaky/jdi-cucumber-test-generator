@@ -1,11 +1,11 @@
 package com.epam.test_generator.transformers;
 
-import com.epam.test_generator.dto.ProjectDTO;
+import com.epam.test_generator.dto.CreateProjectDTO;
 import com.epam.test_generator.entities.Project;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ProjectTransformer extends AbstractDozerTransformer<Project, ProjectDTO> {
+public class ProjectTransformer extends AbstractDozerTransformer<Project, CreateProjectDTO> {
 
     @Override
     protected Class<Project> getEntityClass() {
@@ -13,8 +13,8 @@ public class ProjectTransformer extends AbstractDozerTransformer<Project, Projec
     }
 
     @Override
-    protected Class<ProjectDTO> getDTOClass() {
-        return ProjectDTO.class;
+    protected Class<CreateProjectDTO> getDTOClass() {
+        return CreateProjectDTO.class;
     }
 
 

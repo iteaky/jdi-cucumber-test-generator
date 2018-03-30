@@ -2,8 +2,10 @@ package com.epam.test_generator.dto;
 
 import com.epam.test_generator.entities.Action;
 import com.epam.test_generator.entities.Status;
+import com.epam.test_generator.entities.Step;
 import com.epam.test_generator.entities.StepType;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -40,6 +42,17 @@ public class StepDTO {
         this.description = description;
         this.type = type;
         this.comment = comment;
+        this.status = status;
+    }
+
+    public StepDTO(Step step) {
+        this(step.getId(),
+                step.getRowNumber(),
+                step.getDescription(),
+                step.getType(),
+                step.getComment(),
+                step.getStatus()
+        );
     }
 
     public Long getId() {
@@ -101,14 +114,14 @@ public class StepDTO {
     @Override
     public String toString() {
         return "StepDTO{" +
-            "id=" + id +
-            ", action=" + action +
-            ", rowNumber=" + rowNumber +
-            ", description='" + description + '\'' +
-            ", type=" + type +
-            ", comment='" + comment + '\'' +
-            ", status=" + status +
-            '}';
+                "id=" + id +
+                ", action=" + action +
+                ", rowNumber=" + rowNumber +
+                ", description='" + description + '\'' +
+                ", type=" + type +
+                ", comment='" + comment + '\'' +
+                ", status=" + status +
+                '}';
     }
 
     @Override
@@ -123,12 +136,12 @@ public class StepDTO {
         StepDTO stepDTO = (StepDTO) o;
 
         return (rowNumber == stepDTO.rowNumber) &&
-            (id != null ? id.equals(stepDTO.id) : stepDTO.id == null)
-            && (description != null ? description.equals(stepDTO.description)
-            : stepDTO.description == null)
-            && (comment != null ? comment.equals(stepDTO.comment) : stepDTO.comment == null)
-            && (status != null ? status.equals(stepDTO.status) : stepDTO.status == null)
-            && (type != null ? type.equals(stepDTO.type) : stepDTO.type == null);
+                (id != null ? id.equals(stepDTO.id) : stepDTO.id == null)
+                && (description != null ? description.equals(stepDTO.description)
+                : stepDTO.description == null)
+                && (comment != null ? comment.equals(stepDTO.comment) : stepDTO.comment == null)
+                && (status != null ? status.equals(stepDTO.status) : stepDTO.status == null)
+                && (type != null ? type.equals(stepDTO.type) : stepDTO.type == null);
     }
 
     @Override

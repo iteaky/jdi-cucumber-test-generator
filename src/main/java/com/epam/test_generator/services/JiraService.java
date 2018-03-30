@@ -12,7 +12,9 @@ import com.epam.test_generator.dao.interfaces.ProjectDAO;
 import com.epam.test_generator.dao.interfaces.RemovedIssueDAO;
 import com.epam.test_generator.dao.interfaces.SuitDAO;
 import com.epam.test_generator.dao.interfaces.SuitVersionDAO;
-import com.epam.test_generator.dto.ProjectDTO;
+import com.epam.test_generator.dto.CreateProjectDTO;
+import com.epam.test_generator.dto.SuitDTO;
+import com.epam.test_generator.dto.UserDTO;
 import com.epam.test_generator.entities.Case;
 import com.epam.test_generator.entities.Project;
 import com.epam.test_generator.entities.RemovedIssue;
@@ -116,8 +118,8 @@ public class JiraService {
 
     }
 
-    public ProjectDTO createProjectWithAttachedFilters(Long clienId, String jiraProjectKey,
-                                                       List<JiraFilter>
+    public CreateProjectDTO createProjectWithAttachedFilters(Long clienId, String jiraProjectKey,
+                                                             List<JiraFilter>
         jiraFilters, Authentication auth) {
         return projectTransformer
             .toDto(createProjectWithJiraStories(clienId,jiraProjectKey, findStoriesByFilters
@@ -178,16 +180,15 @@ public class JiraService {
     private Project createProjectFromJiraProject(JiraProject jiraProject, Authentication auth, List<JiraStory> stories) {
         final User user = userService.getUserByEmail(((AuthenticatedUser) auth.getPrincipal()).getEmail());
 
-        final Project project = new Project();
+        final CreateProjectDTO projectDTO = new CreateProjectDTO();
+        projectDTO.setName(jiraProject.getName());
+        projectDTO.setDescription(jiraProject.getDescription());
+        projectDTO.setJiraKey(jiraProject.getJiraKey());
+        projectDTO.setActive(true);
+        projectDTO.setUsers(Collections.singleton(new UserDTO(user)));
+        projectDTO.setSuits(mapJiraStoriesToSuits(stories).stream().map(SuitDTO::new).collect(Collectors.toList()));
 
-        project.setName(jiraProject.getName());
-        project.setDescription(jiraProject.getDescription());
-        project.setJiraKey(jiraProject.getJiraKey());
-        project.setActive(true);
-        project.setUsers(Collections.singleton(user));
-        project.setSuits(mapJiraStoriesToSuits(stories));
-
-        return projectDAO.save(project);
+        return projectDAO.save(new Project(projectDTO));
     }
 
 

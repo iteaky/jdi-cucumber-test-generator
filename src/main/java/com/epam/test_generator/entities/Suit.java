@@ -9,6 +9,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -18,6 +20,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+
+import com.epam.test_generator.dto.CaseDTO;
+import com.epam.test_generator.dto.SuitDTO;
 import org.springframework.data.domain.Persistable;
 
 
@@ -109,6 +114,11 @@ public class Suit implements Serializable, Persistable<Long> {
         this.id = id;
         this.name = name;
         this.description = description;
+    }
+
+    public Suit(SuitDTO suitDTO) {
+        this.id = suitDTO.getId();
+        this.cases = suitDTO.getCases().stream().map(Case::new).collect(Collectors.toList());
     }
 
     @Override
