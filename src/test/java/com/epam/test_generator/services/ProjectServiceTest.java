@@ -10,10 +10,10 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.epam.test_generator.config.security.AuthenticatedUser;
+import com.epam.test_generator.controllers.user.responce.UserDTO;
 import com.epam.test_generator.dao.interfaces.ProjectDAO;
 import com.epam.test_generator.dto.ProjectDTO;
 import com.epam.test_generator.dto.ProjectFullDTO;
-import com.epam.test_generator.dto.UserDTO;
 import com.epam.test_generator.entities.Project;
 import com.epam.test_generator.entities.Role;
 import com.epam.test_generator.entities.User;
@@ -92,7 +92,6 @@ public class ProjectServiceTest {
         UserDTO simpleUserDTO1 = new UserDTO(
             "testName3",
             "testSurname3",
-            "testPassword1",
             "GUEST",
             "testUser1@mail.com"
         );
@@ -100,7 +99,6 @@ public class ProjectServiceTest {
         UserDTO simpleUserDTO2 = new UserDTO(
             "testName4",
             "testSurname4",
-            "testPassword2",
             "GUEST",
             "testUser2@mail.com"
         );

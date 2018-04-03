@@ -1,8 +1,8 @@
 package com.epam.test_generator.controllers;
 
-import com.epam.test_generator.dto.LoginUserDTO;
+import com.epam.test_generator.controllers.user.UserController;
+import com.epam.test_generator.controllers.user.request.RegistrationUserDTO;
 import com.epam.test_generator.services.EmailService;
-import com.epam.test_generator.dto.RegistrationUserDTO;
 import com.epam.test_generator.services.UserService;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Before;

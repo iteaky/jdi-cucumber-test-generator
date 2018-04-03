@@ -1,6 +1,6 @@
 package com.epam.test_generator.transformers;
 
-import com.epam.test_generator.dto.UserDTO;
+import com.epam.test_generator.controllers.user.responce.UserDTO;
 import com.epam.test_generator.entities.User;
 import org.springframework.stereotype.Component;
 

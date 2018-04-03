@@ -1,6 +1,7 @@
 package com.epam.test_generator.dto;
 
 import com.epam.test_generator.controllers.ProjectController;
+import com.epam.test_generator.controllers.user.responce.UserDTO;
 import com.epam.test_generator.entities.Case;
 import com.epam.test_generator.entities.Project;
 import com.epam.test_generator.entities.Suit;

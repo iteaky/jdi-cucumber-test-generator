@@ -1,4 +1,4 @@
-package com.epam.test_generator.dto;
+package com.epam.test_generator.controllers.user.request;
 
 import org.hibernate.validator.constraints.Email;
 

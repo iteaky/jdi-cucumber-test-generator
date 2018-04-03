@@ -12,11 +12,11 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.epam.test_generator.controllers.user.request.LoginUserDTO;
+import com.epam.test_generator.controllers.user.request.RegistrationUserDTO;
+import com.epam.test_generator.controllers.user.responce.UserDTO;
 import com.epam.test_generator.dao.interfaces.TokenDAO;
 import com.epam.test_generator.dao.interfaces.UserDAO;
-import com.epam.test_generator.dto.LoginUserDTO;
-import com.epam.test_generator.dto.RegistrationUserDTO;
-import com.epam.test_generator.dto.UserDTO;
 import com.epam.test_generator.entities.Token;
 import com.epam.test_generator.entities.User;
 import com.epam.test_generator.services.exceptions.UnauthorizedException;
