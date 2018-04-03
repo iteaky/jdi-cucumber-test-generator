@@ -8,8 +8,6 @@ import com.epam.test_generator.dao.interfaces.UserDAO;
 import com.epam.test_generator.entities.Token;
 import com.epam.test_generator.entities.User;
 import com.epam.test_generator.services.exceptions.UnauthorizedException;
-import com.epam.test_generator.transformers.UserTransformer;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -42,8 +40,6 @@ public class UserService {
     @Autowired
     private TokenService tokenService;
 
-    @Autowired
-    private UserTransformer userTransformer;
 
     @Autowired
     private PasswordService passwordService;

@@ -12,6 +12,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.epam.test_generator.controllers.user.UserDTOsTransformer;
 import com.epam.test_generator.controllers.user.request.LoginUserDTO;
 import com.epam.test_generator.controllers.user.request.RegistrationUserDTO;
 import com.epam.test_generator.controllers.user.responce.UserDTO;
@@ -20,7 +21,6 @@ import com.epam.test_generator.dao.interfaces.UserDAO;
 import com.epam.test_generator.entities.Token;
 import com.epam.test_generator.entities.User;
 import com.epam.test_generator.services.exceptions.UnauthorizedException;
-import com.epam.test_generator.transformers.UserTransformer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -42,9 +42,6 @@ public class UserServiceTest {
     private RoleService roleService;
 
     @Mock
-    private UserTransformer transformer;
-
-    @Mock
     private PasswordEncoder encoder;
 
     @Mock
@@ -52,6 +49,9 @@ public class UserServiceTest {
 
     @Mock
     private User user;
+
+    @Mock
+    private UserDTOsTransformer userDTOsTransformer;
 
     @Mock
     private UserDTO userDTO;
@@ -120,7 +120,7 @@ public class UserServiceTest {
         users.add(user);
         userDTOS.add(userDTO);
         when(userDAO.findAll()).thenReturn(users);
-        when(transformer.toDtoList(users)).thenReturn(userDTOS);
+        when(userDTOsTransformer.createUserDTOFromEntity(user)).thenReturn(userDTO);
         final List<UserDTO> usersDTO = sut.getUsers();
         assertFalse(usersDTO.isEmpty());
     }
