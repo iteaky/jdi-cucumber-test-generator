@@ -1,7 +1,8 @@
 package com.epam.test_generator.dao.interfaces;
 
 import com.epam.test_generator.DatabaseConfigForTests;
-import com.epam.test_generator.entities.Project;
+import com.epam.test_generator.ddd.project.domain.Project;
+import com.epam.test_generator.ddd.project.domain.ProjectDAO;
 import com.epam.test_generator.entities.Status;
 import com.epam.test_generator.entities.TestResult;
 import org.junit.Before;

@@ -1,11 +1,10 @@
 package com.epam.test_generator.config.security;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.epam.test_generator.entities.Project;
+import com.epam.test_generator.ddd.project.domain.Project;
 import com.epam.test_generator.entities.Role;
 import com.epam.test_generator.entities.User;
 import com.epam.test_generator.services.ProjectService;
-import com.epam.test_generator.services.TokenService;
 import com.epam.test_generator.services.LoginService;
 import com.epam.test_generator.services.UserService;
 import com.epam.test_generator.services.exceptions.TokenMalformedException;

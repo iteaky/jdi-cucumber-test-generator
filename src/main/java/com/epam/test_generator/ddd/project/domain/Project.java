@@ -1,7 +1,10 @@
-package com.epam.test_generator.entities;
+package com.epam.test_generator.ddd.project.domain;
 
-import com.epam.test_generator.dto.CreateProjectDTO;
-import com.epam.test_generator.dto.UpdateProjectDTO;
+import com.epam.test_generator.ddd.project.application.CreateProjectDTO;
+import com.epam.test_generator.ddd.project.application.UpdateProjectDTO;
+import com.epam.test_generator.entities.Role;
+import com.epam.test_generator.entities.Suit;
+import com.epam.test_generator.entities.User;
 import com.epam.test_generator.services.exceptions.BadRequestException;
 import com.epam.test_generator.services.exceptions.ProjectClosedException;
 

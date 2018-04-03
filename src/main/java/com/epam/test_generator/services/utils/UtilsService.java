@@ -1,7 +1,7 @@
 package com.epam.test_generator.services.utils;
 
 import com.epam.test_generator.entities.Case;
-import com.epam.test_generator.entities.Project;
+import com.epam.test_generator.ddd.project.domain.Project;
 import com.epam.test_generator.entities.Step;
 import com.epam.test_generator.entities.StepSuggestion;
 import com.epam.test_generator.entities.Suit;

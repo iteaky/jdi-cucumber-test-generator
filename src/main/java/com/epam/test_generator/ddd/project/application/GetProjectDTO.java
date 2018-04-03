@@ -1,6 +1,7 @@
-package com.epam.test_generator.dto;
+package com.epam.test_generator.ddd.project.application;
 
-import com.epam.test_generator.entities.Project;
+import com.epam.test_generator.ddd.project.domain.Project;
+import com.epam.test_generator.dto.UserDTO;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;

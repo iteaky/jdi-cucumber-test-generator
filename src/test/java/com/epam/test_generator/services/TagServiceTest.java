@@ -17,7 +17,7 @@ import com.epam.test_generator.dto.CaseDTO;
 import com.epam.test_generator.dto.SuitDTO;
 import com.epam.test_generator.dto.TagDTO;
 import com.epam.test_generator.entities.Case;
-import com.epam.test_generator.entities.Project;
+import com.epam.test_generator.ddd.project.domain.Project;
 import com.epam.test_generator.entities.Role;
 import com.epam.test_generator.entities.Suit;
 import com.epam.test_generator.entities.Tag;

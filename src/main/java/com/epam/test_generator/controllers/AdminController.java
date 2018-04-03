@@ -1,5 +1,7 @@
 package com.epam.test_generator.controllers;
 
+import com.epam.test_generator.ddd.project.application.CreateProjectDTO;
+import com.epam.test_generator.ddd.project.application.GetProjectDTO;
 import com.epam.test_generator.dto.*;
 import com.epam.test_generator.entities.JiraSettings;
 import com.epam.test_generator.services.AdminService;

@@ -5,39 +5,15 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.eq;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
-import com.epam.test_generator.config.security.AuthenticatedUser;
-import com.epam.test_generator.dao.interfaces.ProjectDAO;
-import com.epam.test_generator.dto.CreateProjectDTO;
-import com.epam.test_generator.dto.GetProjectDTO;
-import com.epam.test_generator.dto.GetProjectFullDTO;
-import com.epam.test_generator.dto.UserDTO;
-import com.epam.test_generator.entities.Project;
-import com.epam.test_generator.entities.Role;
-import com.epam.test_generator.entities.User;
 import com.epam.test_generator.services.exceptions.BadRequestException;
 import com.epam.test_generator.services.exceptions.NotFoundException;
 import com.epam.test_generator.services.exceptions.ProjectClosedException;
-import com.epam.test_generator.transformers.ProjectFullTransformer;
-import com.epam.test_generator.transformers.ProjectTransformer;
-import com.google.common.collect.Sets;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.security.core.Authentication;
 
 @Ignore
 @RunWith(MockitoJUnitRunner.class)

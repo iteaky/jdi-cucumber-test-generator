@@ -1,12 +1,12 @@
 package com.epam.test_generator.services;
 
 import com.epam.test_generator.config.security.AuthenticatedUser;
-import com.epam.test_generator.dao.interfaces.ProjectDAO;
-import com.epam.test_generator.dto.CreateProjectDTO;
-import com.epam.test_generator.dto.GetProjectDTO;
-import com.epam.test_generator.dto.GetProjectFullDTO;
-import com.epam.test_generator.dto.UpdateProjectDTO;
-import com.epam.test_generator.entities.Project;
+import com.epam.test_generator.ddd.project.domain.ProjectDAO;
+import com.epam.test_generator.ddd.project.application.CreateProjectDTO;
+import com.epam.test_generator.ddd.project.application.GetProjectDTO;
+import com.epam.test_generator.ddd.project.application.GetProjectFullDTO;
+import com.epam.test_generator.ddd.project.application.UpdateProjectDTO;
+import com.epam.test_generator.ddd.project.domain.Project;
 import com.epam.test_generator.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;

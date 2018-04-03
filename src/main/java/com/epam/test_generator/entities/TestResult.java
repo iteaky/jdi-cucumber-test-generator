@@ -1,5 +1,6 @@
 package com.epam.test_generator.entities;
 
+import com.epam.test_generator.ddd.project.domain.Project;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import javax.persistence.*;

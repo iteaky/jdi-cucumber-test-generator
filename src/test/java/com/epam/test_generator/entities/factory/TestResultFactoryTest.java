@@ -11,7 +11,7 @@ import com.epam.test_generator.dto.RawStepResultDTO;
 import com.epam.test_generator.dto.RawSuitResultDTO;
 import com.epam.test_generator.dto.StepDTO;
 import com.epam.test_generator.entities.Case;
-import com.epam.test_generator.entities.Project;
+import com.epam.test_generator.ddd.project.domain.Project;
 import com.epam.test_generator.entities.Status;
 import com.epam.test_generator.entities.Suit;
 import com.epam.test_generator.entities.TestResult;

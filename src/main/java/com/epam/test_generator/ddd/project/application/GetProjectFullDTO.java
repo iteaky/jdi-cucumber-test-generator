@@ -1,8 +1,9 @@
-package com.epam.test_generator.dto;
+package com.epam.test_generator.ddd.project.application;
 
-import com.epam.test_generator.controllers.ProjectController;
+import com.epam.test_generator.dto.SuitDTO;
+import com.epam.test_generator.dto.UserDTO;
 import com.epam.test_generator.entities.Case;
-import com.epam.test_generator.entities.Project;
+import com.epam.test_generator.ddd.project.domain.Project;
 import com.epam.test_generator.entities.Suit;
 
 import java.util.List;

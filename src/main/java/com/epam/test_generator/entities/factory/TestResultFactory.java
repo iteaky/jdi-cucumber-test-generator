@@ -1,5 +1,6 @@
 package com.epam.test_generator.entities.factory;
 
+import com.epam.test_generator.ddd.project.domain.Project;
 import com.epam.test_generator.dto.RawCaseResultDTO;
 import com.epam.test_generator.dto.RawStepResultDTO;
 import com.epam.test_generator.dto.RawSuitResultDTO;
@@ -42,7 +43,7 @@ public class TestResultFactory {
     /**
      * Return testResult, that store all crucial information about tests execution.
      *
-     * @param projectId {@link com.epam.test_generator.entities.Project}
+     * @param projectId {@link Project}
      * @param executedBy email of executed Author.
      * @param suitResultDTOS list {@link RawSuitResultDTO}
      * @return {@link TestResult}

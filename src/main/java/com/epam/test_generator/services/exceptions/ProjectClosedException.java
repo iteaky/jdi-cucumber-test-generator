@@ -1,7 +1,7 @@
 package com.epam.test_generator.services.exceptions;
 
 import com.epam.test_generator.controllers.GlobalExceptionController;
-import com.epam.test_generator.entities.Project;
+import com.epam.test_generator.ddd.project.domain.Project;
 
 /**
  * Exception that can be thrown when {@link Project} API user tries to modify project

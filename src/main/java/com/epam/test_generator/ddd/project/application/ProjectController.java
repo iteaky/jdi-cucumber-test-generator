@@ -1,4 +1,4 @@
-package com.epam.test_generator.controllers;
+package com.epam.test_generator.ddd.project.application;
 
 import com.epam.test_generator.dto.*;
 import com.epam.test_generator.services.ProjectService;

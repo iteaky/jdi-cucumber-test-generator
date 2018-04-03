@@ -25,7 +25,7 @@ import com.epam.test_generator.dto.SuitDTO;
 import com.epam.test_generator.dto.SuitRowNumberUpdateDTO;
 import com.epam.test_generator.dto.SuitUpdateDTO;
 import com.epam.test_generator.dto.SuitVersionDTO;
-import com.epam.test_generator.entities.Project;
+import com.epam.test_generator.ddd.project.domain.Project;
 import com.epam.test_generator.entities.Suit;
 import com.epam.test_generator.pojo.PropertyDifference;
 import com.epam.test_generator.pojo.SuitVersion;

@@ -1,6 +1,6 @@
 package com.epam.test_generator.controllers;
 
-import com.epam.test_generator.dto.CreateProjectDTO;
+import com.epam.test_generator.ddd.project.application.CreateProjectDTO;
 import com.epam.test_generator.pojo.JiraFilter;
 import com.epam.test_generator.pojo.JiraProject;
 import com.epam.test_generator.pojo.JiraStory;
