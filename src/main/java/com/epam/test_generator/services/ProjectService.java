@@ -1,5 +1,8 @@
 package com.epam.test_generator.services;
 
+import static com.epam.test_generator.services.utils.UtilsService.checkNotNull;
+import static com.epam.test_generator.services.utils.UtilsService.checkProjectIsActive;
+
 import com.epam.test_generator.config.security.AuthenticatedUser;
 import com.epam.test_generator.dao.interfaces.ProjectDAO;
 import com.epam.test_generator.dto.ProjectDTO;
@@ -8,14 +11,11 @@ import com.epam.test_generator.entities.Project;
 import com.epam.test_generator.entities.User;
 import com.epam.test_generator.transformers.ProjectFullTransformer;
 import com.epam.test_generator.transformers.ProjectTransformer;
+import java.util.List;
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
-import java.util.List;
-
-import static com.epam.test_generator.services.utils.UtilsService.*;
 
 @Service
 @Transactional
@@ -49,8 +49,7 @@ public class ProjectService {
     }
 
     public List<Project> getProjectsByUserId(Long userId) {
-        User user = userService.getUserById(userId);
-        checkNotNull(user);
+        User user = checkNotNull(userService.getUserById(userId));
         return projectDAO.findByUsers(user);
     }
 
@@ -72,7 +71,7 @@ public class ProjectService {
         User user = userService.getUserByEmail(userDetails.getEmail());
         Project project = getProjectByProjectId(projectId);
 
-        userBelongsToProject(project, user);
+        project.hasUser(user);
         return projectFullTransformer.toDto(project);
     }
 
@@ -110,8 +109,7 @@ public class ProjectService {
      * @param projectDTO update info
      */
     public void updateProject(Long projectId, ProjectDTO projectDTO) {
-        Project project = projectDAO.findOne(projectId);
-        checkNotNull(project);
+        Project project = checkNotNull(projectDAO.findOne(projectId));
         checkProjectIsActive(project);
 
         projectTransformer.mapDTOToEntity(projectDTO, project);
@@ -124,9 +122,7 @@ public class ProjectService {
      * @param projectId id of project to delete
      */
     public void removeProject(Long projectId) {
-        Project project = projectDAO.findOne(projectId);
-        checkNotNull(project);
-        projectDAO.delete(projectId);
+        projectDAO.delete(checkNotNull(projectDAO.findOne(projectId)));
     }
 
     /**
@@ -135,13 +131,11 @@ public class ProjectService {
      * @param userId id of user to add
      */
     public void addUserToProject(long projectId, long userId) {
-        Project project = projectDAO.findOne(projectId);
-        checkNotNull(project);
+        final Project project = checkNotNull(projectDAO.findOne(projectId));
         checkProjectIsActive(project);
-        User user = userService.getUserById(userId);
-        checkNotNull(user);
+        final User user = checkNotNull(userService.getUserById(userId));
 
-        project.getUsers().add(user);
+        project.addUser(user);
         projectDAO.save(project);
     }
 
@@ -151,13 +145,11 @@ public class ProjectService {
      * @param userId id of user to remove
      */
     public void removeUserFromProject(long projectId, long userId) {
-        Project project = projectDAO.findOne(projectId);
-        checkNotNull(project);
+        final Project project = checkNotNull(projectDAO.findOne(projectId));
         checkProjectIsActive(project);
-        User user = userService.getUserById(userId);
-        checkNotNull(user);
+        final User user = checkNotNull(userService.getUserById(userId));
 
-        project.getUsers().remove(user);
+        project.unsubscribeUser(user);
         projectDAO.save(project);
     }
 
@@ -166,10 +158,8 @@ public class ProjectService {
      * @param projectId id of project to close
      */
     public void closeProject(long projectId) {
-        Project project = projectDAO.findOne(projectId);
-        checkNotNull(project);
+        Project project = checkNotNull(projectDAO.findOne(projectId));
         checkProjectIsActive(project);
-        project.setActive(false);
-        projectDAO.save(project);
+        projectDAO.save(project.close());
     }
 }

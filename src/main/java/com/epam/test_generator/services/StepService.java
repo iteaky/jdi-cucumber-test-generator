@@ -1,8 +1,6 @@
 package com.epam.test_generator.services;
 
-import static com.epam.test_generator.services.utils.UtilsService.caseBelongsToSuit;
 import static com.epam.test_generator.services.utils.UtilsService.checkNotNull;
-import static com.epam.test_generator.services.utils.UtilsService.stepBelongsToCase;
 
 import com.epam.test_generator.dao.interfaces.CaseVersionDAO;
 import com.epam.test_generator.dao.interfaces.StepDAO;
@@ -48,13 +46,11 @@ public class StepService {
      * @return List of all StepDTOs for specified case
      */
     public List<StepDTO> getStepsByCaseId(Long projectId, Long suitId, Long caseId) {
-        Suit suit = suitService.getSuit(projectId, suitId);
 
-        Case caze = caseService.getCase(projectId, suitId, caseId);
+        final Suit suit = checkNotNull(suitService.getSuit(projectId, suitId));
+        final Case caze = checkNotNull(caseService.getCase(projectId, suitId, caseId));
 
-        caseBelongsToSuit(caze, suit);
-
-        return stepTransformer.toDtoList(caze.getSteps());
+        return stepTransformer.toDtoList(suit.hasCase(caze).getSteps());
     }
 
     /**
@@ -66,18 +62,14 @@ public class StepService {
      * @return StepDTO of specified step
      */
     public StepDTO getStep(Long projectId, Long suitId, Long caseId, Long stepId) {
-        Suit suit = suitService.getSuit(projectId, suitId);
+        final Suit suit = checkNotNull(suitService.getSuit(projectId, suitId));
+        final Case caze = checkNotNull(caseService.getCase(projectId, suitId, caseId));
 
-        Case caze = caseService.getCase(projectId, suitId, caseId);
+        suit.hasCase(caze);
 
-        caseBelongsToSuit(caze, suit);
+        final Step step = checkNotNull(stepDAO.findOne(stepId));
 
-        Step step = stepDAO.findOne(stepId);
-        checkNotNull(step);
-
-        stepBelongsToCase(step, caze);
-
-        return stepTransformer.toDto(step);
+        return stepTransformer.toDto(caze.hasStep(step));
     }
 
     /**
@@ -89,16 +81,15 @@ public class StepService {
      * @return id of added step
      */
     public Long addStepToCase(Long projectId, Long suitId, Long caseId, StepDTO stepDTO) {
-        Suit suit = suitService.getSuit(projectId, suitId);
+        final Suit suit = suitService.getSuit(projectId, suitId);
+        final Case caze = caseService.getCase(projectId, suitId, caseId);
 
-        Case caze = caseService.getCase(projectId, suitId, caseId);
-
-        caseBelongsToSuit(caze, suit);
+        suit.hasCase(caze);
 
         Step step = stepTransformer.fromDto(stepDTO);
 
         step = stepDAO.save(step);
-        caze.getSteps().add(step);
+        caze.addStep(step);
 
         caseVersionDAO.save(caze);
         suitVersionDAO.save(suit);
@@ -115,19 +106,16 @@ public class StepService {
      * @param stepId id of step which to update
      */
     public void updateStep(Long projectId, Long suitId, Long caseId, Long stepId, StepDTO stepDTO) {
-        Suit suit = suitService.getSuit(projectId, suitId);
+        final Suit suit = suitService.getSuit(projectId, suitId);
+        final Case caze = caseService.getCase(projectId, suitId, caseId);
 
-        Case caze = caseService.getCase(projectId, suitId, caseId);
+        suit.hasCase(caze);
 
-        caseBelongsToSuit(caze, suit);
+        final Step step = checkNotNull(stepDAO.findOne(stepId));
 
-        Step step = stepDAO.findOne(stepId);
-        checkNotNull(step);
-
-        stepBelongsToCase(step, caze);
+        caze.hasStep(step);
 
         stepTransformer.mapDTOToEntity(stepDTO, step);
-
         stepDAO.save(step);
 
         caseVersionDAO.save(caze);
@@ -142,18 +130,16 @@ public class StepService {
      * @param stepId id of step to delete
      */
     public void removeStep(Long projectId, Long suitId, Long caseId, Long stepId) {
-        Suit suit = suitService.getSuit(projectId, suitId);
+        final Suit suit = checkNotNull(suitService.getSuit(projectId, suitId));
+        final Case caze = checkNotNull(caseService.getCase(projectId, suitId, caseId));
 
-        Case caze = caseService.getCase(projectId, suitId, caseId);
+        suit.hasCase(caze);
 
-        caseBelongsToSuit(caze, suit);
+        final Step step = checkNotNull(stepDAO.findOne(stepId));
 
-        Step step = stepDAO.findOne(stepId);
-        checkNotNull(step);
+        caze.hasStep(step);
 
-        stepBelongsToCase(step, caze);
-
-        caze.getSteps().remove(step);
+        caze.removeStep(step);
         stepDAO.delete(stepId);
 
         caseVersionDAO.save(caze);

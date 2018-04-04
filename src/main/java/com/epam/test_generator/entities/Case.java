@@ -1,5 +1,6 @@
 package com.epam.test_generator.entities;
 
+import com.epam.test_generator.entities.api.CaseTrait;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ import org.springframework.statemachine.annotation.WithStateMachine;
  */
 @Entity
 @WithStateMachine
-public class Case implements Serializable, Persistable<Long> {
+public class Case implements Serializable, Persistable<Long>, CaseTrait {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -308,5 +309,10 @@ public class Case implements Serializable, Persistable<Long> {
         result = 31 * result + (tags != null ? tags.hashCode() : 0);
         result = 31 * result + (comment != null ? comment.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public Case getCase() {
+        return this;
     }
 }

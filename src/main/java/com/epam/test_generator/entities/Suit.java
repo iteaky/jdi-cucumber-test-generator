@@ -1,5 +1,6 @@
 package com.epam.test_generator.entities;
 
+import com.epam.test_generator.entities.api.SuitTrait;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -29,7 +30,7 @@ import org.springframework.data.domain.Persistable;
  * {@Link Suit} object.
  */
 @Entity
-public class Suit implements Serializable, Persistable<Long> {
+public class Suit implements Serializable, Persistable<Long>, SuitTrait {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -303,5 +304,10 @@ public class Suit implements Serializable, Persistable<Long> {
             .hash(id, name, description, priority, status, jiraKey, jiraProjectKey, tags,
                 cases,
                 rowNumber);
+    }
+
+    @Override
+    public Suit getSuit() {
+        return this;
     }
 }

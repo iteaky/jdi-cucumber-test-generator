@@ -1,7 +1,6 @@
 package com.epam.test_generator.services;
 
 import static com.epam.test_generator.services.utils.UtilsService.checkNotNull;
-import static com.epam.test_generator.services.utils.UtilsService.suitBelongsToProject;
 
 import com.epam.test_generator.dao.interfaces.CaseVersionDAO;
 import com.epam.test_generator.dao.interfaces.RemovedIssueDAO;
@@ -69,15 +68,9 @@ public class SuitService {
     }
 
     public Suit getSuit(long projectId, long suitId) {
-        Project project = projectService.getProjectByProjectId(projectId);
-        checkNotNull(project);
-
-        Suit suit = suitDAO.findOne(suitId);
-        checkNotNull(suit);
-
-        suitBelongsToProject(project, suit);
-
-        return suit;
+        final Project project = checkNotNull(projectService.getProjectByProjectId(projectId));
+        final Suit suit = checkNotNull(suitDAO.findOne(suitId));
+        return project.hasSuit(suit);
     }
 
     public SuitDTO getSuitDTO(long projectId, long suitId) {
@@ -92,21 +85,18 @@ public class SuitService {
      * @return {@link SuitDTO} of added suit
      */
     public SuitDTO addSuit(Long projectId, SuitDTO suitDTO) {
-        Project project = projectService.getProjectByProjectId(projectId);
-        checkNotNull(project);
+        Project project = checkNotNull(projectService.getProjectByProjectId(projectId));
         suitDTO.setJiraProjectKey(project.getJiraKey());
         Suit suit = suitDAO.save(suitTransformer.fromDto(suitDTO));
         suit.setLastModifiedDate(LocalDateTime.now());
 
         suitVersionDAO.save(suit);
 
-        project.getSuits().add(suit);
+        project.addSuit(suit);
 
         caseVersionDAO.save(suit.getCases());
 
-        SuitDTO addedSuitDTO = suitTransformer.toDto(suit);
-
-        return addedSuitDTO;
+        return suitTransformer.toDto(suit);
     }
 
 
@@ -141,11 +131,7 @@ public class SuitService {
         suitVersionDAO.save(suit);
         caseVersionDAO.save(suit.getCases());
 
-        SuitDTO updatedSuitDTO = suitTransformer.toDto(suit);
-        SuitUpdateDTO updatedSuitDTOwithFailedStepIds = new SuitUpdateDTO(updatedSuitDTO,
-            failedStepIds);
-
-        return updatedSuitDTOwithFailedStepIds;
+        return new SuitUpdateDTO(suitTransformer.toDto(suit), failedStepIds);
     }
 
     /**
@@ -156,10 +142,9 @@ public class SuitService {
      * @return {@link SuitDTO) of removed suit
      */
     public SuitDTO removeSuit(long projectId, long suitId) {
-        Suit suit = getSuit(projectId, suitId);
-        checkNotNull(suit);
+        final Suit suit = checkNotNull(getSuit(projectId, suitId));
 
-        if (suit.getJiraKey() != null) {
+        if (!suit.isRemoved()) {
             removedIssueDAO.save(new RemovedIssue(suit.getJiraKey()));
         }
 
@@ -170,14 +155,11 @@ public class SuitService {
 
         Project project = projectService.getProjectByProjectId(projectId);
         project.getSuits().remove(suit);
-        SuitDTO removedSuitDTO = suitTransformer.toDto(suit);
-        return removedSuitDTO;
+        return suitTransformer.toDto(suit);
     }
 
     public List<SuitDTO> getSuitsFromProject(Long projectId) {
-        Project project = projectService.getProjectByProjectId(projectId);
-        checkNotNull(project);
-
+        final Project project = checkNotNull(projectService.getProjectByProjectId(projectId));
         return suitTransformer.toDtoList(project.getSuits());
     }
 
@@ -187,7 +169,8 @@ public class SuitService {
      * @param rowNumberUpdates List of SuitRowNumberUpdateDTOs
      * @return list of {@link SuitRowNumberUpdateDTO} to check on the frontend
      */
-    public List<SuitRowNumberUpdateDTO> updateSuitRowNumber(List<SuitRowNumberUpdateDTO> rowNumberUpdates) {
+    public List<SuitRowNumberUpdateDTO> updateSuitRowNumber(List<SuitRowNumberUpdateDTO>
+                                                                rowNumberUpdates) {
         if (rowNumberUpdates.isEmpty()) {
             throw new BadRequestException("The list has not to be empty");
         }
@@ -203,7 +186,10 @@ public class SuitService {
             .collect(Collectors
                 .toMap(SuitRowNumberUpdateDTO::getId, SuitRowNumberUpdateDTO::getRowNumber));
 
-        final List<Integer> distinct = patch.values().stream().distinct()
+        final List<Integer> distinct = patch
+            .values()
+            .stream()
+            .distinct()
             .collect(Collectors.toList());
 
         if (rowNumberUpdates.size() != distinct.size()) {
@@ -240,13 +226,11 @@ public class SuitService {
     }
 
     public List<SuitVersionDTO> getSuitVersions(Long projectId, Long suitId) {
-        Project project = projectService.getProjectByProjectId(projectId);
-        checkNotNull(project);
+        final Project project = checkNotNull(projectService.getProjectByProjectId(projectId));
 
-        Suit suit =suitDAO.findOne(suitId);
-        checkNotNull(suit);
+        final Suit suit = checkNotNull(suitDAO.findOne(suitId));
 
-        suitBelongsToProject(project, suit);
+        project.hasSuit(suit);
 
         List<SuitVersion> suitVersions = suitVersionDAO.findAll(suitId);
         return suitVersionTransformer.toDtoList(suitVersions);
@@ -262,20 +246,15 @@ public class SuitService {
     public SuitDTO restoreSuit(Long projectId, Long suitId, String commitId) {
         Project  project= projectService.getProjectByProjectId(projectId);
 
-        Suit suit = suitDAO.findOne(suitId);
-        checkNotNull(suit);
+        Suit suit = checkNotNull(suitDAO.findOne(suitId));
+        project.hasSuit(suit);
 
-        suitBelongsToProject(project, suit);
-
-        Suit suitToRestore = suitVersionDAO.findByCommitId(suitId, commitId);
-        checkNotNull(suitToRestore);
+        Suit suitToRestore = checkNotNull(suitVersionDAO.findByCommitId(suitId, commitId));
 
         Suit restoredSuit = suitDAO.save(suitToRestore);
         suitVersionDAO.save(suitToRestore);
         caseVersionDAO.save(suitToRestore.getCases());
 
-        SuitDTO restoredSuitDTO = suitTransformer.toDto(restoredSuit);
-
-        return restoredSuitDTO;
+        return suitTransformer.toDto(restoredSuit);
     }
 }

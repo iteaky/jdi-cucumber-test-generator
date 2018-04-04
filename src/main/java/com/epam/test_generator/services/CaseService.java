@@ -83,14 +83,10 @@ public class CaseService {
     }
 
     public Case getCase(Long projectId, Long suitId, Long caseId) {
-        Suit suit = suitService.getSuit(projectId, suitId);
+        final Suit suit = checkNotNull(suitService.getSuit(projectId, suitId));
+        final Case caze = checkNotNull(caseDAO.findOne(caseId));
 
-        Case caze = caseDAO.findOne(caseId);
-        checkNotNull(caze);
-
-        caseBelongsToSuit(caze, suit);
-
-        return caze;
+        return suit.hasCase(caze);
     }
 
     public CaseDTO getCaseDTO(Long projectId, Long suitId, Long caseId) {
@@ -106,28 +102,26 @@ public class CaseService {
      * @return {@link CaseDTO} of added case to suit
      */
     public CaseDTO addCaseToSuit(Long projectId, Long suitId, @Valid CaseDTO caseDTO) {
-        Suit suit = suitService.getSuit(projectId, suitId);
+        final Suit suit = checkNotNull(suitService.getSuit(projectId, suitId));
 
         caseDTO.setJiraParentKey(suit.getJiraKey());
         caseDTO.setJiraProjectKey(suit.getJiraProjectKey());
 
         Case caze = caseTransformer.fromDto(caseDTO);
 
-        Date currentTime = Calendar.getInstance().getTime();
+        final Date currentTime = Calendar.getInstance().getTime();
 
         caze.setCreationDate(currentTime);
         caze.setUpdateDate(currentTime);
         caze.setLastModifiedDate(LocalDateTime.now());
         caze = caseDAO.save(caze);
 
-        suit.getCases().add(caze);
+        suit.addCase(caze);
 
         caseVersionDAO.save(caze);
         suitVersionDAO.save(suit);
 
-        CaseDTO addedCaseDTO = caseTransformer.toDto(caze);
-
-        return addedCaseDTO;
+        return caseTransformer.toDto(caze);
     }
 
 
@@ -140,7 +134,7 @@ public class CaseService {
      */
     public CaseDTO addCaseToSuit(Long projectId, Long suitId, EditCaseDTO editCaseDTO)
         throws MethodArgumentNotValidException {
-        CaseDTO caseDTO = new CaseDTO(editCaseDTO.getId(), editCaseDTO.getName(),
+        final CaseDTO caseDTO = new CaseDTO(editCaseDTO.getId(), editCaseDTO.getName(),
             editCaseDTO.getDescription(), new ArrayList<>(),
             editCaseDTO.getPriority(), new HashSet<>(), editCaseDTO.getStatus(), editCaseDTO.getComment());
 
