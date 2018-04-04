@@ -245,8 +245,7 @@ public class CaseService {
         removedCases.forEach(caze -> suit.getCases().remove(caze));
         suitVersionDAO.save(suit);
 
-        List<CaseDTO> removedCasesDTO = caseTransformer.toDtoList(removedCases);
-        return removedCasesDTO;
+        return caseTransformer.toDtoList(removedCases);
     }
 
     private void saveIssueToDeleteInJira(Case caze) {

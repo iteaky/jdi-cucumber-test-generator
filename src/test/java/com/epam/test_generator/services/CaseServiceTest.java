@@ -64,7 +64,7 @@ public class CaseServiceTest {
 
     private static final long SIMPLE_PROJECT_ID = 0L;
     private static final long SIMPLE_SUIT_ID = 1L;
-    private static final long SIMPLE_CASE_ID = 2L;
+    private static final long SIMPLE_CASE_ID = 3L;
     private static final String SIMPLE_COMMIT_ID = "1.5";
 
     private Suit suit;
@@ -130,10 +130,13 @@ public class CaseServiceTest {
 
         caze = new Case(SIMPLE_CASE_ID, "Case name", "Case desc",
                 listSteps, 1, setOfTags, "comment");
+
+        listCases.add(caze);
         expectedCaseDTO = new CaseDTO(SIMPLE_CASE_ID, "Case name", "Case desc",
                 expectedListSteps, 1, expectedSetTags, Status.NOT_DONE, "comment");
         suit = new Suit(SIMPLE_SUIT_ID, "Suit 1", "Suit desc",
                 listCases, 1, setOfTags, 1);
+
         caseToRestore = new Case(SIMPLE_CASE_ID, "new name", "new description",
               Lists.newArrayList(), 3, Sets.newHashSet(),  "comment");
 

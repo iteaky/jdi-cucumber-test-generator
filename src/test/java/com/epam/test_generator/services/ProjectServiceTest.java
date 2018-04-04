@@ -332,7 +332,7 @@ public class ProjectServiceTest {
     public void remove_Project_Success() {
         when(projectDAO.findOne(SIMPLE_PROJECT_ID)).thenReturn(simpleProject1);
         projectService.removeProject(SIMPLE_PROJECT_ID);
-        verify(projectDAO).delete(SIMPLE_PROJECT_ID);
+        verify(projectDAO).delete(simpleProject1);
     }
 
     @Test(expected = NotFoundException.class)
