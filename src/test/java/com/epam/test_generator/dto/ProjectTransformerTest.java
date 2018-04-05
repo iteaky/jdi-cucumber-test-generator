@@ -1,6 +1,7 @@
 package com.epam.test_generator.dto;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.when;
 
 import com.epam.test_generator.controllers.Project.ProjectTransformer;
 import com.epam.test_generator.controllers.Project.request.ProjectCreateDTO;
@@ -10,14 +11,17 @@ import com.epam.test_generator.controllers.Project.responce.ProjectFullDTO;
 import com.epam.test_generator.entities.Project;
 import com.epam.test_generator.entities.Status;
 import com.epam.test_generator.entities.Suit;
+import com.epam.test_generator.transformers.SuitTransformer;
 import com.epam.test_generator.transformers.UserTransformer;
 import java.util.Collections;
 import javax.persistence.Temporal;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -26,6 +30,9 @@ public class ProjectTransformerTest {
     @Mock
     private UserTransformer userTransformer;
 
+    @Mock
+    private SuitTransformer suitTransformer;
+
     @InjectMocks
     private ProjectTransformer projectTransformer;
 
@@ -33,6 +40,26 @@ public class ProjectTransformerTest {
     private static final String NAME = "NAME";
     private static final String DESCRIPTION = "DESCRIPTION";
     private static final String JIRA_KEY = "KEY";
+
+    private Suit suit;
+    private SuitDTO suitDTO;
+
+    @Before
+    public void setUp() throws Exception {
+        suit = new Suit();
+        suit.setName(NAME);
+        suit.setPriority(1);
+        suit.setStatus(Status.NOT_DONE);
+        suit.setRowNumber(1);
+        suit.setDescription(DESCRIPTION);
+
+        suitDTO = new SuitDTO();
+        suitDTO.setName(NAME);
+        suitDTO.setPriority(1);
+        suitDTO.setStatus(Status.NOT_DONE);
+        suitDTO.setRowNumber(1);
+        suitDTO.setDescription(DESCRIPTION);
+    }
 
     @Test
     public void fromDTO_ProjectCreateDTO_Success() {
@@ -74,8 +101,7 @@ public class ProjectTransformerTest {
 
     @Test
     public void toFullDTO_Project_Success() {
-        Suit suit = new Suit();
-        suit.setName(NAME);
+        when(suitTransformer.toDto(any(Suit.class))).thenReturn(suitDTO);
         Project project = new Project();
         project.setId(ID);
         project.setName(NAME);
@@ -85,15 +111,12 @@ public class ProjectTransformerTest {
         project.setUsers(Collections.emptySet());
         project.setSuits(Collections.singletonList(suit));
 
-        SuitDTO suitDTO = new SuitDTO();
-        suitDTO.setName(NAME);
         ProjectFullDTO expectedProjectDTO = new ProjectFullDTO();
         expectedProjectDTO.setId(ID);
         expectedProjectDTO.setName(NAME);
         expectedProjectDTO.setDescription(DESCRIPTION);
         expectedProjectDTO.setJiraKey(JIRA_KEY);
         expectedProjectDTO.setActive(true);
-        expectedProjectDTO.setUsers(Collections.emptySet());
         expectedProjectDTO.setSuits(Collections.singletonList(suitDTO));
 
         ProjectFullDTO resultProjectDTO = projectTransformer.toFullDto(project);
@@ -102,12 +125,7 @@ public class ProjectTransformerTest {
 
     @Test
     public void updateFromDto_ProjectUpdateDTO_Project_Success() {
-        Suit suit = new Suit();
-        suit.setName(NAME);
-        suit.setPriority(1);
-        suit.setStatus(Status.NOT_DONE);
-        suit.setRowNumber(1);
-        suit.setDescription(DESCRIPTION);
+        when(suitTransformer.fromDto(any(SuitDTO.class))).thenReturn(suit);
 
         Project expectedProject = new Project();
         expectedProject.setName(NAME);
@@ -118,13 +136,6 @@ public class ProjectTransformerTest {
         expectedProject.setSuits(Collections.singletonList(suit));
 
         Project updateProject = new Project();
-
-        SuitDTO suitDTO = new SuitDTO();
-        suitDTO.setName(NAME);
-        suitDTO.setPriority(1);
-        suitDTO.setStatus(Status.NOT_DONE);
-        suitDTO.setRowNumber(1);
-        suitDTO.setDescription(DESCRIPTION);
 
         ProjectUpdateDTO projectDTO = new ProjectUpdateDTO();
         projectDTO.setName(NAME);
