@@ -8,6 +8,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTCreator;
 import com.epam.test_generator.DatabaseConfigForTests;
 import com.epam.test_generator.config.WebConfig;
 import com.epam.test_generator.config.security.JwtAuthenticationProvider;
@@ -87,6 +89,8 @@ public class AdminControllerSecurityTest {
     @Autowired
     private Filter springSecurityFilterChain;
 
+    private JWTCreator.Builder builder;
+
     private MockMvc mvc;
 
 
@@ -111,9 +115,19 @@ public class AdminControllerSecurityTest {
         when(user.getPassword()).thenReturn("test");
         when(user.getId()).thenReturn(new Long(1));
         when(user.isLocked()).thenReturn(false);
+        when(user.getRole()).thenReturn(new Role("GUEST"));
 
         when(projectService.getProjectByProjectId(anyLong())).thenReturn(null);
 
+        builder = JWT.create()
+                .withIssuer("cucumber")
+                .withClaim("id", user.getId())
+                .withClaim("email", user.getEmail())
+                .withClaim("given_name", user.getName())
+                .withClaim("family_name",user. getSurname())
+                .withClaim("role", user.getRole().getName());
+
+        when(user.getUserBuilder("cucumber")).thenReturn(builder);
         ReflectionTestUtils.setField(adminService, "userService", userService);
         ReflectionTestUtils.setField(adminService, "roleService", roleService);
         ReflectionTestUtils.setField(loginService, "userService", userService);

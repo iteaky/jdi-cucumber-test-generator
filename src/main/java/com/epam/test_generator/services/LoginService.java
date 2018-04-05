@@ -78,13 +78,7 @@ public class LoginService {
     public String getLoginJWTToken(LoginUserDTO loginUserDTO) {
 
         User user = userService.getUserByEmail(loginUserDTO.getEmail());
-        JWTCreator.Builder builder = JWT.create()
-                .withIssuer(ELEMENT_FOR_UNIQUE_TOKEN)
-                .withClaim("id", user.getId())
-                .withClaim("email", user.getEmail())
-                .withClaim("given_name", user.getName())
-                .withClaim("family_name", user.getSurname())
-                .withClaim("role", user.getRole().getName());
+        JWTCreator.Builder builder = user.getUserBuilder(ELEMENT_FOR_UNIQUE_TOKEN);
         try {
             return builder.sign(Algorithm.HMAC256(this.environment.getProperty("jwt_secret")));
         } catch (UnsupportedEncodingException e) {

@@ -126,13 +126,9 @@ public class UserService {
         User user = getUserById(userId);
 
         if (user != null) {
-            int attempts = user.getAttempts();
-            if (MAX_ATTEMPTS <= ++attempts) {
-                user.setLocked(true);
-            }
-            user.setAttempts(attempts);
+            user.updateFailureAttempts(MAX_ATTEMPTS);
             userDAO.save(user);
-            return attempts;
+            return user.getAttempts();
         }
 
         return 0;
@@ -146,8 +142,7 @@ public class UserService {
     public void invalidateAttempts(Long userId) {
         User user = getUserById(userId);
         if (user != null) {
-            user.setLocked(false);
-            user.setAttempts(0);
+            user.invalidateAttempts();
             userDAO.save(user);
         }
     }
@@ -159,9 +154,7 @@ public class UserService {
      */
     public void updatePassword(String password, String email) {
         User byEmail = userDAO.findByEmail(email);
-        byEmail.setPassword(password);
-        byEmail.setLocked(false);
-        byEmail.setAttempts(0);
+        byEmail.updatePassword(password);
         userDAO.save(byEmail);
     }
 

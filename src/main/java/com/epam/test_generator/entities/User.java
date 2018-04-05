@@ -1,7 +1,7 @@
 package com.epam.test_generator.entities;
 
 
-import java.util.List;
+import com.epam.test_generator.entities.api.UserTrait;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 import javax.persistence.*;
@@ -12,7 +12,7 @@ import javax.persistence.*;
  * privileges for users of current role.
  */
 @Entity
-public class User {
+public class User implements UserTrait {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -113,6 +113,11 @@ public class User {
 
     public void setLocked(boolean locked) {
         this.locked = locked;
+    }
+
+    @Override
+    public User getUser() {
+        return this;
     }
 
     @Override
