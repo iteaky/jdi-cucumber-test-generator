@@ -3,6 +3,8 @@ package com.epam.test_generator.controllers.user;
 import com.epam.test_generator.controllers.user.request.RegistrationUserDTO;
 import com.epam.test_generator.controllers.user.response.UserDTO;
 import com.epam.test_generator.entities.User;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -12,6 +14,11 @@ public class UserDTOsTransformer {
 
     @Autowired
     private PasswordEncoder encoder;
+
+    public List<UserDTO> toListUserDto(List<User> users) {
+        return users.stream().map(this::toUserDTO)
+            .collect(Collectors.toList());
+    }
 
     public User fromDTO(RegistrationUserDTO userDTO) {
         User user = new User();
@@ -30,7 +37,9 @@ public class UserDTOsTransformer {
         userDTO.setEmail(user.getEmail());
         userDTO.setAttempts(user.getAttempts());
         userDTO.setLocked(user.isLocked());
-        userDTO.setRole(user.getRole().getName());
+        if (user.getRole() != null) {
+            userDTO.setRole(user.getRole().getName());
+        }
         return userDTO;
    }
 

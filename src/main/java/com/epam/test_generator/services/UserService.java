@@ -86,8 +86,7 @@ public class UserService {
     }
 
     public List<UserDTO> getUsers() {
-        return userDAO.findAll().stream().map(userDTOsTransformer::toUserDTO)
-            .collect(Collectors.toList());
+        return userDTOsTransformer.toListUserDto(userDAO.findAll());
     }
 
     /**

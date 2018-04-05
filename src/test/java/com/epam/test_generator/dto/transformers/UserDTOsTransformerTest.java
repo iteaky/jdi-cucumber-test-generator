@@ -8,6 +8,8 @@ import com.epam.test_generator.controllers.user.request.RegistrationUserDTO;
 import com.epam.test_generator.controllers.user.response.UserDTO;
 import com.epam.test_generator.entities.Role;
 import com.epam.test_generator.entities.User;
+import java.util.Collections;
+import java.util.List;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -74,6 +76,25 @@ public class UserDTOsTransformerTest {
 
         UserDTO resultUserDTO = userDTOsTransformer.toUserDTO(user);
         Assert.assertEquals(expectedUserDTO, resultUserDTO);
+    }
+
+    @Test
+    public void  toListUserDto_Users_Success() {
+        user.setLocked(false);
+        user.setAttempts(ATTEMPTS);
+
+        UserDTO userDTO = new UserDTO();
+        userDTO.setName(NAME);
+        userDTO.setSurname(SURNAME);
+        userDTO.setEmail(EMAIL);
+        userDTO.setLocked(false);
+        userDTO.setAttempts(ATTEMPTS);
+
+        List<User> users = Collections.singletonList(user);
+        List<UserDTO> expectedUserDTOS = Collections.singletonList(userDTO);
+
+        List<UserDTO> resultUserDTOs = userDTOsTransformer.toListUserDto(users);
+        Assert.assertEquals(expectedUserDTOS, resultUserDTOs);
     }
 
 }

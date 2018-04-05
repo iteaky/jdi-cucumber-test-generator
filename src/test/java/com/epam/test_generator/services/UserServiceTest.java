@@ -121,6 +121,7 @@ public class UserServiceTest {
         users.add(user);
         userDTOS.add(userDTO);
         when(userDAO.findAll()).thenReturn(users);
+        when(userDTOsTransformer.toListUserDto(users)).thenReturn(userDTOS);
         when(userDTOsTransformer.toUserDTO(user)).thenReturn(userDTO);
         final List<UserDTO> usersDTO = sut.getUsers();
         assertFalse(usersDTO.isEmpty());
