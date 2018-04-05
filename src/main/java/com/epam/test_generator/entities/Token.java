@@ -1,8 +1,11 @@
 package com.epam.test_generator.entities;
 
 
+import com.epam.test_generator.entities.api.TokenTrait;
+
 import java.util.Calendar;
 import java.util.Date;
+import java.util.UUID;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -15,7 +18,7 @@ import javax.validation.constraints.NotNull;
  * This class represents token essence. Token is a special key that is used for user identification.
  */
 @Entity
-public class Token {
+public class Token implements TokenTrait {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,7 +42,14 @@ public class Token {
     }
 
     public Token() {
+        this.token = UUID.randomUUID().toString();
+    }
 
+    public Token(User user, Integer minutes) {
+        this.user = user;
+        Calendar now = Calendar.getInstance();
+        now.add(Calendar.MINUTE, minutes);
+        this.expiryDate = now.getTime();
     }
 
     public Long getId() {
@@ -47,12 +57,15 @@ public class Token {
     }
 
     public String getToken() {
-
         return token;
     }
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public Date getExpiryDate() {
+        return expiryDate;
     }
 
     public void setExpiryDate(int minutes) {
@@ -61,7 +74,7 @@ public class Token {
         this.expiryDate = now.getTime();
     }
 
-    public boolean isExpired() {
-        return new Date().after(this.expiryDate);
+    public Token getInstance() {
+        return this;
     }
 }
