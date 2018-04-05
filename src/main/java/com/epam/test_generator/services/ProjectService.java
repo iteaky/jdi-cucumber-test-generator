@@ -54,9 +54,7 @@ public class ProjectService {
     }
 
     public Project getProjectByProjectId(Long projectId) {
-        Project project = projectDAO.findOne(projectId);
-        checkNotNull(project);
-        return project;
+        return checkNotNull(projectDAO.findOne(projectId));
     }
 
     public Project getProjectByJiraKey(String key) {
@@ -70,7 +68,6 @@ public class ProjectService {
         AuthenticatedUser userDetails = (AuthenticatedUser) authentication.getPrincipal();
         User user = userService.getUserByEmail(userDetails.getEmail());
         Project project = getProjectByProjectId(projectId);
-
         project.hasUser(user);
         return projectFullTransformer.toDto(project);
     }
@@ -87,7 +84,7 @@ public class ProjectService {
 
         Project project = projectTransformer.fromDto(projectDTO);
         project.addUser(authUser);
-        project.setActive(true);
+        project.activate();
         project = projectDAO.save(project);
 
         return projectTransformer.toDto(project);
@@ -96,7 +93,7 @@ public class ProjectService {
     public Long createProjectwithoutPrincipal(ProjectDTO projectDTO) {
 
         Project project = projectTransformer.fromDto(projectDTO);
-        project.setActive(true);
+        project.activate();
 
         project = projectDAO.save(project);
 

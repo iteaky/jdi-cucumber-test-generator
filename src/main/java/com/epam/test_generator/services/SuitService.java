@@ -30,7 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
 
-@Transactional
+
 @Service
 public class SuitService {
 
@@ -154,7 +154,7 @@ public class SuitService {
         caseVersionDAO.delete(suit.getCases());
 
         Project project = projectService.getProjectByProjectId(projectId);
-        project.getSuits().remove(suit);
+        project.removeSuit(suit);
         return suitTransformer.toDto(suit);
     }
 

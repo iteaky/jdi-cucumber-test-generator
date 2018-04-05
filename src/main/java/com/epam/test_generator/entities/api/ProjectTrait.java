@@ -27,6 +27,10 @@ public interface ProjectTrait {
         return suit;
     }
 
+    default boolean removeSuit(Suit suit){
+        return getProject().getSuits().remove(suit);
+    }
+
     default User hasUser(User user) {
         final Set<User> users = getProject().getUsers();
         if (users == null || !users.contains(user)) {
@@ -44,5 +48,9 @@ public interface ProjectTrait {
         final Project project = getProject();
         project.setActive(false);
         return project;
+    }
+
+    default void activate(){
+        getProject().setActive(true);
     }
 }
