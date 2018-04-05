@@ -1,5 +1,6 @@
-package com.epam.test_generator.dto;
+package com.epam.test_generator.controllers.Project.responce;
 
+import com.epam.test_generator.dto.UserDTO;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Objects;
@@ -86,19 +87,21 @@ public class ProjectDTO {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof ProjectDTO)) {
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
         ProjectDTO that = (ProjectDTO) o;
         return active == that.active &&
             Objects.equals(id, that.id) &&
             Objects.equals(name, that.name) &&
-            Objects.equals(description, that.description);
+            Objects.equals(description, that.description) &&
+            Objects.equals(users, that.users) &&
+            Objects.equals(jiraKey, that.jiraKey);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, name, description, active);
+        return Objects.hash(id, name, description, active, users, jiraKey);
     }
 }

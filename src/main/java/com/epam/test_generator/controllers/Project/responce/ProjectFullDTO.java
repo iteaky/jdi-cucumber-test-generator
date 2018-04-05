@@ -1,11 +1,13 @@
-package com.epam.test_generator.dto;
+package com.epam.test_generator.controllers.Project.responce;
 
-import com.epam.test_generator.controllers.ProjectController;
+import com.epam.test_generator.controllers.Project.ProjectController;
+import com.epam.test_generator.dto.SuitDTO;
+import com.epam.test_generator.dto.UserDTO;
 import com.epam.test_generator.entities.Case;
 import com.epam.test_generator.entities.Project;
 import com.epam.test_generator.entities.Suit;
-import com.epam.test_generator.entities.User;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -22,18 +24,15 @@ public class ProjectFullDTO {
 
     private Long id;
 
-    @NotNull
-    @Size(min = 1, max = 255)
     private String name;
 
-    @Size(max = 255)
     private String description;
 
-    @Valid
     private List<SuitDTO> suits;
 
-    @Valid
     private Set<UserDTO> users;
+
+    private String jiraKey;
 
     private boolean active;
 
@@ -98,6 +97,15 @@ public class ProjectFullDTO {
         this.active = active;
     }
 
+    public String getJiraKey() {
+        return jiraKey;
+    }
+
+    public void setJiraKey(String jiraKey) {
+        this.jiraKey = jiraKey;
+    }
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -106,36 +114,18 @@ public class ProjectFullDTO {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-
         ProjectFullDTO that = (ProjectFullDTO) o;
-
-        if (active != that.active) {
-            return false;
-        }
-        if (!id.equals(that.id)) {
-            return false;
-        }
-        if (!name.equals(that.name)) {
-            return false;
-        }
-        if (description != null ? !description.equals(that.description)
-            : that.description != null) {
-            return false;
-        }
-        if (suits != null ? !suits.equals(that.suits) : that.suits != null) {
-            return false;
-        }
-        return users != null ? users.equals(that.users) : that.users == null;
+        return active == that.active &&
+            Objects.equals(id, that.id) &&
+            Objects.equals(name, that.name) &&
+            Objects.equals(description, that.description) &&
+            Objects.equals(suits, that.suits) &&
+            Objects.equals(users, that.users) &&
+            Objects.equals(jiraKey, that.jiraKey);
     }
 
     @Override
     public int hashCode() {
-        int result = id.hashCode();
-        result = 31 * result + name.hashCode();
-        result = 31 * result + (description != null ? description.hashCode() : 0);
-        result = 31 * result + (suits != null ? suits.hashCode() : 0);
-        result = 31 * result + (users != null ? users.hashCode() : 0);
-        result = 31 * result + (active ? 1 : 0);
-        return result;
+        return Objects.hash(id, name, description, suits, users, jiraKey, active);
     }
 }

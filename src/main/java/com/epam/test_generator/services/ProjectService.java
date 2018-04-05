@@ -1,13 +1,14 @@
 package com.epam.test_generator.services;
 
 import com.epam.test_generator.config.security.AuthenticatedUser;
+import com.epam.test_generator.controllers.Project.ProjectTransformer;
+import com.epam.test_generator.controllers.Project.request.ProjectCreateDTO;
+import com.epam.test_generator.controllers.Project.request.ProjectUpdateDTO;
 import com.epam.test_generator.dao.interfaces.ProjectDAO;
-import com.epam.test_generator.dto.ProjectDTO;
-import com.epam.test_generator.dto.ProjectFullDTO;
+import com.epam.test_generator.controllers.Project.responce.ProjectDTO;
+import com.epam.test_generator.controllers.Project.responce.ProjectFullDTO;
 import com.epam.test_generator.entities.Project;
 import com.epam.test_generator.entities.User;
-import com.epam.test_generator.transformers.ProjectFullTransformer;
-import com.epam.test_generator.transformers.ProjectTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -26,9 +27,6 @@ public class ProjectService {
 
     @Autowired
     private ProjectTransformer projectTransformer;
-
-    @Autowired
-    private ProjectFullTransformer projectFullTransformer;
 
     @Autowired
     private UserService userService;
@@ -73,7 +71,7 @@ public class ProjectService {
         Project project = getProjectByProjectId(projectId);
 
         userBelongsToProject(project, user);
-        return projectFullTransformer.toDto(project);
+        return projectTransformer.toFullDto(project);
     }
 
     /**
@@ -82,7 +80,7 @@ public class ProjectService {
      * @param authentication current authorized user
      * @return projectDTO
      */
-    public ProjectDTO createProject(ProjectDTO projectDTO, Authentication authentication) {
+    public ProjectDTO createProject(ProjectCreateDTO projectDTO, Authentication authentication) {
         AuthenticatedUser userDetails = (AuthenticatedUser) authentication.getPrincipal();
         User authUser = userService.getUserByEmail(userDetails.getEmail());
 
@@ -94,27 +92,18 @@ public class ProjectService {
         return projectTransformer.toDto(project);
     }
 
-    public Long createProjectwithoutPrincipal(ProjectDTO projectDTO) {
-
-        Project project = projectTransformer.fromDto(projectDTO);
-        project.setActive(true);
-
-        project = projectDAO.save(project);
-
-        return project.getId();
-    }
 
     /**
      * Updates project by id with info specified in ProjectDTO
      * @param projectId id of project to update
      * @param projectDTO update info
      */
-    public void updateProject(Long projectId, ProjectDTO projectDTO) {
+    public void updateProject(Long projectId, ProjectUpdateDTO projectDTO) {
         Project project = projectDAO.findOne(projectId);
         checkNotNull(project);
         checkProjectIsActive(project);
 
-        projectTransformer.mapDTOToEntity(projectDTO, project);
+        projectTransformer.updateFromDto(projectDTO, project);
         project.setId(projectId);
         projectDAO.save(project);
     }

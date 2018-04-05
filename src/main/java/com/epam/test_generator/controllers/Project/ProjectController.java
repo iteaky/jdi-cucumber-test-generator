@@ -1,7 +1,9 @@
-package com.epam.test_generator.controllers;
+package com.epam.test_generator.controllers.Project;
 
-import com.epam.test_generator.dto.ProjectDTO;
-import com.epam.test_generator.dto.ProjectFullDTO;
+import com.epam.test_generator.controllers.Project.request.ProjectCreateDTO;
+import com.epam.test_generator.controllers.Project.request.ProjectUpdateDTO;
+import com.epam.test_generator.controllers.Project.responce.ProjectDTO;
+import com.epam.test_generator.controllers.Project.responce.ProjectFullDTO;
 import com.epam.test_generator.dto.ValidationErrorsDTO;
 import com.epam.test_generator.services.ProjectService;
 import io.swagger.annotations.ApiImplicitParam;
@@ -75,14 +77,14 @@ public class ProjectController {
     })
     @ApiImplicitParams({
         @ApiImplicitParam(name = "projectDTO", value = "Create a new project",
-            required = true, dataType = "ProjectDTO", paramType = "body"),
+            required = true, dataType = "ProjectCreateDTO", paramType = "body"),
         @ApiImplicitParam(name = "Authorization", value = "add here your token", paramType = "header", dataType = "string", required = true)
     })
     @ResponseStatus(HttpStatus.CREATED)
     @Secured({"ROLE_ADMIN"})
     @RequestMapping(value = "/projects", method = RequestMethod.POST,
         consumes = "application/json", produces = "application/json")
-    public ResponseEntity<ProjectDTO> createProject(@RequestBody @Valid ProjectDTO projectDTO,
+    public ResponseEntity<ProjectDTO> createProject(@RequestBody @Valid ProjectCreateDTO projectDTO,
                                               Authentication authentication) {
 
         return new ResponseEntity<>(projectService.createProject(projectDTO, authentication),
@@ -100,14 +102,14 @@ public class ProjectController {
         @ApiImplicitParam(name = "projectId", value = "ID of project to update",
             required = true, dataType = "long", paramType = "path"),
         @ApiImplicitParam(name = "projectDTO", value = "Updated project object",
-            required = true, dataType = "ProjectDTO", paramType = "body"),
+            required = true, dataType = "ProjectUpdateDTO", paramType = "body"),
         @ApiImplicitParam(name = "Authorization", value = "add here your token", paramType = "header", dataType = "string", required = true)
     })
     @Secured({"ROLE_ADMIN", "ROLE_TEST_LEAD"})
     @RequestMapping(value = "/projects/{projectId}", method = RequestMethod.PUT,
         consumes = "application/json")
     public ResponseEntity<Void> updateProject(@PathVariable("projectId") long projectId,
-                                              @RequestBody @Valid ProjectDTO projectDTO) {
+                                              @RequestBody @Valid ProjectUpdateDTO projectDTO) {
         projectService.updateProject(projectId, projectDTO);
         return new ResponseEntity<>(HttpStatus.OK);
     }
