@@ -42,7 +42,7 @@ public class PasswordForgotControllerTest {
     private PasswordForgotController passwordForgotController;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         email = new EmailDTO();
         mapper = new ObjectMapper();
         mockMvc = MockMvcBuilders.standaloneSetup(passwordForgotController)

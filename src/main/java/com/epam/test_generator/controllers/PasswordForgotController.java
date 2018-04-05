@@ -30,8 +30,7 @@ public class PasswordForgotController {
     public ResponseEntity passwordForgot(@RequestBody EmailDTO email,
                                          HttpServletRequest request) throws Exception {
 
-        User user = userService.getUserByEmail(email.getEmail());
-        userService.checkUserExist(user);
+        User user = userService.checkUserExist(userService.getUserByEmail(email.getEmail()));
         emailService.sendResetPasswordMessage(user, request);
 
         return new ResponseEntity(HttpStatus.OK);

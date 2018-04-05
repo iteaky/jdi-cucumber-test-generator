@@ -116,11 +116,6 @@ public class User implements UserTrait {
     }
 
     @Override
-    public User getUser() {
-        return this;
-    }
-
-    @Override
     public String toString() {
         return String.format("User {id= %s, name= %s, surname= %s, email= %s, password= %s, role= %s, attempts =%s, locked = %s}",
                 id, name, surname, email, password, role, attempts, locked);

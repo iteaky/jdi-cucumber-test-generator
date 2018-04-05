@@ -19,6 +19,7 @@ import com.epam.test_generator.dto.RegistrationUserDTO;
 import com.epam.test_generator.dto.UserDTO;
 import com.epam.test_generator.entities.Token;
 import com.epam.test_generator.entities.User;
+import com.epam.test_generator.services.exceptions.NotFoundException;
 import com.epam.test_generator.services.exceptions.UnauthorizedException;
 import com.epam.test_generator.transformers.UserTransformer;
 import java.util.ArrayList;
@@ -94,11 +95,10 @@ public class UserServiceTest {
 
     }
 
-    @Test
-    public void getUserById_NoSuchUser_Success() throws Exception {
+    @Test(expected = UnauthorizedException.class)
+    public void getUserById_NoSuchUser_Success() {
         when(userDAO.findById(anyLong())).thenReturn(null);
-        User userById = sut.getUserById(1L);
-        assertNull(userById);
+        sut.getUserById(1L);
     }
 
     @Test
@@ -108,11 +108,10 @@ public class UserServiceTest {
         assertNotNull(userById);
     }
 
-    @Test
-    public void getUserByEmail_NoSuchUser_Success() throws Exception {
+    @Test(expected = UnauthorizedException.class)
+    public void getUserByEmail_NoSuchUser_Success(){
         when(userDAO.findByEmail(anyString())).thenReturn(null);
-        User userById = sut.getUserByEmail("iteaky");
-        assertNull(userById);
+        sut.getUserByEmail("iteaky");
     }
 
     @Test
@@ -132,7 +131,7 @@ public class UserServiceTest {
         assertTrue(users.isEmpty());
     }
 
-    @Test
+    @Test(expected = UnauthorizedException.class)
     public void createUser_RegistrationUserDTO_Success() throws Exception {
         sut.createUser(registrationUserDTO);
         verify(userDAO).save(any(User.class));

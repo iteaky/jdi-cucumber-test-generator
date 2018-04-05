@@ -8,33 +8,57 @@ import com.epam.test_generator.entities.User;
 
 public interface UserTrait {
 
-    User getUser();
+    Long getId();
+
+    String getName();
+
+    String getSurname();
+
+    String getEmail();
+
+    void setPassword(String password);
+
+    Role getRole();
+
+    void setAttempts(int i);
+
+    Integer getAttempts();
+
+    void setLocked(boolean b);
 
     default void updatePassword(String password) {
-        getUser().setPassword(password);
+        setPassword(password);
         invalidateAttempts();
     }
 
     default void invalidateAttempts() {
-        getUser().setLocked(false);
-        getUser().setAttempts(0);
+        setLocked(false);
+        setAttempts(0);
     }
 
     default void updateFailureAttempts(int maxAttempts){
-        int attempts = getUser().getAttempts();
+        int attempts = getAttempts();
         if (maxAttempts <= ++attempts) {
-            getUser().setLocked(true);
+            setLocked(true);
         }
-        getUser().setAttempts(attempts);
+        setAttempts(attempts);
     }
 
     default JWTCreator.Builder getUserBuilder(String elementForUniqueToken) {
         return JWT.create()
                 .withIssuer(elementForUniqueToken)
-                .withClaim("id", getUser().getId())
-                .withClaim("email", getUser().getEmail())
-                .withClaim("given_name", getUser().getName())
-                .withClaim("family_name",getUser(). getSurname())
-                .withClaim("role", getUser().getRole().getName());
+                .withClaim("id", getId())
+                .withClaim("email", getEmail())
+                .withClaim("given_name", getName())
+                .withClaim("family_name", getSurname())
+                .withClaim("role", getRole().getName());
+    }
+
+    default void lock() {
+        setLocked(true);
+    }
+
+    default void unLock() {
+        setLocked(false);
     }
 }

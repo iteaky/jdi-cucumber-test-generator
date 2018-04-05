@@ -13,7 +13,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.jws.soap.SOAPBinding;
 import java.util.List;
+
+import static com.epam.test_generator.services.utils.UtilsService.checkNotNull;
 
 
 @Transactional
@@ -46,12 +49,12 @@ public class UserService {
     private TokenDAO tokenDAO;
 
     public User getUserById(Long id) {
-        return userDAO.findById(id);
+        return checkUserExist(userDAO.findById(id));
 
     }
 
     public User getUserByEmail(String email) {
-        return userDAO.findByEmail(email);
+        return checkUserExist(userDAO.findByEmail(email));
 
     }
 
@@ -69,7 +72,7 @@ public class UserService {
      */
     public void createAdminIfDoesNotExist() {
 
-        final List<User> admin = userDAO.findByRole(roleService.getRoleByName("ADMIN"));
+        final List<User> admin = checkNotNull(userDAO.findByRole(roleService.getRoleByName("ADMIN")));
 
         if (admin.isEmpty()) {
 
@@ -85,7 +88,7 @@ public class UserService {
     }
 
     public List<UserDTO> getUsers() {
-        return userTransformer.toDtoList(userDAO.findAll());
+        return userTransformer.toDtoList(checkNotNull(userDAO.findAll()));
     }
 
     /**
@@ -105,7 +108,7 @@ public class UserService {
                     registrationUserDTO.getEmail(),
                     encoder.encode(registrationUserDTO.getPassword()),
                     roleService.getRoleByName(DEFAULT_ROLE));
-            user.setLocked(true);
+            user.lock();
             userDAO.save(user);
             return user;
         }
@@ -153,24 +156,25 @@ public class UserService {
      * @param email user's Email
      */
     public void updatePassword(String password, String email) {
-        User byEmail = userDAO.findByEmail(email);
+        User byEmail = checkUserExist(userDAO.findByEmail(email));
         byEmail.updatePassword(password);
         userDAO.save(byEmail);
     }
 
-    public void checkUserExist(User user) {
+    public User checkUserExist(User user) {
         if (user == null) {
             throw new UnauthorizedException(
                     "User not found.");
+        } else {
+            return user;
         }
     }
 
     public void confirmUser(String token){
         tokenService.checkToken(token);
         Token tokenByName = passwordService.getTokenByName(token);
-        User user = tokenByName.getUser();
-        checkUserExist(user);
-        user.setLocked(false);
+        User user = checkUserExist(tokenByName.getUser());
+        user.unLock();
         saveUser(user);
         tokenDAO.delete(tokenByName);
     }
