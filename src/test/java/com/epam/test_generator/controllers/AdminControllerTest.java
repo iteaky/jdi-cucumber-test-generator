@@ -1,7 +1,8 @@
 package com.epam.test_generator.controllers;
 
-import com.epam.test_generator.dto.ChangeUserRoleDTO;
-import com.epam.test_generator.dto.JiraSettingsDTO;
+import com.epam.test_generator.controllers.Admin.AdminController;
+import com.epam.test_generator.controllers.Admin.request.UpdateUserRoleDTO;
+import com.epam.test_generator.controllers.Admin.request.JiraSettingsCreateDTO;
 import com.epam.test_generator.services.AdminService;
 import com.epam.test_generator.services.JiraSettingsService;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -29,14 +30,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class AdminControllerTest {
 
     private MockMvc mockMvc;
-    private ChangeUserRoleDTO userChangeRole;
+    private UpdateUserRoleDTO userChangeRole;
     private ObjectMapper mapper;
     @Mock
     private AdminService adminService;
     @Mock
     private JiraSettingsService jiraSettingsService;
 
-    private JiraSettingsDTO jiraSettingsDTO;
+    private JiraSettingsCreateDTO jiraSettingsCreateDTO;
 
     @InjectMocks
     private AdminController adminController;
@@ -45,7 +46,7 @@ public class AdminControllerTest {
 
     public void setUp() {
         mapper = new ObjectMapper();
-        userChangeRole = new ChangeUserRoleDTO();
+        userChangeRole = new UpdateUserRoleDTO();
         mockMvc = MockMvcBuilders.standaloneSetup(adminController)
             .setControllerAdvice(new GlobalExceptionController())
             .build();
@@ -64,17 +65,17 @@ public class AdminControllerTest {
 
     @Test
     public void createJiraSettings_JiraSetting_StatusOk() throws Exception {
-        jiraSettingsDTO = new JiraSettingsDTO();
-        jiraSettingsDTO.setLogin("login");
-        jiraSettingsDTO.setPassword("password");
-        jiraSettingsDTO.setUri("uri");
+        jiraSettingsCreateDTO = new JiraSettingsCreateDTO();
+        jiraSettingsCreateDTO.setLogin("login");
+        jiraSettingsCreateDTO.setPassword("password");
+        jiraSettingsCreateDTO.setUri("uri");
 
         mockMvc.perform(post("/admin/jira_settings")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(mapper.writeValueAsString(jiraSettingsDTO)))
+            .content(mapper.writeValueAsString(jiraSettingsCreateDTO)))
             .andExpect(status().isOk());
 
-        verify(jiraSettingsService).createJiraSettings(eq(jiraSettingsDTO));
+        verify(jiraSettingsService).createJiraSettings(eq(jiraSettingsCreateDTO));
     }
 
     @Test

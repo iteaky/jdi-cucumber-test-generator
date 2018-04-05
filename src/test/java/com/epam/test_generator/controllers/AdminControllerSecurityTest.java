@@ -12,7 +12,7 @@ import com.epam.test_generator.DatabaseConfigForTests;
 import com.epam.test_generator.config.WebConfig;
 import com.epam.test_generator.config.security.JwtAuthenticationProvider;
 import com.epam.test_generator.dao.interfaces.UserDAO;
-import com.epam.test_generator.dto.ChangeUserRoleDTO;
+import com.epam.test_generator.controllers.Admin.request.UpdateUserRoleDTO;
 import com.epam.test_generator.dto.LoginUserDTO;
 import com.epam.test_generator.entities.Role;
 import com.epam.test_generator.entities.User;
@@ -45,7 +45,7 @@ import org.springframework.web.context.WebApplicationContext;
 public class AdminControllerSecurityTest {
 
     private final LoginUserDTO loginUserDTO = new LoginUserDTO();
-    private final ChangeUserRoleDTO changeUserRoleDTO = new ChangeUserRoleDTO();
+    private final UpdateUserRoleDTO updateUserRoleDTO = new UpdateUserRoleDTO();
 
     @Autowired
     private UserDAO userDAO;
@@ -101,8 +101,8 @@ public class AdminControllerSecurityTest {
         loginUserDTO.setEmail("test@email.com");
         loginUserDTO.setPassword("test");
 
-        changeUserRoleDTO.setEmail("admin@email.com");
-        changeUserRoleDTO.setRole("TEST_LEAD");
+        updateUserRoleDTO.setEmail("admin@email.com");
+        updateUserRoleDTO.setRole("TEST_LEAD");
 
         when(passiveUser.getEmail()).thenReturn("admin@email.com");
         when(passiveUser.getRole()).thenReturn(new Role("GUEST"));
@@ -158,10 +158,10 @@ public class AdminControllerSecurityTest {
         final String token = "Bearer " + loginService.getLoginJWTToken(loginUserDTO);
 
         when(userService.getUserByEmail(eq("admin@email.com"))).thenReturn(passiveUser);
-        when(roleService.getRoleByName(changeUserRoleDTO.getRole()))
+        when(roleService.getRoleByName(updateUserRoleDTO.getRole()))
             .thenReturn(new Role("TEST_LEAD"));
 
-        final String json = new ObjectMapper().writeValueAsString(changeUserRoleDTO);
+        final String json = new ObjectMapper().writeValueAsString(updateUserRoleDTO);
 
         mvc.perform(put("/admin/changeroles").header("Authorization", token).content(json)
             .contentType("application/json"))
@@ -178,9 +178,9 @@ public class AdminControllerSecurityTest {
         final String token = "Bearer " + loginService.getLoginJWTToken(loginUserDTO);
 
         when(userService.getUserByEmail(eq("admin@email.com"))).thenReturn(passiveUser);
-        when(roleService.getRoleByName(changeUserRoleDTO.getRole())).thenReturn(null);
+        when(roleService.getRoleByName(updateUserRoleDTO.getRole())).thenReturn(null);
 
-        final String json = new ObjectMapper().writeValueAsString(changeUserRoleDTO);
+        final String json = new ObjectMapper().writeValueAsString(updateUserRoleDTO);
 
         mvc.perform(put("/admin/changeroles").header("Authorization", token).content(json)
             .contentType("application/json"))
@@ -196,7 +196,7 @@ public class AdminControllerSecurityTest {
 
         final String token = "Bearer " + loginService.getLoginJWTToken(loginUserDTO);
 
-        final String json = new ObjectMapper().writeValueAsString(changeUserRoleDTO);
+        final String json = new ObjectMapper().writeValueAsString(updateUserRoleDTO);
 
         mvc.perform(put("/admin/changeroles").header("Authorization", token).content(json)
             .contentType("application/json"))

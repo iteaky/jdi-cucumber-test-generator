@@ -2,13 +2,15 @@ package com.epam.test_generator.services;
 
 import static com.epam.test_generator.services.utils.UtilsService.checkNotNull;
 
+import com.epam.test_generator.controllers.Admin.JiraSettingsTransformer;
+import com.epam.test_generator.controllers.Admin.request.JiraSettingsCreateDTO;
 import com.epam.test_generator.dao.interfaces.JiraSettingsDAO;
-import com.epam.test_generator.dto.JiraSettingsDTO;
 import com.epam.test_generator.entities.JiraSettings;
 import com.epam.test_generator.services.exceptions.JiraAuthenticationException;
+
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,28 +19,25 @@ import org.springframework.transaction.annotation.Transactional;
 public class JiraSettingsService {
 
     @Autowired
-    JiraSettingsDAO jiraSettingsDAO;
+    private JiraSettingsDAO jiraSettingsDAO;
 
-    public JiraSettings createJiraSettings(JiraSettingsDTO jiraSettingsDTO) throws JiraAuthenticationException {
-        if (jiraSettingsDAO.findByLogin(jiraSettingsDTO.getLogin()) != null) {
+    public JiraSettings createJiraSettings(JiraSettingsCreateDTO jiraSettingsCreateDTO) throws JiraAuthenticationException {
+        if (jiraSettingsDAO.findByLogin(jiraSettingsCreateDTO.getLogin()) != null) {
             throw new JiraAuthenticationException(
-                "Jira setting with such login:" + jiraSettingsDTO.getLogin() + " already exist!");
+                    "Jira setting with such login:" + jiraSettingsCreateDTO.getLogin() + " already exist!");
         } else {
-            final JiraSettings jiraSettings = new JiraSettings(
-                jiraSettingsDTO.getUri(),
-                jiraSettingsDTO.getLogin(),
-                jiraSettingsDTO.getPassword());
+            JiraSettings jiraSettings = JiraSettingsTransformer.fromDTO(jiraSettingsCreateDTO);
             jiraSettingsDAO.save(jiraSettings);
             return jiraSettings;
         }
     }
 
-    public void updateJiraSettings(Long id, JiraSettingsDTO jiraSettingsDTO) {
+    public void updateJiraSettings(Long id, JiraSettingsCreateDTO jiraSettingsCreateDTO) {
         JiraSettings jiraSettings = jiraSettingsDAO.findById(id);
         checkNotNull(jiraSettings);
-        jiraSettings.setLogin(jiraSettingsDTO.getLogin());
-        jiraSettings.setPassword( jiraSettingsDTO.getPassword());
-        jiraSettings.setUri(jiraSettingsDTO.getUri());
+        jiraSettings.setLogin(jiraSettingsCreateDTO.getLogin());
+        jiraSettings.setPassword(jiraSettingsCreateDTO.getPassword());
+        jiraSettings.setUri(jiraSettingsCreateDTO.getUri());
         jiraSettingsDAO.save(jiraSettings);
     }
 

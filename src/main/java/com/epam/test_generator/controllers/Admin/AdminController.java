@@ -1,10 +1,10 @@
-package com.epam.test_generator.controllers;
+package com.epam.test_generator.controllers.Admin;
 
-import com.epam.test_generator.dto.ChangeUserRoleDTO;
-import com.epam.test_generator.dto.JiraSettingsDTO;
+import com.epam.test_generator.controllers.Admin.request.UpdateUserRoleDTO;
+import com.epam.test_generator.controllers.Admin.request.JiraSettingsCreateDTO;
+import com.epam.test_generator.controllers.Admin.response.JiraSettingsGetDTO;
 import com.epam.test_generator.dto.ProjectDTO;
 import com.epam.test_generator.dto.UserDTO;
-import com.epam.test_generator.entities.JiraSettings;
 import com.epam.test_generator.services.AdminService;
 import com.epam.test_generator.services.JiraSettingsService;
 import com.epam.test_generator.services.ProjectService;
@@ -14,8 +14,11 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -48,9 +51,9 @@ public class AdminController {
     @ApiImplicitParam(name = "Authorization", value = "add here your token", paramType = "header", dataType = "string", required = true)
     @Secured("ROLE_ADMIN")
     @RequestMapping(value = "/admin/changeroles", method = RequestMethod.PUT)
-    public ResponseEntity changeUserRole(@RequestBody @Valid ChangeUserRoleDTO changeUserRoleDTO) {
+    public ResponseEntity changeUserRole(@RequestBody @Valid UpdateUserRoleDTO updateUserRoleDTO) {
 
-        adminService.changeUserRole(changeUserRoleDTO);
+        adminService.changeUserRole(updateUserRoleDTO);
 
         return new ResponseEntity(HttpStatus.OK);
     }
@@ -64,8 +67,8 @@ public class AdminController {
 
     @ApiOperation(value = "Get all projects", nickname = "getProjects")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "OK",
-            response = ProjectDTO.class, responseContainer = "List")
+            @ApiResponse(code = 200, message = "OK",
+                    response = ProjectDTO.class, responseContainer = "List")
     })
     @Secured("ROLE_ADMIN")
     @RequestMapping(value = "/admin/projects", method = RequestMethod.GET, produces = "application/json")
@@ -76,13 +79,13 @@ public class AdminController {
 
     @ApiOperation(value = "Delete project by id", nickname = "removeProject")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "OK"),
-        @ApiResponse(code = 404, message = "project not found")
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 404, message = "project not found")
     })
     @ApiImplicitParams({
-        @ApiImplicitParam(name = "projectId", value = "ID of project to delete",
-            required = true, dataType = "long", paramType = "path"),
-        @ApiImplicitParam(name = "Authorization", value = "add here your token", paramType = "header", dataType = "string", required = true)
+            @ApiImplicitParam(name = "projectId", value = "ID of project to delete",
+                    required = true, dataType = "long", paramType = "path"),
+            @ApiImplicitParam(name = "Authorization", value = "add here your token", paramType = "header", dataType = "string", required = true)
     })
     @Secured({"ROLE_ADMIN"})
     @RequestMapping(value = "admin/projects/{projectId}", method = RequestMethod.DELETE)
@@ -95,8 +98,8 @@ public class AdminController {
     @ApiOperation(value = "Create jira settings")
     @ApiImplicitParam(name = "Authorization", value = "add here your token", paramType = "header", dataType = "string", required = true)
     @RequestMapping(value = "admin/jira_settings", method = RequestMethod.POST, consumes = "application/json")
-    public ResponseEntity createJiraSettings(@RequestBody @Valid JiraSettingsDTO jiraSettingsDTO) {
-        jiraSettingsService.createJiraSettings(jiraSettingsDTO);
+    public ResponseEntity createJiraSettings(@RequestBody @Valid JiraSettingsCreateDTO jiraSettingsCreateDTO) {
+        jiraSettingsService.createJiraSettings(jiraSettingsCreateDTO);
         return new ResponseEntity(HttpStatus.OK);
     }
 
@@ -104,7 +107,12 @@ public class AdminController {
     @ApiOperation(value = "Get jira settings")
     @ApiImplicitParam(name = "Authorization", value = "add here your token", paramType = "header", dataType = "string", required = true)
     @RequestMapping(value = "admin/jira_settings", method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<List<JiraSettings>> getJiraSettings() {
-        return new ResponseEntity<>(jiraSettingsService.getJiraSettings(), HttpStatus.OK);
+    public ResponseEntity<List<JiraSettingsGetDTO>> getJiraSettings() {
+        List<JiraSettingsGetDTO> settings = jiraSettingsService.getJiraSettings()
+                .stream()
+                .map(JiraSettingsTransformer::toDTO)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(settings, HttpStatus.OK);
     }
 }

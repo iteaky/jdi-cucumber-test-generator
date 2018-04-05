@@ -1,11 +1,11 @@
-package com.epam.test_generator.dto;
+package com.epam.test_generator.controllers.Admin.request;
 
 import org.hibernate.validator.constraints.Email;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-public class ChangeUserRoleDTO {
+public class UpdateUserRoleDTO {
 
     @NotNull
     @Email
@@ -15,7 +15,7 @@ public class ChangeUserRoleDTO {
     @NotNull
     private String role;
 
-    public ChangeUserRoleDTO() {
+    public UpdateUserRoleDTO() {
     }
 
     public String getEmail() {

@@ -1,6 +1,6 @@
 package com.epam.test_generator.services;
 
-import com.epam.test_generator.dto.ChangeUserRoleDTO;
+import com.epam.test_generator.controllers.Admin.request.UpdateUserRoleDTO;
 import com.epam.test_generator.entities.Role;
 import com.epam.test_generator.entities.User;
 import com.epam.test_generator.services.exceptions.BadRoleException;
@@ -35,7 +35,7 @@ public class AdminServiceTest {
     @InjectMocks
     private AdminService adminService;
 
-    private ChangeUserRoleDTO userRoleDTO;
+    private UpdateUserRoleDTO userRoleDTO;
 
     private User user;
 
@@ -88,8 +88,8 @@ public class AdminServiceTest {
         return user;
     }
 
-    private ChangeUserRoleDTO getUserDtoFor(String userEmail, String userRole) {
-        final ChangeUserRoleDTO userRoleDTO = new ChangeUserRoleDTO();
+    private UpdateUserRoleDTO getUserDtoFor(String userEmail, String userRole) {
+        final UpdateUserRoleDTO userRoleDTO = new UpdateUserRoleDTO();
         userRoleDTO.setEmail(userEmail);
         userRoleDTO.setRole(userRole);
         return userRoleDTO;

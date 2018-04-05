@@ -1,12 +1,12 @@
-package com.epam.test_generator.dto;
+package com.epam.test_generator.controllers.Admin.response;
 
-import java.util.Objects;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import org.hibernate.validator.constraints.Email;
+import java.util.Objects;
 
-public class JiraSettingsDTO {
+public class JiraSettingsGetDTO {
 
+    @NotNull
     private Long id;
 
     @NotNull
@@ -17,17 +17,13 @@ public class JiraSettingsDTO {
     @Size(min = 1, max = 255)
     private String login;
 
-    @NotNull
-    @Size(min = 1, max = 255)
-    private String password;
-
-    public JiraSettingsDTO(String uri, String login, String password) {
+    public JiraSettingsGetDTO(Long id, String uri, String login) {
+        this.id = id;
         this.uri = uri;
         this.login = login;
-        this.password = password;
     }
 
-    public JiraSettingsDTO() {
+    public JiraSettingsGetDTO() {
     }
 
     public Long getId() {
@@ -54,21 +50,12 @@ public class JiraSettingsDTO {
         this.login = login;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     @Override
     public String toString() {
-        return "JiraSettingsDTO{" +
+        return "JiraSettingsCreateDTO{" +
             "id=" + id +
             ", uri='" + uri + '\'' +
             ", login='" + login + '\'' +
-            ", password='" + password + '\'' +
             '}';
     }
 
@@ -80,18 +67,16 @@ public class JiraSettingsDTO {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        JiraSettingsDTO that = (JiraSettingsDTO) o;
+        JiraSettingsGetDTO that = (JiraSettingsGetDTO) o;
         return Objects.equals(id, that.id) &&
             Objects.equals(uri, that.uri) &&
-            Objects.equals(login, that.login) &&
-            Objects.equals(password, that.password);
+            Objects.equals(login, that.login);
     }
 
     @Override
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (login != null ? login.hashCode() : 0);
-        result = 31 * result + (password != null ? password.hashCode() : 0);
         result = 31 * result + (uri != null ? uri.hashCode() : 0);
         return result;
     }
