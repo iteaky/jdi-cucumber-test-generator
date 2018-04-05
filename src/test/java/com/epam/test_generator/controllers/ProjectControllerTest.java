@@ -125,19 +125,7 @@ public class ProjectControllerTest {
 
         verify(projectService).updateProject((anyLong()), any(ProjectUpdateDTO.class));
     }
-
-    @Test
-    public void updateProject_InvalidInput_StatusBadRequest() throws Exception {
-        projectDTO.setId(null);
-        projectDTO.setName(null);
-
-        mockMvc.perform(put("/projects/" + SIMPLE_PROJECT_ID)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(mapper.writeValueAsString(projectDTO)))
-            .andExpect(status().isBadRequest());
-
-        verify(projectService, never()).updateProject(anyLong(), any(ProjectUpdateDTO.class));
-    }
+    
 
     @Test
     public void updateProject_ValidUpdateDTO_StatusNotFound() throws Exception {
