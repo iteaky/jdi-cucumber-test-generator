@@ -167,7 +167,17 @@ public class Project implements ProjectTrait {
     }
 
     @Override
-    public Project getProject() {
+    public Project is() {
         return this;
+    }
+
+    @Override
+    public List<Suit> suits() {
+        return getSuits();
+    }
+
+    @Override
+    public Set<User> users() {
+        return getUsers();
     }
 }

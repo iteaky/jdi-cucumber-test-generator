@@ -8,21 +8,21 @@ import java.util.Objects;
 
 public interface CaseTrait {
 
-    Case getCase();
+    Case is();
+
+    List<Step> steps();
 
 
     default Step hasStep(Step step) {
-        final List<Step> cases = getCase().getSteps();
-        if (cases == null || !cases.contains(step)) {
+        if (steps() == null || !steps().contains(step)) {
             throw new BadRequestException();
         }
         return step;
     }
 
     default Case removeStep(Step step){
-        final Case aCase = getCase();
-        Objects.requireNonNull(aCase.getSteps()).remove(step);
-        return aCase;
+        Objects.requireNonNull(steps()).remove(step);
+        return is();
     }
 
 }

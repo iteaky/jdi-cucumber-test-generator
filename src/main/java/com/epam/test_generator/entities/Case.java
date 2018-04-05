@@ -311,8 +311,14 @@ public class Case implements Serializable, Persistable<Long>, CaseTrait {
         return result;
     }
 
+
     @Override
-    public Case getCase() {
+    public Case is() {
         return this;
+    }
+
+    @Override
+    public List<Step> steps() {
+        return getSteps();
     }
 }

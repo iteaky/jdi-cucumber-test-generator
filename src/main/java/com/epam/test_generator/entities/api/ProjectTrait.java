@@ -10,47 +10,49 @@ import java.util.Set;
 public interface ProjectTrait {
 
 
-    Project getProject();
+    Project is();
+
+    List<Suit> suits();
+
+    Set<User> users();
 
 
     default void addSuit(Suit suit) {
-        getProject().getSuits().add(suit);
+        suits().add(suit);
     }
 
     default Suit hasSuit(Suit suit) {
-        final List<Suit> suits = getProject().getSuits();
-        if (suits == null || !suits.contains(suit)) {
+        if (suits() == null || !suits().contains(suit)) {
             throw new BadRequestException(
-                "Error: project " + getProject().getName() + " does not have suit " + suit
+                "Error: project " + is().getName() + " does not have suit " + suit
                     .getName());
         }
         return suit;
     }
 
     default boolean removeSuit(Suit suit){
-        return getProject().getSuits().remove(suit);
+        return suits().remove(suit);
     }
 
     default User hasUser(User user) {
-        final Set<User> users = getProject().getUsers();
-        if (users == null || !users.contains(user)) {
+        if (users() == null || !users().contains(user)) {
             throw new BadRequestException(
-                "Error: user does not access to project " + getProject().getName());
+                "Error: user does not access to project " + is().getName());
         }
         return user;
     }
 
     default boolean unsubscribeUser(User user){
-        return getProject().getUsers().remove(user);
+        return users().remove(user);
     }
 
     default Project close(){
-        final Project project = getProject();
+        final Project project = is();
         project.setActive(false);
         return project;
     }
 
     default void activate(){
-        getProject().setActive(true);
+        is().setActive(true);
     }
 }

@@ -307,7 +307,12 @@ public class Suit implements Serializable, Persistable<Long>, SuitTrait {
     }
 
     @Override
-    public Suit getSuit() {
+    public Suit is() {
         return this;
+    }
+
+    @Override
+    public List<Case> cases() {
+        return getCases();
     }
 }

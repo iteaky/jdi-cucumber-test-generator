@@ -8,15 +8,16 @@ import java.util.Objects;
 
 public interface SuitTrait {
 
-    Suit getSuit();
+    Suit is();
+
+    List<Case> cases();
 
     default boolean isRemoved() {
-        return Objects.isNull(getSuit().getJiraKey());
+        return Objects.isNull(is().getJiraKey());
     }
 
     default Case hasCase(Case aCase) {
-        final List<Case> cases = getSuit().getCases();
-        if (cases == null || !cases.contains(aCase)) {
+        if (cases() == null || !cases().contains(aCase)) {
             throw new BadRequestException();
         }
         return aCase;
