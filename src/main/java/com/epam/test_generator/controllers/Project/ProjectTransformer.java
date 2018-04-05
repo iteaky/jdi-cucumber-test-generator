@@ -2,8 +2,8 @@ package com.epam.test_generator.controllers.Project;
 
 import com.epam.test_generator.controllers.Project.request.ProjectCreateDTO;
 import com.epam.test_generator.controllers.Project.request.ProjectUpdateDTO;
-import com.epam.test_generator.controllers.Project.responce.ProjectDTO;
-import com.epam.test_generator.controllers.Project.responce.ProjectFullDTO;
+import com.epam.test_generator.controllers.Project.response.ProjectDTO;
+import com.epam.test_generator.controllers.Project.response.ProjectFullDTO;
 import com.epam.test_generator.dto.SuitDTO;
 import com.epam.test_generator.dto.UserDTO;
 import com.epam.test_generator.entities.Project;

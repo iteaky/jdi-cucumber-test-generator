@@ -13,7 +13,7 @@ import com.epam.test_generator.dao.interfaces.ProjectDAO;
 import com.epam.test_generator.dao.interfaces.RemovedIssueDAO;
 import com.epam.test_generator.dao.interfaces.SuitDAO;
 import com.epam.test_generator.dao.interfaces.SuitVersionDAO;
-import com.epam.test_generator.controllers.Project.responce.ProjectDTO;
+import com.epam.test_generator.controllers.Project.response.ProjectDTO;
 import com.epam.test_generator.entities.Case;
 import com.epam.test_generator.entities.Project;
 import com.epam.test_generator.entities.RemovedIssue;

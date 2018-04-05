@@ -18,8 +18,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.epam.test_generator.controllers.Project.ProjectController;
 import com.epam.test_generator.controllers.Project.request.ProjectCreateDTO;
 import com.epam.test_generator.controllers.Project.request.ProjectUpdateDTO;
-import com.epam.test_generator.controllers.Project.responce.ProjectDTO;
-import com.epam.test_generator.controllers.Project.responce.ProjectFullDTO;
+import com.epam.test_generator.controllers.Project.response.ProjectDTO;
+import com.epam.test_generator.controllers.Project.response.ProjectFullDTO;
 import com.epam.test_generator.services.ProjectService;
 import com.epam.test_generator.services.exceptions.NotFoundException;
 import com.epam.test_generator.services.exceptions.ProjectClosedException;

@@ -6,22 +6,20 @@ import static org.mockito.Mockito.when;
 import com.epam.test_generator.controllers.Project.ProjectTransformer;
 import com.epam.test_generator.controllers.Project.request.ProjectCreateDTO;
 import com.epam.test_generator.controllers.Project.request.ProjectUpdateDTO;
-import com.epam.test_generator.controllers.Project.responce.ProjectDTO;
-import com.epam.test_generator.controllers.Project.responce.ProjectFullDTO;
+import com.epam.test_generator.controllers.Project.response.ProjectDTO;
+import com.epam.test_generator.controllers.Project.response.ProjectFullDTO;
 import com.epam.test_generator.entities.Project;
 import com.epam.test_generator.entities.Status;
 import com.epam.test_generator.entities.Suit;
 import com.epam.test_generator.transformers.SuitTransformer;
 import com.epam.test_generator.transformers.UserTransformer;
 import java.util.Collections;
-import javax.persistence.Temporal;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)

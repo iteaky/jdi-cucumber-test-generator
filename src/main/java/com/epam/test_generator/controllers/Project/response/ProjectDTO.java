@@ -1,4 +1,4 @@
-package com.epam.test_generator.controllers.Project.responce;
+package com.epam.test_generator.controllers.Project.response;
 
 import com.epam.test_generator.dto.UserDTO;
 import javax.validation.constraints.NotNull;

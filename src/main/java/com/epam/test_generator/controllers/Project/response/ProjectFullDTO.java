@@ -1,4 +1,4 @@
-package com.epam.test_generator.controllers.Project.responce;
+package com.epam.test_generator.controllers.Project.response;
 
 import com.epam.test_generator.controllers.Project.ProjectController;
 import com.epam.test_generator.dto.SuitDTO;
@@ -9,9 +9,6 @@ import com.epam.test_generator.entities.Suit;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 /**
  * DTO class, that fully represents {@link Project} entity (all it's fields). This DTO is used only for
