@@ -10,11 +10,6 @@ public interface SuitTrait {
 
     List<Case> getCases();
 
-    String getJiraKey();
-
-    default boolean isRemoved() {
-        return Objects.isNull(getJiraKey());
-    }
 
     default Case hasCase(Case aCase) {
         if (getCases() == null || !getCases().contains(aCase)) {

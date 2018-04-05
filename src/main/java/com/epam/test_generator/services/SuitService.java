@@ -101,10 +101,7 @@ public class SuitService {
 
 
     public Suit getSuitByJiraKey(String key) {
-        Suit project = suitDAO.findByJiraKey(key);
-        checkNotNull(project);
-
-        return project;
+        return checkNotNull(suitDAO.findByJiraKey(key));
     }
 
     /**
@@ -144,7 +141,7 @@ public class SuitService {
     public SuitDTO removeSuit(long projectId, long suitId) {
         final Suit suit = checkNotNull(getSuit(projectId, suitId));
 
-        if (!suit.isRemoved()) {
+        if (suit.isNotRemoved()) {
             removedIssueDAO.save(new RemovedIssue(suit.getJiraKey()));
         }
 
@@ -153,7 +150,7 @@ public class SuitService {
         suitVersionDAO.delete(suit);
         caseVersionDAO.delete(suit.getCases());
 
-        Project project = projectService.getProjectByProjectId(projectId);
+        final Project project = projectService.getProjectByProjectId(projectId);
         project.removeSuit(suit);
         return suitTransformer.toDto(suit);
     }

@@ -49,7 +49,7 @@ public class ProjectService {
     }
 
     public List<Project> getProjectsByUserId(Long userId) {
-        final User user = checkNotNull(userService.getUserById(userId));
+        final User user = userService.getUserById(userId);
         return projectDAO.findByUsers(user);
     }
 
@@ -58,10 +58,7 @@ public class ProjectService {
     }
 
     public Project getProjectByJiraKey(String key) {
-        Project project = projectDAO.findByJiraKey(key);
-        checkNotNull(project);
-
-        return project;
+        return checkNotNull(projectDAO.findByJiraKey(key));
     }
 
     public ProjectFullDTO getAuthUserFullProject(Long projectId, Authentication authentication) {
@@ -106,8 +103,8 @@ public class ProjectService {
      * @param projectDTO update info
      */
     public void updateProject(Long projectId, ProjectDTO projectDTO) {
-        Project project = checkNotNull(projectDAO.findOne(projectId));
-        checkProjectIsActive(project);
+        final Project project = checkNotNull(projectDAO.findOne(projectId));
+        project.checkIsActive();
 
         projectTransformer.mapDTOToEntity(projectDTO, project);
         project.setId(projectId);
@@ -129,7 +126,7 @@ public class ProjectService {
      */
     public void addUserToProject(long projectId, long userId) {
         final Project project = checkNotNull(projectDAO.findOne(projectId));
-        checkProjectIsActive(project);
+        project.checkIsActive();
         final User user = checkNotNull(userService.getUserById(userId));
 
         project.addUser(user);
@@ -143,7 +140,7 @@ public class ProjectService {
      */
     public void removeUserFromProject(long projectId, long userId) {
         final Project project = checkNotNull(projectDAO.findOne(projectId));
-        checkProjectIsActive(project);
+        project.checkIsActive();
         final User user = checkNotNull(userService.getUserById(userId));
 
         project.unsubscribeUser(user);
@@ -156,7 +153,7 @@ public class ProjectService {
      */
     public void closeProject(long projectId) {
         final Project project = checkNotNull(projectDAO.findOne(projectId));
-        checkProjectIsActive(project);
+        project.checkIsActive();
         project.close();
         projectDAO.save(project);
     }

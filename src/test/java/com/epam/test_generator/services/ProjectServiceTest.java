@@ -20,6 +20,7 @@ import com.epam.test_generator.entities.User;
 import com.epam.test_generator.services.exceptions.BadRequestException;
 import com.epam.test_generator.services.exceptions.NotFoundException;
 import com.epam.test_generator.services.exceptions.ProjectClosedException;
+import com.epam.test_generator.services.exceptions.UnauthorizedException;
 import com.epam.test_generator.transformers.ProjectFullTransformer;
 import com.epam.test_generator.transformers.ProjectTransformer;
 import com.google.common.collect.Sets;
@@ -221,12 +222,11 @@ public class ProjectServiceTest {
 
     @Test(expected = NotFoundException.class)
     public void getProjectsByUserId_InvalidUserId_NotFoundException() {
-        when(userService.getUserById(simpleUser1.getId())).thenReturn(null);
-        when(projectDAO.findByUsers(simpleUser1)).thenReturn(expectedProjects);
+        when(userService.getUserById(simpleUser1.getId())).thenReturn(simpleUser1);
+        when(projectDAO.findByUsers(simpleUser1)).thenReturn(null);
 
         projectService.getProjectsByUserId(simpleUser1.getId());
 
-        verify(userService).getUserById(eq(simpleUser1.getId()));
     }
 
     @Test

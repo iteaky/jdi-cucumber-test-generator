@@ -46,12 +46,12 @@ public class UserService {
     private TokenDAO tokenDAO;
 
     public User getUserById(Long id) {
-        return userDAO.findById(id);
+        return checkUserExist(userDAO.findById(id));
 
     }
 
     public User getUserByEmail(String email) {
-        return userDAO.findByEmail(email);
+        return checkUserExist(userDAO.findByEmail(email));
 
     }
 
@@ -165,11 +165,12 @@ public class UserService {
         userDAO.save(byEmail);
     }
 
-    public void checkUserExist(User user) {
+    public User checkUserExist(User user) {
         if (user == null) {
             throw new UnauthorizedException(
                     "User not found.");
         }
+        return user;
     }
 
     public void confirmUser(String token){

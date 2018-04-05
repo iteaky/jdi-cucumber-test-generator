@@ -66,6 +66,7 @@ public class Project implements ProjectTrait, SuitProjectTrait, UsersProjectTrai
         this.description = description;
     }
 
+    @Override
     public Long getId() {
         return id;
     }
@@ -117,6 +118,7 @@ public class Project implements ProjectTrait, SuitProjectTrait, UsersProjectTrai
         this.users = users;
     }
 
+    @Override
     public boolean isActive() {
         return active;
     }

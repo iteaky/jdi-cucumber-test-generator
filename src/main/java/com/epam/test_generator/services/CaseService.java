@@ -158,12 +158,10 @@ public class CaseService {
      * (in fact id of {@link StepDTO} with FAILED {@link Status} which belong this suit)
      */
     public CaseUpdateDTO updateCase(Long projectId, Long suitId, Long caseId, EditCaseDTO editCaseDTO) {
-        Suit suit = suitService.getSuit(projectId, suitId);
+        final Suit suit = suitService.getSuit(projectId, suitId);
 
-        Case caze = caseDAO.findOne(caseId);
-        checkNotNull(caze);
-
-        caseBelongsToSuit(caze, suit);
+        Case caze = checkNotNull(caseDAO.findOne(caseId));
+        suit.hasCase(caze);
 
         final List<Long> failedStepIds = cascadeUpdateService
             .cascadeCaseStepsUpdate(projectId, suitId, caseId, editCaseDTO);
@@ -245,7 +243,7 @@ public class CaseService {
     }
 
     private void saveIssueToDeleteInJira(Case caze) {
-        if (caze.getJiraKey() != null) {
+        if (caze.isNotRemoved()) {
             removedIssueDAO.save(new RemovedIssue(caze.getJiraKey()));
         }
     }

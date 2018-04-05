@@ -1,6 +1,7 @@
 package com.epam.test_generator.entities;
 
 import com.epam.test_generator.entities.api.CaseTrait;
+import com.epam.test_generator.entities.api.JiraStoryTrait;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ import org.springframework.statemachine.annotation.WithStateMachine;
  */
 @Entity
 @WithStateMachine
-public class Case implements Serializable, Persistable<Long>, CaseTrait {
+public class Case implements Serializable, Persistable<Long>, CaseTrait, JiraStoryTrait {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -154,6 +155,7 @@ public class Case implements Serializable, Persistable<Long>, CaseTrait {
         this.description = description;
     }
 
+    @Override
     public List<Step> getSteps() {
         if (steps == null) {
             steps = new ArrayList<>();
@@ -229,6 +231,7 @@ public class Case implements Serializable, Persistable<Long>, CaseTrait {
         this.comment = comment;
     }
 
+    @Override
     public String getJiraKey() {
         return jiraKey;
     }

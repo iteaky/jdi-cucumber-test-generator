@@ -1,5 +1,6 @@
 package com.epam.test_generator.entities;
 
+import com.epam.test_generator.entities.api.JiraStoryTrait;
 import com.epam.test_generator.entities.api.SuitTrait;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -30,7 +31,7 @@ import org.springframework.data.domain.Persistable;
  * {@Link Suit} object.
  */
 @Entity
-public class Suit implements Serializable, Persistable<Long>, SuitTrait {
+public class Suit implements Serializable, Persistable<Long>, SuitTrait, JiraStoryTrait {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
