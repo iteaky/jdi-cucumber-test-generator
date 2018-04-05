@@ -13,11 +13,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.epam.test_generator.dto.ProjectDTO;
-import com.epam.test_generator.dto.ProjectFullDTO;
+import com.epam.test_generator.controllers.Project.ProjectController;
+import com.epam.test_generator.controllers.Project.request.ProjectCreateDTO;
+import com.epam.test_generator.controllers.Project.request.ProjectUpdateDTO;
+import com.epam.test_generator.controllers.Project.responce.ProjectDTO;
+import com.epam.test_generator.controllers.Project.responce.ProjectFullDTO;
 import com.epam.test_generator.services.ProjectService;
 import com.epam.test_generator.services.exceptions.NotFoundException;
 import com.epam.test_generator.services.exceptions.ProjectClosedException;
@@ -91,14 +93,14 @@ public class ProjectControllerTest {
     @Test
     public void createProject_CorrectDTO_StatusCreated() throws Exception {
         projectDTO.setId(null);
-        when(projectService.createProject(any(ProjectDTO.class), any(Authentication.class))).thenReturn(projectDTO);
+        when(projectService.createProject(any(ProjectCreateDTO.class), any(Authentication.class))).thenReturn(projectDTO);
 
         mockMvc.perform(post("/projects")
             .contentType(MediaType.APPLICATION_JSON)
             .content(mapper.writeValueAsString(projectDTO)))
             .andExpect(status().isCreated());
 
-        verify(projectService).createProject(any(ProjectDTO.class), any(Authentication.class));
+        verify(projectService).createProject(any(ProjectCreateDTO.class), any(Authentication.class));
     }
 
     @Test
@@ -111,7 +113,7 @@ public class ProjectControllerTest {
             .content(mapper.writeValueAsString(projectDTO)))
             .andExpect(status().isBadRequest());
 
-        verify(projectService,never()).createProject(any(ProjectDTO.class), any(Authentication.class));
+        verify(projectService,never()).createProject(any(ProjectCreateDTO.class), any(Authentication.class));
     }
 
     @Test
@@ -121,7 +123,7 @@ public class ProjectControllerTest {
             .content(mapper.writeValueAsString(projectDTO)))
             .andExpect(status().isOk());
 
-        verify(projectService).updateProject((anyLong()), any(ProjectDTO.class));
+        verify(projectService).updateProject((anyLong()), any(ProjectUpdateDTO.class));
     }
 
     @Test
@@ -134,19 +136,19 @@ public class ProjectControllerTest {
             .content(mapper.writeValueAsString(projectDTO)))
             .andExpect(status().isBadRequest());
 
-        verify(projectService, never()).updateProject(anyLong(), any(ProjectDTO.class));
+        verify(projectService, never()).updateProject(anyLong(), any(ProjectUpdateDTO.class));
     }
 
     @Test
     public void updateProject_ValidUpdateDTO_StatusNotFound() throws Exception {
         doThrow(NotFoundException.class)
-            .when(projectService).updateProject(anyLong(), any(ProjectDTO.class));
+            .when(projectService).updateProject(anyLong(), any(ProjectUpdateDTO.class));
         mockMvc.perform(put("/projects/" + SIMPLE_PROJECT_ID)
             .contentType(MediaType.APPLICATION_JSON)
             .content(mapper.writeValueAsString(projectDTO)))
             .andExpect(status().isNotFound());
 
-        verify(projectService).updateProject((anyLong()), any(ProjectDTO.class));
+        verify(projectService).updateProject((anyLong()), any(ProjectUpdateDTO.class));
     }
 
     @Test
@@ -154,13 +156,13 @@ public class ProjectControllerTest {
         projectDTO.setActive(false);
 
         doThrow(ProjectClosedException.class)
-            .when(projectService).updateProject(anyLong(), any(ProjectDTO.class));
+            .when(projectService).updateProject(anyLong(), any(ProjectUpdateDTO.class));
         mockMvc.perform(put("/projects/" + SIMPLE_PROJECT_ID)
             .contentType(MediaType.APPLICATION_JSON)
             .content(mapper.writeValueAsString(projectDTO)))
             .andExpect(status().isForbidden());
 
-        verify(projectService).updateProject((anyLong()), any(ProjectDTO.class));
+        verify(projectService).updateProject((anyLong()), any(ProjectUpdateDTO.class));
     }
 
     @Test
