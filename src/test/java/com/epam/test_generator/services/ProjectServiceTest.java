@@ -10,7 +10,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.epam.test_generator.config.security.AuthenticatedUser;
-import com.epam.test_generator.controllers.user.responce.UserDTO;
+import com.epam.test_generator.controllers.user.response.UserDTO;
 import com.epam.test_generator.dao.interfaces.ProjectDAO;
 import com.epam.test_generator.dto.ProjectDTO;
 import com.epam.test_generator.dto.ProjectFullDTO;

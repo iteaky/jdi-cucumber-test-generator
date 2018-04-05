@@ -2,7 +2,7 @@ package com.epam.test_generator.services;
 
 import com.epam.test_generator.controllers.user.UserDTOsTransformer;
 import com.epam.test_generator.controllers.user.request.RegistrationUserDTO;
-import com.epam.test_generator.controllers.user.responce.UserDTO;
+import com.epam.test_generator.controllers.user.response.UserDTO;
 import com.epam.test_generator.dao.interfaces.TokenDAO;
 import com.epam.test_generator.dao.interfaces.UserDAO;
 import com.epam.test_generator.entities.Token;

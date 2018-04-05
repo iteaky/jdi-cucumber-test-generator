@@ -1,8 +1,7 @@
 package com.epam.test_generator.controllers.user;
 
-import com.epam.test_generator.controllers.user.request.LoginUserDTO;
 import com.epam.test_generator.controllers.user.request.RegistrationUserDTO;
-import com.epam.test_generator.controllers.user.responce.UserDTO;
+import com.epam.test_generator.controllers.user.response.UserDTO;
 import com.epam.test_generator.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
