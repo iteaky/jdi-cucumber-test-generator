@@ -141,6 +141,7 @@ public class Suit implements Serializable, Persistable<Long>, SuitTrait {
         this.status = status;
     }
 
+    @Override
     public String getJiraKey() {
         return jiraKey;
     }
@@ -193,6 +194,7 @@ public class Suit implements Serializable, Persistable<Long>, SuitTrait {
         this.tags = tags;
     }
 
+    @Override
     public List<Case> getCases() {
         return cases;
     }
@@ -304,15 +306,5 @@ public class Suit implements Serializable, Persistable<Long>, SuitTrait {
             .hash(id, name, description, priority, status, jiraKey, jiraProjectKey, tags,
                 cases,
                 rowNumber);
-    }
-
-    @Override
-    public Suit is() {
-        return this;
-    }
-
-    @Override
-    public List<Case> cases() {
-        return getCases();
     }
 }

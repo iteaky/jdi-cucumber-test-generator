@@ -1,6 +1,8 @@
 package com.epam.test_generator.entities;
 
 import com.epam.test_generator.entities.api.ProjectTrait;
+import com.epam.test_generator.entities.api.SuitProjectTrait;
+import com.epam.test_generator.entities.api.UsersProjectTrait;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -23,7 +25,7 @@ import javax.persistence.OneToMany;
  * of current project. More rights are granted with more significant {@link Role} of a user.
  */
 @Entity
-public class Project implements ProjectTrait {
+public class Project implements ProjectTrait, SuitProjectTrait, UsersProjectTrait {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -72,6 +74,7 @@ public class Project implements ProjectTrait {
         this.id = id;
     }
 
+    @Override
     public String getName() {
         return name;
     }
@@ -88,6 +91,7 @@ public class Project implements ProjectTrait {
         this.description = description;
     }
 
+    @Override
     public List<Suit> getSuits() {
         return suits;
     }
@@ -96,6 +100,7 @@ public class Project implements ProjectTrait {
         this.suits = suits;
     }
 
+    @Override
     public Set<User> getUsers() {
         return users;
     }
@@ -116,6 +121,7 @@ public class Project implements ProjectTrait {
         return active;
     }
 
+    @Override
     public void setActive(boolean active) {
         this.active = active;
     }
@@ -164,20 +170,5 @@ public class Project implements ProjectTrait {
     public int hashCode() {
 
         return Objects.hash(id, name, description, suits, users, active, jiraKey);
-    }
-
-    @Override
-    public Project is() {
-        return this;
-    }
-
-    @Override
-    public List<Suit> suits() {
-        return getSuits();
-    }
-
-    @Override
-    public Set<User> users() {
-        return getUsers();
     }
 }

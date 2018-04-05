@@ -310,15 +310,4 @@ public class Case implements Serializable, Persistable<Long>, CaseTrait {
         result = 31 * result + (comment != null ? comment.hashCode() : 0);
         return result;
     }
-
-
-    @Override
-    public Case is() {
-        return this;
-    }
-
-    @Override
-    public List<Step> steps() {
-        return getSteps();
-    }
 }

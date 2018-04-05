@@ -1,25 +1,29 @@
 package com.epam.test_generator.entities.api;
 
 import com.epam.test_generator.entities.Case;
-import com.epam.test_generator.entities.Suit;
 import com.epam.test_generator.services.exceptions.BadRequestException;
 import java.util.List;
 import java.util.Objects;
 
 public interface SuitTrait {
 
-    Suit is();
 
-    List<Case> cases();
+    List<Case> getCases();
+
+    String getJiraKey();
 
     default boolean isRemoved() {
-        return Objects.isNull(is().getJiraKey());
+        return Objects.isNull(getJiraKey());
     }
 
     default Case hasCase(Case aCase) {
-        if (cases() == null || !cases().contains(aCase)) {
+        if (getCases() == null || !getCases().contains(aCase)) {
             throw new BadRequestException();
         }
         return aCase;
+    }
+
+    default boolean removeCase(Case aCase){
+        return getCases().remove(hasCase(aCase));
     }
 }

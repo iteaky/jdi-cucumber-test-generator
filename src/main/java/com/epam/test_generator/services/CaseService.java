@@ -197,24 +197,20 @@ public class CaseService {
      * @return removed {@link CaseDTO}
      */
     public CaseDTO removeCase(Long projectId, Long suitId, Long caseId) {
-        Suit suit = suitService.getSuit(projectId, suitId);
+        final Suit suit = suitService.getSuit(projectId, suitId);
 
-        Case caze = caseDAO.findOne(caseId);
-        checkNotNull(caze);
+        final Case caze = checkNotNull(caseDAO.findOne(caseId));
 
-        caseBelongsToSuit(caze, suit);
+        suit.removeCase(caze);
 
         saveIssueToDeleteInJira(caze);
 
-        suit.getCases().remove(caze);
         caseDAO.delete(caseId);
 
         caseVersionDAO.delete(caze);
         suitVersionDAO.save(suit);
 
-        CaseDTO removedCaseDTO = caseTransformer.toDto(caze);
-
-        return removedCaseDTO;
+        return caseTransformer.toDto(caze);
     }
 
     /**
@@ -225,9 +221,9 @@ public class CaseService {
      * @return removed list of {@link CaseDTO}
      */
     public List<CaseDTO> removeCases(Long projectId, Long suitId, List<Long> caseIds) {
-        Suit suit = suitService.getSuit(projectId, suitId);
+        final Suit suit = suitService.getSuit(projectId, suitId);
 
-        List<Case> removedCases = new ArrayList<>();
+        final List<Case> removedCases = new ArrayList<>();
 
         suit.getCases().stream()
             .filter(caze -> caseIds.stream()
@@ -242,7 +238,7 @@ public class CaseService {
 
             });
 
-        removedCases.forEach(caze -> suit.getCases().remove(caze));
+        removedCases.forEach(suit::removeCase);
         suitVersionDAO.save(suit);
 
         return caseTransformer.toDtoList(removedCases);
@@ -255,12 +251,11 @@ public class CaseService {
     }
 
     public List<CaseVersionDTO> getCaseVersions(Long projectId, Long suitId, Long caseId) {
-        Suit suit = suitService.getSuit(projectId, suitId);
+        final Suit suit = suitService.getSuit(projectId, suitId);
 
-        Case caze = caseDAO.findOne(caseId);
-        checkNotNull(caze);
+        final Case caze = checkNotNull(caseDAO.findOne(caseId));
 
-        caseBelongsToSuit(caze, suit);
+        suit.hasCase(caze);
 
         List<CaseVersion> caseVersions = caseVersionDAO.findAll(caseId);
 
@@ -276,23 +271,18 @@ public class CaseService {
      * @return {@link CaseDTO} of restored by the commitId case
      */
     public CaseDTO restoreCase(Long projectId, Long suitId, Long caseId, String commitId) {
-        Suit suit = suitService.getSuit(projectId, suitId);
+        final Suit suit = suitService.getSuit(projectId, suitId);
+        final Case caze = checkNotNull(caseDAO.findOne(caseId));
 
-        Case caze = caseDAO.findOne(caseId);
-        checkNotNull(caze);
+        suit.hasCase(caze);
 
-        caseBelongsToSuit(caze, suit);
+        final Case caseToRestore = checkNotNull(caseVersionDAO.findByCommitId(caseId, commitId));
 
-        Case caseToRestore = caseVersionDAO.findByCommitId(caseId, commitId);
-        checkNotNull(caseToRestore);
-
-        Case restoredCase = caseDAO.save(caseToRestore);
+        final Case restoredCase = caseDAO.save(caseToRestore);
         caseVersionDAO.save(caseToRestore);
         suitVersionDAO.save(suit);
 
-        CaseDTO restoredCaseDTO = caseTransformer.toDto(restoredCase);
-
-        return restoredCaseDTO;
+        return caseTransformer.toDto(restoredCase);
     }
 
     /**

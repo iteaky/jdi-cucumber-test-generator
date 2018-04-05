@@ -49,7 +49,7 @@ public class ProjectService {
     }
 
     public List<Project> getProjectsByUserId(Long userId) {
-        User user = checkNotNull(userService.getUserById(userId));
+        final User user = checkNotNull(userService.getUserById(userId));
         return projectDAO.findByUsers(user);
     }
 
@@ -65,9 +65,9 @@ public class ProjectService {
     }
 
     public ProjectFullDTO getAuthUserFullProject(Long projectId, Authentication authentication) {
-        AuthenticatedUser userDetails = (AuthenticatedUser) authentication.getPrincipal();
-        User user = userService.getUserByEmail(userDetails.getEmail());
-        Project project = getProjectByProjectId(projectId);
+        final AuthenticatedUser userDetails = (AuthenticatedUser) authentication.getPrincipal();
+        final User user = userService.getUserByEmail(userDetails.getEmail());
+        final Project project = getProjectByProjectId(projectId);
         project.hasUser(user);
         return projectFullTransformer.toDto(project);
     }
@@ -79,8 +79,8 @@ public class ProjectService {
      * @return projectDTO
      */
     public ProjectDTO createProject(ProjectDTO projectDTO, Authentication authentication) {
-        AuthenticatedUser userDetails = (AuthenticatedUser) authentication.getPrincipal();
-        User authUser = userService.getUserByEmail(userDetails.getEmail());
+        final AuthenticatedUser userDetails = (AuthenticatedUser) authentication.getPrincipal();
+        final User authUser = userService.getUserByEmail(userDetails.getEmail());
 
         Project project = projectTransformer.fromDto(projectDTO);
         project.addUser(authUser);
@@ -155,8 +155,9 @@ public class ProjectService {
      * @param projectId id of project to close
      */
     public void closeProject(long projectId) {
-        Project project = checkNotNull(projectDAO.findOne(projectId));
+        final Project project = checkNotNull(projectDAO.findOne(projectId));
         checkProjectIsActive(project);
-        projectDAO.save(project.close());
+        project.close();
+        projectDAO.save(project);
     }
 }
