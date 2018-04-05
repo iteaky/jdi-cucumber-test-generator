@@ -1,7 +1,7 @@
 package com.epam.test_generator.transformers;
 
 import com.epam.test_generator.dto.StepDTO;
-import com.epam.test_generator.dto.TagDTO;
+import com.epam.test_generator.controllers.tag.response.TagDTO;
 import com.epam.test_generator.entities.Status;
 import com.epam.test_generator.entities.Step;
 import com.epam.test_generator.entities.Tag;

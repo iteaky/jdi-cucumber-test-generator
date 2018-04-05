@@ -23,7 +23,7 @@ import com.epam.test_generator.services.exceptions.BadRequestException;
 import com.epam.test_generator.state.machine.StateMachineAdapter;
 import com.epam.test_generator.transformers.CaseTransformer;
 import com.epam.test_generator.transformers.CaseVersionTransformer;
-import com.epam.test_generator.transformers.TagTransformer;
+import com.epam.test_generator.controllers.tag.TagTransformer;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;

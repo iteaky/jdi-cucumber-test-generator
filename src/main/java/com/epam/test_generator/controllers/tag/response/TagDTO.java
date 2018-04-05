@@ -1,4 +1,4 @@
-package com.epam.test_generator.dto;
+package com.epam.test_generator.controllers.tag.response;
 
 import java.io.Serializable;
 import javax.validation.constraints.NotNull;

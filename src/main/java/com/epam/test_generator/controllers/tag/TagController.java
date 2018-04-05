@@ -1,8 +1,10 @@
-package com.epam.test_generator.controllers;
+package com.epam.test_generator.controllers.tag;
 
 
+import com.epam.test_generator.controllers.tag.request.TagCreateDTO;
+import com.epam.test_generator.controllers.tag.request.TagUpdateDTO;
 import com.epam.test_generator.dto.CaseDTO;
-import com.epam.test_generator.dto.TagDTO;
+import com.epam.test_generator.controllers.tag.response.TagDTO;
 import com.epam.test_generator.dto.ValidationErrorsDTO;
 import com.epam.test_generator.services.CaseService;
 import com.epam.test_generator.services.TagService;
@@ -118,7 +120,7 @@ public class TagController {
             @ApiImplicitParam(name = "caseId", value = "ID of case which will be added a new tag",
                     required = true, dataType = "long", paramType = "path"),
             @ApiImplicitParam(name = "tagDTO", value = "Added tag object",
-                    required = true, dataType = "TagDTO", paramType = "body"),
+                    required = true, dataType = "TagCreateDTO", paramType = "body"),
             @ApiImplicitParam(name = "Authorization",
                               value = "add here your token",
                               paramType = "header",
@@ -132,7 +134,7 @@ public class TagController {
     public ResponseEntity<Long> addTagToCase(@PathVariable("projectId") long projectId,
                                              @PathVariable("suitId") long suitId,
                                              @PathVariable("caseId") long caseId,
-                                             @RequestBody TagDTO tagDTO) {
+                                             @RequestBody TagCreateDTO tagDTO) {
 
         return new ResponseEntity<>(tagService.addTagToCase(projectId, suitId, caseId, tagDTO),
                 HttpStatus.CREATED);
@@ -154,7 +156,7 @@ public class TagController {
             @ApiImplicitParam(name = "tagId", value = "ID of tag to update",
                     required = true, dataType = "long", paramType = "path"),
             @ApiImplicitParam(name = "tagDTO", value = "Updated tag object",
-                    required = true, dataType = "TagDTO", paramType = "body"),
+                    required = true, dataType = "TagBpdateDTO", paramType = "body"),
             @ApiImplicitParam(name = "Authorization",
                               value = "add here your token",
                               paramType = "header",
@@ -168,7 +170,7 @@ public class TagController {
                                           @PathVariable("suitId") long suitId,
                                           @PathVariable("caseId") long caseId,
                                           @PathVariable("tagId") long tagId,
-                                          @RequestBody TagDTO tagDTO) {
+                                          @RequestBody TagUpdateDTO tagDTO) {
         tagService.updateTag(projectId, suitId, caseId, tagId, tagDTO);
 
         return new ResponseEntity<>(HttpStatus.OK);

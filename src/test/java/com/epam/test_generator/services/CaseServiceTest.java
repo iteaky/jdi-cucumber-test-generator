@@ -24,7 +24,7 @@ import com.epam.test_generator.dto.EditCaseDTO;
 import com.epam.test_generator.dto.PropertyDifferenceDTO;
 import com.epam.test_generator.dto.StepDTO;
 import com.epam.test_generator.dto.SuitDTO;
-import com.epam.test_generator.dto.TagDTO;
+import com.epam.test_generator.controllers.tag.response.TagDTO;
 import com.epam.test_generator.entities.Action;
 import com.epam.test_generator.entities.Case;
 import com.epam.test_generator.entities.Event;
