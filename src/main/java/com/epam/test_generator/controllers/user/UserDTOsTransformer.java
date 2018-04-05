@@ -14,7 +14,7 @@ public class UserDTOsTransformer {
     @Autowired
     private PasswordEncoder encoder;
 
-    public User createEntityFromDTO(RegistrationUserDTO userDTO) {
+    public User fromDTO(RegistrationUserDTO userDTO) {
         User user = new User();
         user.setName(userDTO.getName());
         user.setSurname(userDTO.getSurname());
@@ -24,7 +24,7 @@ public class UserDTOsTransformer {
     }
 
 
-   public UserDTO createUserDTOFromEntity(User user) {
+   public UserDTO toUserDTO(User user) {
         UserDTO userDTO = new UserDTO();
         userDTO.setName(user.getName());
         userDTO.setSurname(user.getSurname());

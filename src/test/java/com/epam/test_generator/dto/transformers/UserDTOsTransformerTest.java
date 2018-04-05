@@ -54,7 +54,7 @@ public class UserDTOsTransformerTest {
         registrationUserDTO.setEmail(EMAIL);
         registrationUserDTO.setPassword(PASSWORD);
 
-        User resultUser = userDTOsTransformer.createEntityFromDTO(registrationUserDTO);
+        User resultUser = userDTOsTransformer.fromDTO(registrationUserDTO);
         Assert.assertEquals(user, resultUser);
     }
 
@@ -72,7 +72,7 @@ public class UserDTOsTransformerTest {
         user.setAttempts(ATTEMPTS);
         user.setLocked(LOCKED);
 
-        UserDTO resultUserDTO = userDTOsTransformer.createUserDTOFromEntity(user);
+        UserDTO resultUserDTO = userDTOsTransformer.toUserDTO(user);
         Assert.assertEquals(expectedUserDTO, resultUserDTO);
     }
 

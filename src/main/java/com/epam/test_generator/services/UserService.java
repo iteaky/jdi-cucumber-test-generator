@@ -86,7 +86,7 @@ public class UserService {
     }
 
     public List<UserDTO> getUsers() {
-        return userDAO.findAll().stream().map(userDTOsTransformer::createUserDTOFromEntity)
+        return userDAO.findAll().stream().map(userDTOsTransformer::toUserDTO)
             .collect(Collectors.toList());
     }
 
@@ -102,7 +102,7 @@ public class UserService {
                 "user with email:" + registrationUserDTO.getEmail() + " already exist!");
         } else {
 
-            User user = userDTOsTransformer.createEntityFromDTO(registrationUserDTO);
+            User user = userDTOsTransformer.fromDTO(registrationUserDTO);
             user.setRole(roleService.getRoleByName(DEFAULT_ROLE));
             user.setLocked(true);
             userDAO.save(user);

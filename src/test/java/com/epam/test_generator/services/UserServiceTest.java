@@ -121,7 +121,7 @@ public class UserServiceTest {
         users.add(user);
         userDTOS.add(userDTO);
         when(userDAO.findAll()).thenReturn(users);
-        when(userDTOsTransformer.createUserDTOFromEntity(user)).thenReturn(userDTO);
+        when(userDTOsTransformer.toUserDTO(user)).thenReturn(userDTO);
         final List<UserDTO> usersDTO = sut.getUsers();
         assertFalse(usersDTO.isEmpty());
     }
@@ -135,7 +135,7 @@ public class UserServiceTest {
 
     @Test
     public void createUser_RegistrationUserDTO_Success() throws Exception {
-        when(userDTOsTransformer.createEntityFromDTO(anyObject())).thenReturn(user);
+        when(userDTOsTransformer.fromDTO(anyObject())).thenReturn(user);
         sut.createUser(registrationUserDTO);
         verify(userDAO).save(any(User.class));
     }
