@@ -84,17 +84,16 @@ public class ProjectUpdateDTO {
             return false;
         }
         ProjectUpdateDTO that = (ProjectUpdateDTO) o;
-        return active == that.active &&
-            Objects.equals(name, that.name) &&
-            Objects.equals(description, that.description) &&
-            Objects.equals(suits, that.suits) &&
-            Objects.equals(users, that.users) &&
-            Objects.equals(jiraKey, that.jiraKey);
+        return active == that.active
+            && Objects.equals(name, that.name)
+            && Objects.equals(description, that.description)
+            && Objects.equals(suits, that.suits)
+            && Objects.equals(users, that.users)
+            && Objects.equals(jiraKey, that.jiraKey);
     }
 
     @Override
     public int hashCode() {
-
         return Objects.hash(name, description, suits, users, jiraKey, active);
     }
 }

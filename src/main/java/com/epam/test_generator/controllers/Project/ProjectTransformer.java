@@ -62,6 +62,7 @@ public class ProjectTransformer {
         if (project.getUsers() != null) {
             Set<UserDTO> outputUsers = project.getUsers().stream()
                 .map(userTransformer::toDto).collect(Collectors.toSet());
+            projectFullDTO.setUsers(outputUsers);
         }
         if (project.getSuits() != null) {
             List<SuitDTO> outputSuits = project.getSuits().stream()
@@ -85,7 +86,7 @@ public class ProjectTransformer {
         if (projectUpdateDTO.isActive() != null) {
             project.setActive(projectUpdateDTO.isActive());
         }
-        // change on out transformers
+        // change on our transformers
         if (projectUpdateDTO.getUsers() != null) {
             Set<User> inputUsers = projectUpdateDTO.getUsers().stream()
                 .map(userTransformer::fromDto).collect(Collectors.toSet());

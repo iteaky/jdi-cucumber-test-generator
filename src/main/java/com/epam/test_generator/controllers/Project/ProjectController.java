@@ -65,7 +65,8 @@ public class ProjectController {
     public ResponseEntity<ProjectFullDTO> getProject(@PathVariable("projectId") long projectId,
                                                      Authentication authentication) {
 
-        return new ResponseEntity<>(projectService.getAuthUserFullProject(projectId, authentication),
+        return new ResponseEntity<>(
+            projectService.getAuthUserFullProject(projectId, authentication),
             HttpStatus.OK);
     }
 
@@ -85,7 +86,7 @@ public class ProjectController {
     @RequestMapping(value = "/projects", method = RequestMethod.POST,
         consumes = "application/json", produces = "application/json")
     public ResponseEntity<ProjectDTO> createProject(@RequestBody @Valid ProjectCreateDTO projectDTO,
-                                              Authentication authentication) {
+                                                    Authentication authentication) {
 
         return new ResponseEntity<>(projectService.createProject(projectDTO, authentication),
             HttpStatus.CREATED);
@@ -174,7 +175,7 @@ public class ProjectController {
     @RequestMapping(value = "/projects/{projectId}/users", method = RequestMethod.DELETE,
         produces = "application/json")
     public ResponseEntity<Void> removeUserFromProject(@PathVariable("projectId") long projectId,
-                                                    @RequestParam long userId) {
+                                                      @RequestParam long userId) {
         projectService.removeUserFromProject(projectId, userId);
         return new ResponseEntity<>(HttpStatus.OK);
     }

@@ -115,6 +115,7 @@ public class ProjectTransformerTest {
         expectedProjectDTO.setDescription(DESCRIPTION);
         expectedProjectDTO.setJiraKey(JIRA_KEY);
         expectedProjectDTO.setActive(true);
+        expectedProjectDTO.setUsers(Collections.emptySet());
         expectedProjectDTO.setSuits(Collections.singletonList(suitDTO));
 
         ProjectFullDTO resultProjectDTO = projectTransformer.toFullDto(project);

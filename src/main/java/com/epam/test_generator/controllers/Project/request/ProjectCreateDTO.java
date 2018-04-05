@@ -19,7 +19,6 @@ public class ProjectCreateDTO {
 
 
     public ProjectCreateDTO() {
-
     }
 
     public String getName() {
@@ -56,14 +55,13 @@ public class ProjectCreateDTO {
             return false;
         }
         ProjectCreateDTO that = (ProjectCreateDTO) o;
-        return Objects.equals(name, that.name) &&
-            Objects.equals(description, that.description) &&
-            Objects.equals(jiraKey, that.jiraKey);
+        return Objects.equals(name, that.name)
+            && Objects.equals(description, that.description)
+            && Objects.equals(jiraKey, that.jiraKey);
     }
 
     @Override
     public int hashCode() {
-
         return Objects.hash(name, description, jiraKey);
     }
 }

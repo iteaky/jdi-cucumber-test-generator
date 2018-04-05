@@ -50,7 +50,7 @@ public class ProjectControllerTest {
     private ProjectController projectController;
 
     @Before
-    public void setUp(){
+    public void setUp() {
         this.mockMvc = MockMvcBuilders.standaloneSetup(projectController)
             .setControllerAdvice(new GlobalExceptionController())
             .build();
@@ -62,7 +62,8 @@ public class ProjectControllerTest {
 
     @Test
     public void getUserProjects_CorrectRequest_StatusOk() throws Exception {
-        when(projectService.getAuthenticatedUserProjects(any(Authentication.class))).thenReturn(Arrays.asList(projectDTO));
+        when(projectService.getAuthenticatedUserProjects(any(Authentication.class)))
+            .thenReturn(Arrays.asList(projectDTO));
 
         mockMvc.perform(get("/projects"))
             .andExpect(status().isOk());
@@ -72,7 +73,8 @@ public class ProjectControllerTest {
 
     @Test
     public void getProject_CorrectProjectId_StatusOk() throws Exception {
-        when(projectService.getAuthUserFullProject(anyLong(), any(Authentication.class))).thenReturn(new ProjectFullDTO());
+        when(projectService.getAuthUserFullProject(anyLong(), any(Authentication.class)))
+            .thenReturn(new ProjectFullDTO());
 
         mockMvc.perform(get("/projects/" + SIMPLE_PROJECT_ID))
             .andExpect(status().isOk());
@@ -82,7 +84,8 @@ public class ProjectControllerTest {
 
     @Test
     public void getProject_IncorrectProjectId_StatusNotFound() throws Exception {
-        when(projectService.getAuthUserFullProject(anyLong(), anyObject())).thenThrow(new NotFoundException());
+        when(projectService.getAuthUserFullProject(anyLong(), anyObject()))
+            .thenThrow(new NotFoundException());
 
         mockMvc.perform(get("/projects/" + SIMPLE_PROJECT_ID))
             .andExpect(status().isNotFound());
@@ -93,14 +96,16 @@ public class ProjectControllerTest {
     @Test
     public void createProject_CorrectDTO_StatusCreated() throws Exception {
         projectDTO.setId(null);
-        when(projectService.createProject(any(ProjectCreateDTO.class), any(Authentication.class))).thenReturn(projectDTO);
+        when(projectService.createProject(any(ProjectCreateDTO.class), any(Authentication.class)))
+            .thenReturn(projectDTO);
 
         mockMvc.perform(post("/projects")
             .contentType(MediaType.APPLICATION_JSON)
             .content(mapper.writeValueAsString(projectDTO)))
             .andExpect(status().isCreated());
 
-        verify(projectService).createProject(any(ProjectCreateDTO.class), any(Authentication.class));
+        verify(projectService)
+            .createProject(any(ProjectCreateDTO.class), any(Authentication.class));
     }
 
     @Test
@@ -113,7 +118,8 @@ public class ProjectControllerTest {
             .content(mapper.writeValueAsString(projectDTO)))
             .andExpect(status().isBadRequest());
 
-        verify(projectService,never()).createProject(any(ProjectCreateDTO.class), any(Authentication.class));
+        verify(projectService, never())
+            .createProject(any(ProjectCreateDTO.class), any(Authentication.class));
     }
 
     @Test
@@ -125,7 +131,7 @@ public class ProjectControllerTest {
 
         verify(projectService).updateProject((anyLong()), any(ProjectUpdateDTO.class));
     }
-    
+
 
     @Test
     public void updateProject_ValidUpdateDTO_StatusNotFound() throws Exception {
@@ -183,7 +189,7 @@ public class ProjectControllerTest {
 
     @Test
     public void assignUserToProject_ValidInput_StatusOk() throws Exception {
-        mockMvc.perform(put("/projects/" + SIMPLE_PROJECT_ID +"/users")
+        mockMvc.perform(put("/projects/" + SIMPLE_PROJECT_ID + "/users")
             .param("userId", "0"))
             .andExpect(status().isOk());
 
@@ -194,7 +200,7 @@ public class ProjectControllerTest {
     public void assignUserToProject_InvalidInput_StatusNotFound() throws Exception {
         doThrow(NotFoundException.class)
             .when(projectService).addUserToProject(anyLong(), anyLong());
-        mockMvc.perform(put("/projects/" + SIMPLE_PROJECT_ID +"/users")
+        mockMvc.perform(put("/projects/" + SIMPLE_PROJECT_ID + "/users")
             .param("userId", "0"))
             .andExpect(status().isNotFound());
 
@@ -205,7 +211,7 @@ public class ProjectControllerTest {
     public void assignUserToProject_ValidInput_StatusForbidden() throws Exception {
         doThrow(ProjectClosedException.class)
             .when(projectService).addUserToProject(anyLong(), anyLong());
-        mockMvc.perform(put("/projects/" + SIMPLE_PROJECT_ID +"/users")
+        mockMvc.perform(put("/projects/" + SIMPLE_PROJECT_ID + "/users")
             .param("userId", "0"))
             .andExpect(status().isForbidden());
 
@@ -214,7 +220,7 @@ public class ProjectControllerTest {
 
     @Test
     public void removeUserFromProject_ValidInput_StatusOk() throws Exception {
-        mockMvc.perform(delete("/projects/" + SIMPLE_PROJECT_ID +"/users")
+        mockMvc.perform(delete("/projects/" + SIMPLE_PROJECT_ID + "/users")
             .param("userId", "0"))
             .andExpect(status().isOk());
 
@@ -225,7 +231,7 @@ public class ProjectControllerTest {
     public void removeUserFromProject_InvalidInput_StatusNotFound() throws Exception {
         doThrow(NotFoundException.class)
             .when(projectService).removeUserFromProject(anyLong(), anyLong());
-        mockMvc.perform(delete("/projects/" + SIMPLE_PROJECT_ID +"/users")
+        mockMvc.perform(delete("/projects/" + SIMPLE_PROJECT_ID + "/users")
             .param("userId", "0"))
             .andExpect(status().isNotFound());
 
@@ -236,7 +242,7 @@ public class ProjectControllerTest {
     public void removeUserFromProject_ValidInput_StatusForbidden() throws Exception {
         doThrow(ProjectClosedException.class)
             .when(projectService).removeUserFromProject(anyLong(), anyLong());
-        mockMvc.perform(delete("/projects/" + SIMPLE_PROJECT_ID +"/users")
+        mockMvc.perform(delete("/projects/" + SIMPLE_PROJECT_ID + "/users")
             .param("userId", "0"))
             .andExpect(status().isForbidden());
 
