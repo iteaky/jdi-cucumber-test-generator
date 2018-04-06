@@ -27,7 +27,8 @@ public class TokenService {
      * @return user's token
      */
     public Token createToken(User user, Integer minutes) {
-        Token token = new Token(user, minutes);
+        Token token = new Token(minutes);
+        token.setUser(user);
         return tokenDAO.save(token);
     }
 

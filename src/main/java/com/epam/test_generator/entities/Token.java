@@ -31,14 +31,8 @@ public class Token implements TokenTrait {
     @NotNull
     private Date expiryDate;
 
-    public Token() {
+    public Token(Integer minutes) {
         this.token = UUID.randomUUID().toString();
-    }
-
-    public Token(User user, Integer minutes) {
-        this();
-        this.user = user;
-
         Calendar now = Calendar.getInstance();
         now.add(Calendar.MINUTE, minutes);
         this.expiryDate = now.getTime();

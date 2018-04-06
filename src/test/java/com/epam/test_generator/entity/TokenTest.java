@@ -13,15 +13,13 @@ public class TokenTest {
 
     @Test
     public void isExpired_NotExpiredToken_False() {
-        User user = new User();
-        Token token = new Token(user, LONG_EXPIRATION_DURATION);
+        Token token = new Token(LONG_EXPIRATION_DURATION);
         assertFalse(token.isExpired());
     }
 
     @Test
     public void isExpired_ExpiredToken_True() {
-        User user = new User();
-        Token token = new Token(user, ZERO_EXPIRATION_DURATION);
+        Token token = new Token(ZERO_EXPIRATION_DURATION);
         assertTrue(token.isExpired());
     }
 

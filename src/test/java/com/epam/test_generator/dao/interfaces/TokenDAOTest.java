@@ -2,6 +2,7 @@ package com.epam.test_generator.dao.interfaces;
 
 import com.epam.test_generator.DatabaseConfigForTests;
 import com.epam.test_generator.entities.Token;
+import com.epam.test_generator.entities.User;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,15 +20,13 @@ import static org.hamcrest.CoreMatchers.is;
 @Transactional
 public class TokenDAOTest {
 
-
     @Autowired
     private TokenDAO sut;
 
     @Test
     public void findByToken_SimpleToke_Ok() {
-        Token token = new Token();
+        Token token = new Token(15);
         token.setToken("token");
-        token.setExpiryDate(15);
         sut.save(token);
         Token byToken = sut.findByToken("token");
         Assert.assertThat(byToken, is(equalTo(token)));
