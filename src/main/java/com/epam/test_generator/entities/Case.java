@@ -1,7 +1,7 @@
 package com.epam.test_generator.entities;
 
 import com.epam.test_generator.entities.api.CaseTrait;
-import com.epam.test_generator.entities.api.JiraStoryTrait;
+import com.epam.test_generator.entities.api.JiraSuitAndCaseTrait;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -32,7 +32,7 @@ import org.springframework.statemachine.annotation.WithStateMachine;
  */
 @Entity
 @WithStateMachine
-public class Case implements Serializable, Persistable<Long>, CaseTrait, JiraStoryTrait {
+public class Case implements Serializable, Persistable<Long>, CaseTrait, JiraSuitAndCaseTrait {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
