@@ -25,7 +25,7 @@ public interface SuitProjectTrait {
     }
 
     default boolean removeSuit(Suit suit){
-        return getSuits().remove(suit);
+        return getSuits().remove(hasSuit(suit));
     }
 
 }
