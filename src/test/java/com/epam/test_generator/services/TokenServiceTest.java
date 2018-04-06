@@ -42,7 +42,6 @@ public class TokenServiceTest {
         when(tokenDAO.save(any(Token.class))).thenReturn(token);
         Token token1 = sut.createToken(user, 1);
         Assert.assertEquals(token, token1);
-
     }
 
     @Test
@@ -50,14 +49,12 @@ public class TokenServiceTest {
         when(tokenDAO.findByToken(anyString())).thenReturn(token);
         when(token.isExpired()).thenReturn(false);
         sut.checkToken(anyString());
-
     }
 
     @Test(expected = TokenMissingException.class)
     public void checkToken_IncorrectToken_Exception() {
         when(tokenDAO.findByToken(anyString())).thenReturn(null);
         sut.checkToken(anyString());
-
     }
 
     @Test(expected = TokenMalformedException.class)
@@ -65,7 +62,6 @@ public class TokenServiceTest {
         when(tokenDAO.findByToken(anyString())).thenReturn(token);
         when(token.isExpired()).thenReturn(true);
         sut.checkToken(anyString());
-
     }
 
 }

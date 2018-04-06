@@ -1,18 +1,14 @@
 package com.epam.test_generator.services.utils;
 
-import com.epam.test_generator.entities.Case;
-import com.epam.test_generator.entities.Project;
-import com.epam.test_generator.entities.Step;
-import com.epam.test_generator.entities.StepSuggestion;
-import com.epam.test_generator.entities.Suit;
-import com.epam.test_generator.entities.Tag;
-import com.epam.test_generator.entities.User;
+import com.epam.test_generator.entities.*;
 import com.epam.test_generator.services.exceptions.BadRequestException;
 import com.epam.test_generator.services.exceptions.NotFoundException;
 import com.epam.test_generator.services.exceptions.ProjectClosedException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+
+import com.epam.test_generator.services.exceptions.TokenMissingException;
 import org.springframework.dao.OptimisticLockingFailureException;
 
 /**
@@ -26,6 +22,17 @@ public class UtilsService {
             throw new NotFoundException();
         } else {
             return obj;
+        }
+    }
+
+    /**
+     * Checks if Token is null. Returns nothing if not.
+     *
+     * @throws TokenMissingException if Token is null.
+     */
+    public static void checkNotNullToken(Token token) {
+        if (token == null) {
+            throw new TokenMissingException("Token is invalid");
         }
     }
 

@@ -33,14 +33,14 @@ public class TokenService {
 
     /**
      * Checks token for existing and expiring. Throws exceptions if there is problems with token.
-     * @param token
+     * @param tokenString
      */
-    public void checkToken(String token) {
-        Token resetToken = tokenDAO.findByToken(token);
-        if (resetToken == null) {
+    public void checkToken(String tokenString) {
+        Token token = tokenDAO.findByToken(tokenString);
+        if (token == null) {
             throw new TokenMissingException("Could not find password reset token.");
-        } else if (resetToken.isExpired()) {
-            tokenDAO.delete(resetToken);
+        } else if (token.isExpired()) {
+            tokenDAO.delete(token);
             throw new TokenMalformedException(
                     "Token has expired, please request a new password reset.");
         }
