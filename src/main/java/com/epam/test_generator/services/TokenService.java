@@ -27,11 +27,7 @@ public class TokenService {
      * @return user's token
      */
     public Token createToken(User user, Integer minutes) {
-        Token token = new Token();
-        token.setToken(UUID.randomUUID().toString());
-        token.setUser(user);
-        token.setExpiryDate(minutes);
-
+        Token token = new Token(user, minutes);
         return tokenDAO.save(token);
     }
 
