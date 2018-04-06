@@ -31,8 +31,8 @@ public class PasswordService {
     @Value("${override.domain:#{null}}")
     private String OVERRIDE_DOMAIN;
 
-    private final static String PASSWORD_RESET_PATH = "/passwordReset";
-    private final static String CONFIRM_ACCOUNT_PATH = "/confirmAccount";
+    private final static String PASSWORD_RESET_PATH = "/user?action=confirm-email-reset";
+    private final static String CONFIRM_ACCOUNT_PATH = "/user?action=confirm-email";
     private final static String TOKEN = "token=";
 
     /**
@@ -87,7 +87,7 @@ public class PasswordService {
                                TOKEN + token.getToken(),
                                null);
             }
-            return new URI(OVERRIDE_DOMAIN + path + "?" + TOKEN + token.getToken());
+            return new URI(OVERRIDE_DOMAIN + path + "&" + TOKEN + token.getToken());
         } catch (URISyntaxException e) {
             throw new IncorrectURI(e.getMessage());
         }
