@@ -30,7 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
 
-
+@Transactional
 @Service
 public class SuitService {
 
@@ -68,7 +68,7 @@ public class SuitService {
     }
 
     public Suit getSuit(long projectId, long suitId) {
-        final Project project = checkNotNull(projectService.getProjectByProjectId(projectId));
+        final Project project = projectService.getProjectByProjectId(projectId);
         final Suit suit = checkNotNull(suitDAO.findOne(suitId));
         return project.hasSuit(suit);
     }
@@ -85,9 +85,9 @@ public class SuitService {
      * @return {@link SuitDTO} of added suit
      */
     public SuitDTO addSuit(Long projectId, SuitDTO suitDTO) {
-        Project project = checkNotNull(projectService.getProjectByProjectId(projectId));
+        final Project project = projectService.getProjectByProjectId(projectId);
         suitDTO.setJiraProjectKey(project.getJiraKey());
-        Suit suit = suitDAO.save(suitTransformer.fromDto(suitDTO));
+        final Suit suit = suitDAO.save(suitTransformer.fromDto(suitDTO));
         suit.setLastModifiedDate(LocalDateTime.now());
 
         suitVersionDAO.save(suit);
@@ -139,7 +139,7 @@ public class SuitService {
      * @return {@link SuitDTO) of removed suit
      */
     public SuitDTO removeSuit(long projectId, long suitId) {
-        final Suit suit = checkNotNull(getSuit(projectId, suitId));
+        final Suit suit = getSuit(projectId, suitId);
 
         if (suit.isNotRemoved()) {
             removedIssueDAO.save(new RemovedIssue(suit.getJiraKey()));
@@ -156,7 +156,7 @@ public class SuitService {
     }
 
     public List<SuitDTO> getSuitsFromProject(Long projectId) {
-        final Project project = checkNotNull(projectService.getProjectByProjectId(projectId));
+        final Project project = projectService.getProjectByProjectId(projectId);
         return suitTransformer.toDtoList(project.getSuits());
     }
 
@@ -223,7 +223,7 @@ public class SuitService {
     }
 
     public List<SuitVersionDTO> getSuitVersions(Long projectId, Long suitId) {
-        final Project project = checkNotNull(projectService.getProjectByProjectId(projectId));
+        final Project project = projectService.getProjectByProjectId(projectId);
 
         final Suit suit = checkNotNull(suitDAO.findOne(suitId));
 

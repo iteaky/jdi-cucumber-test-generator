@@ -46,12 +46,12 @@ public class UserService {
     private TokenDAO tokenDAO;
 
     public User getUserById(Long id) {
-        return checkUserExist(userDAO.findById(id));
+        return userDAO.findById(id);
 
     }
 
     public User getUserByEmail(String email) {
-        return checkUserExist(userDAO.findByEmail(email));
+        return userDAO.findByEmail(email);
 
     }
 

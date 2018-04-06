@@ -1,6 +1,5 @@
 package com.epam.test_generator.services;
 
-import static com.epam.test_generator.services.utils.UtilsService.caseBelongsToSuit;
 import static com.epam.test_generator.services.utils.UtilsService.checkNotNull;
 
 import com.epam.test_generator.dao.interfaces.CaseDAO;
@@ -83,7 +82,7 @@ public class CaseService {
     }
 
     public Case getCase(Long projectId, Long suitId, Long caseId) {
-        final Suit suit = checkNotNull(suitService.getSuit(projectId, suitId));
+        final Suit suit = suitService.getSuit(projectId, suitId);
         final Case caze = checkNotNull(caseDAO.findOne(caseId));
 
         return suit.hasCase(caze);
@@ -102,7 +101,7 @@ public class CaseService {
      * @return {@link CaseDTO} of added case to suit
      */
     public CaseDTO addCaseToSuit(Long projectId, Long suitId, @Valid CaseDTO caseDTO) {
-        final Suit suit = checkNotNull(suitService.getSuit(projectId, suitId));
+        final Suit suit = suitService.getSuit(projectId, suitId);
 
         caseDTO.setJiraParentKey(suit.getJiraKey());
         caseDTO.setJiraProjectKey(suit.getJiraProjectKey());

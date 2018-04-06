@@ -1,7 +1,6 @@
 package com.epam.test_generator.services;
 
 import static com.epam.test_generator.services.utils.UtilsService.checkNotNull;
-import static com.epam.test_generator.services.utils.UtilsService.checkProjectIsActive;
 
 import com.epam.test_generator.config.security.AuthenticatedUser;
 import com.epam.test_generator.dao.interfaces.ProjectDAO;
@@ -127,7 +126,7 @@ public class ProjectService {
     public void addUserToProject(long projectId, long userId) {
         final Project project = checkNotNull(projectDAO.findOne(projectId));
         project.checkIsActive();
-        final User user = checkNotNull(userService.getUserById(userId));
+        final User user = userService.getUserById(userId);
 
         project.addUser(user);
         projectDAO.save(project);
@@ -141,7 +140,7 @@ public class ProjectService {
     public void removeUserFromProject(long projectId, long userId) {
         final Project project = checkNotNull(projectDAO.findOne(projectId));
         project.checkIsActive();
-        final User user = checkNotNull(userService.getUserById(userId));
+        final User user = userService.getUserById(userId);
 
         project.unsubscribeUser(user);
         projectDAO.save(project);
