@@ -1,6 +1,7 @@
 package com.epam.test_generator.controllers;
 
 import com.epam.test_generator.dto.CaseDTO;
+import com.epam.test_generator.dto.SuitCreateDTO;
 import com.epam.test_generator.dto.SuitUpdateDTO;
 import com.epam.test_generator.dto.SuitDTO;
 import com.epam.test_generator.dto.SuitRowNumberUpdateDTO;
@@ -95,8 +96,8 @@ public class SuitController {
     @RequestMapping(value = "/projects/{projectId}/suits", method = RequestMethod.POST,
         consumes = "application/json", produces = "application/json")
     public ResponseEntity<SuitDTO> createSuit(@PathVariable("projectId") long projectId,
-                                              @RequestBody @Valid SuitDTO suitDTO) {
-        return new ResponseEntity<>(suitService.addSuit(projectId, suitDTO), HttpStatus.CREATED);
+                                              @RequestBody @Valid SuitCreateDTO suitCreateDTO) {
+        return new ResponseEntity<>(suitService.addSuit(projectId, suitCreateDTO), HttpStatus.CREATED);
     }
 
     @ApiOperation(value = "Update suit by id", nickname = "updateSuit")

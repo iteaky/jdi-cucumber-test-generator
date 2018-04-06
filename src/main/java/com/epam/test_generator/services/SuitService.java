@@ -8,6 +8,7 @@ import com.epam.test_generator.dao.interfaces.RemovedIssueDAO;
 import com.epam.test_generator.dao.interfaces.SuitDAO;
 import com.epam.test_generator.dao.interfaces.SuitVersionDAO;
 import com.epam.test_generator.dto.StepDTO;
+import com.epam.test_generator.dto.SuitCreateDTO;
 import com.epam.test_generator.dto.SuitDTO;
 import com.epam.test_generator.dto.SuitRowNumberUpdateDTO;
 import com.epam.test_generator.dto.SuitUpdateDTO;
@@ -88,14 +89,14 @@ public class SuitService {
      * Adds suit specified in suitDTO to project by id
      *
      * @param projectId if of project where to add case
-     * @param suitDTO suit info
+     * @param suitCreateDTO suit info
      * @return {@link SuitDTO} of added suit
      */
-    public SuitDTO addSuit(Long projectId, SuitDTO suitDTO) {
+    public SuitDTO addSuit(Long projectId, SuitCreateDTO suitCreateDTO) {
         Project project = projectService.getProjectByProjectId(projectId);
         checkNotNull(project);
-        suitDTO.setJiraProjectKey(project.getJiraKey());
-        Suit suit = suitDAO.save(suitTransformer.fromDto(suitDTO));
+        suitCreateDTO.setJiraProjectKey(project.getJiraKey());
+        Suit suit = suitDAO.save(suitTransformer.fromDto(suitCreateDTO));
         suit.setLastModifiedDate(LocalDateTime.now());
 
         suitVersionDAO.save(suit);
@@ -104,9 +105,7 @@ public class SuitService {
 
         caseVersionDAO.save(suit.getCases());
 
-        SuitDTO addedSuitDTO = suitTransformer.toDto(suit);
-
-        return addedSuitDTO;
+        return suitTransformer.toDto(suit);
     }
 
 
