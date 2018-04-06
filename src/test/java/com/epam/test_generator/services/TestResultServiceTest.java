@@ -19,7 +19,7 @@ import com.epam.test_generator.entities.Case;
 import com.epam.test_generator.entities.Project;
 import com.epam.test_generator.entities.Status;
 import com.epam.test_generator.entities.Suit;
-import com.epam.test_generator.entities.TestResult;
+import com.epam.test_generator.entities.results.TestResult;
 import com.epam.test_generator.entities.factory.TestResultFactory;
 import com.epam.test_generator.services.exceptions.BadRequestException;
 import com.epam.test_generator.transformers.TestResultTransformer;

@@ -5,7 +5,7 @@ import com.epam.test_generator.dao.interfaces.TestResultDAO;
 import com.epam.test_generator.dto.RawSuitResultDTO;
 import com.epam.test_generator.dto.TestResultDTO;
 import com.epam.test_generator.entities.Project;
-import com.epam.test_generator.entities.TestResult;
+import com.epam.test_generator.entities.results.TestResult;
 import com.epam.test_generator.entities.factory.TestResultFactory;
 import com.epam.test_generator.services.exceptions.BadRequestException;
 import com.epam.test_generator.transformers.TestResultTransformer;

@@ -1,30 +1,20 @@
-package com.epam.test_generator.entities;
+package com.epam.test_generator.entities.results;
 
+import com.epam.test_generator.entities.Project;
+import com.epam.test_generator.entities.results.api.TestResultTrait;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 @Entity
-public class TestResult {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+public class TestResult extends AbstractResult implements TestResultTrait {
 
     private Date date;
 
     private Long duration;
-
-    @Enumerated(EnumType.STRING)
-    private Status status;
 
     private String executedBy;
 
@@ -57,14 +47,6 @@ public class TestResult {
 
     public void setDuration(long duration) {
         this.duration = duration;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
     }
 
     public String getExecutedBy() {

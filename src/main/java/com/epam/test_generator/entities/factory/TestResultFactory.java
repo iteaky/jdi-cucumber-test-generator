@@ -4,12 +4,12 @@ import com.epam.test_generator.dto.RawCaseResultDTO;
 import com.epam.test_generator.dto.RawStepResultDTO;
 import com.epam.test_generator.dto.RawSuitResultDTO;
 import com.epam.test_generator.entities.Case;
-import com.epam.test_generator.entities.CaseResult;
+import com.epam.test_generator.entities.results.CaseResult;
 import com.epam.test_generator.entities.Status;
-import com.epam.test_generator.entities.StepResult;
+import com.epam.test_generator.entities.results.StepResult;
 import com.epam.test_generator.entities.Suit;
-import com.epam.test_generator.entities.SuitResult;
-import com.epam.test_generator.entities.TestResult;
+import com.epam.test_generator.entities.results.SuitResult;
+import com.epam.test_generator.entities.results.TestResult;
 import com.epam.test_generator.services.CaseService;
 import com.epam.test_generator.services.ProjectService;
 import com.epam.test_generator.services.StepService;
@@ -56,9 +56,9 @@ public class TestResultFactory {
         testResult.setExecutedBy(executedBy);
         testResult.setProject(projectService.getProjectByProjectId(projectId));
         testResult.setSuits(getListOfSuitResultsFrom(projectId, suitResultDTOS));
-        testResult.setDuration(summarizeDuration(testResult.getSuits()));
-        testResult.setStatus(evaluateStatusFrom(getStatuses(testResult)));
-
+        testResult.summarizeDuration();
+        testResult.evaluateStatus();
+        testResult.countTestResultStatistics();
         countingOfTestRunStatisticsFor(testResult);
 
         return testResult;
@@ -79,27 +79,7 @@ public class TestResultFactory {
      */
     private void countingOfTestRunStatisticsFor(TestResult testResult) {
 
-        int amountOfPassed = 0;
-        int amountOfSkipped = 0;
-        int amountOfFailed = 0;
 
-        for (SuitResult suitResult : testResult.getSuits()) {
-            switch (suitResult.getStatus()) {
-                case PASSED:
-                    amountOfPassed++;
-                    break;
-                case SKIPPED:
-                    amountOfSkipped++;
-                    break;
-                case FAILED:
-                    amountOfFailed++;
-                    break;
-            }
-        }
-
-        testResult.setAmountOfPassed(amountOfPassed);
-        testResult.setAmountOfFailed(amountOfFailed);
-        testResult.setAmountOfSkipped(amountOfSkipped);
     }
 
 
@@ -143,14 +123,6 @@ public class TestResultFactory {
         return caseResults
             .stream()
             .mapToLong(CaseResult::getDuration)
-            .sum();
-    }
-
-
-    private long summarizeDuration(List<SuitResult> suitResults) {
-        return suitResults
-            .stream()
-            .mapToLong(SuitResult::getDuration)
             .sum();
     }
 
@@ -223,7 +195,7 @@ public class TestResultFactory {
      * Evaluate summarized status from collection of statuses
      *
      * @param statuses collection of {@link Status}
-     * @return result evaluated by given rules
+     * @return results evaluated by given rules
      */
     private Status evaluateStatusFrom(Collection<Status> statuses) {
         if (statuses.stream().anyMatch(Status.FAILED::equals)) {

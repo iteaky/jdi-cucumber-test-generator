@@ -1,6 +1,6 @@
 package com.epam.test_generator.dao.interfaces;
 
-import com.epam.test_generator.entities.TestResult;
+import com.epam.test_generator.entities.results.TestResult;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
