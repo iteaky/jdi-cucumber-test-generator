@@ -7,7 +7,7 @@ import java.util.List;
 public interface CaseVersionDAO {
 
     /**
-     * Find all CaseVersions of Case with caseId.
+     * Find all CaseVersions of caze with caseId.
      */
     List<CaseVersion> findAll(Long caseId);
 

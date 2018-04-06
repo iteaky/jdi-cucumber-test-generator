@@ -1,6 +1,6 @@
 package com.epam.test_generator.controllers;
 
-import com.epam.test_generator.dto.CaseDTO;
+import com.epam.test_generator.controllers.caze.response.CaseDTO;
 import com.epam.test_generator.dto.CaseVersionDTO;
 import com.epam.test_generator.services.CaseService;
 import io.swagger.annotations.ApiImplicitParam;
@@ -31,7 +31,7 @@ public class CaseVersionController {
         @ApiResponse(code = 200, message = "OK",
             response = CaseVersionDTO.class, responseContainer = "List"),
         @ApiResponse(code = 400, message = "Suit doesn't contain the case"),
-        @ApiResponse(code = 404, message = "Suit/Case not found")
+        @ApiResponse(code = 404, message = "Suit/caze not found")
     })
     @ApiImplicitParams({
         @ApiImplicitParam(name = "projectId", value = "ID of project",
@@ -55,7 +55,7 @@ public class CaseVersionController {
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "OK"),
         @ApiResponse(code = 400, message = "Suit doesn't contain the case"),
-        @ApiResponse(code = 404, message = "Suit/Case/CaseToRestore not found")
+        @ApiResponse(code = 404, message = "Suit/caze/CaseToRestore not found")
     })
     @ApiImplicitParams({
         @ApiImplicitParam(name = "projectId", value = "ID of project",

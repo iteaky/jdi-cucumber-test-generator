@@ -1,5 +1,6 @@
 package com.epam.test_generator.dto;
 
+import com.epam.test_generator.controllers.caze.response.CaseDTO;
 import com.epam.test_generator.entities.Status;
 import java.util.Calendar;
 import java.util.Date;

@@ -1,5 +1,6 @@
 package com.epam.test_generator.dto;
 
+import com.epam.test_generator.dto.StepResultDTO;
 import com.epam.test_generator.entities.Status;
 import java.util.List;
 

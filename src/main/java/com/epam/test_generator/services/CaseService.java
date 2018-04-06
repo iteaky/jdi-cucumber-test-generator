@@ -7,10 +7,10 @@ import com.epam.test_generator.dao.interfaces.CaseDAO;
 import com.epam.test_generator.dao.interfaces.CaseVersionDAO;
 import com.epam.test_generator.dao.interfaces.RemovedIssueDAO;
 import com.epam.test_generator.dao.interfaces.SuitVersionDAO;
-import com.epam.test_generator.dto.CaseDTO;
-import com.epam.test_generator.dto.CaseUpdateDTO;
+import com.epam.test_generator.controllers.caze.response.CaseDTO;
+import com.epam.test_generator.controllers.caze.request.CaseUpdateDTO;
 import com.epam.test_generator.dto.CaseVersionDTO;
-import com.epam.test_generator.dto.EditCaseDTO;
+import com.epam.test_generator.controllers.caze.request.EditCaseDTO;
 import com.epam.test_generator.dto.StepDTO;
 import com.epam.test_generator.dto.SuitUpdateDTO;
 import com.epam.test_generator.entities.Case;
@@ -21,7 +21,7 @@ import com.epam.test_generator.entities.Suit;
 import com.epam.test_generator.pojo.CaseVersion;
 import com.epam.test_generator.services.exceptions.BadRequestException;
 import com.epam.test_generator.state.machine.StateMachineAdapter;
-import com.epam.test_generator.transformers.CaseTransformer;
+import com.epam.test_generator.controllers.caze.CaseTransformer;
 import com.epam.test_generator.transformers.CaseVersionTransformer;
 import com.epam.test_generator.transformers.TagTransformer;
 import java.time.LocalDateTime;
@@ -317,7 +317,7 @@ public class CaseService {
             switch (caseDTO.getAction()) {
                 case DELETE:
                     if (caseDTO.getId() == null) {
-                        throw new BadRequestException("No id in Case to remove");
+                        throw new BadRequestException("No id in caze to remove");
                     }
                     updatedCases.add(removeCase(projectId, suitId, caseDTO.getId()));
                     break;
@@ -326,7 +326,7 @@ public class CaseService {
                     break;
                 case UPDATE:
                     if (caseDTO.getId() == null) {
-                        throw new BadRequestException("No id in Case to update");
+                        throw new BadRequestException("No id in caze to update");
                     }
                     CaseDTO updatedCaseDTO = updateCase(projectId, suitId, caseDTO.getId(), caseDTO)
                         .getUpdatedCaseDto();

@@ -91,12 +91,12 @@ public class StepServiceTest {
         expectedListSteps.add(new StepDTO(2L, 2, "Step 2", StepType.WHEN, "Comment", Status.NOT_RUN));
         expectedListSteps.add(expectedStep);
 
-        caze = new Case(SIMPLE_CASE_ID, "name", "Case desc", listSteps, 1, setOfTags, "comment");
+        caze = new Case(SIMPLE_CASE_ID, "name", "caze desc", listSteps, 1, setOfTags, "comment");
 
         final List<Case> listCases = new ArrayList<>();
 
-        listCases.add(new Case(1L, "name 1", "Case 1", listSteps, 1, setOfTags, "comment1"));
-        listCases.add(new Case(2L, "name 2", "Case 2", listSteps, 2, setOfTags, "comment2"));
+        listCases.add(new Case(1L, "name 1", "caze 1", listSteps, 1, setOfTags, "comment1"));
+        listCases.add(new Case(2L, "name 2", "caze 2", listSteps, 2, setOfTags, "comment2"));
         listCases.add(caze);
 
         suit = new Suit(SIMPLE_SUIT_ID, "Suit 1", "Suit desc", listCases, 1, setOfTags, 1);

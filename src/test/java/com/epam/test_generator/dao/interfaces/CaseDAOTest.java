@@ -160,7 +160,7 @@ public class CaseDAOTest {
 
     private Case retrieveCase() {
 
-        return new Case("Case name", "Case description", new ArrayList<>(),
+        return new Case("caze name", "caze description", new ArrayList<>(),
             Calendar.getInstance().getTime(), Calendar.getInstance().getTime(),
             3, new HashSet<>(), Status.NOT_RUN, "comment");
     }

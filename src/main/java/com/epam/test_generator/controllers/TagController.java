@@ -1,7 +1,7 @@
 package com.epam.test_generator.controllers;
 
 
-import com.epam.test_generator.dto.CaseDTO;
+import com.epam.test_generator.controllers.caze.response.CaseDTO;
 import com.epam.test_generator.dto.TagDTO;
 import com.epam.test_generator.dto.ValidationErrorsDTO;
 import com.epam.test_generator.services.CaseService;
@@ -78,7 +78,7 @@ public class TagController {
     @ApiOperation(value = "Get all tags from the case", nickname = "getTags")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK", response = TagDTO.class, responseContainer = "Set"),
-            @ApiResponse(code = 404, message = "Suit/Case not found")
+            @ApiResponse(code = 404, message = "Suit/caze not found")
     })
     @ApiImplicitParams({
             @ApiImplicitParam(name = "projectId", value = "ID of project",
@@ -108,7 +108,7 @@ public class TagController {
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Created", response = Long.class),
             @ApiResponse(code = 400, message = "Invalid input", response = ValidationErrorsDTO.class),
-            @ApiResponse(code = 404, message = "Suit/Case not found")
+            @ApiResponse(code = 404, message = "Suit/caze not found")
     })
     @ApiImplicitParams({
             @ApiImplicitParam(name = "projectId", value = "ID of project",
@@ -142,7 +142,7 @@ public class TagController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),
             @ApiResponse(code = 400, message = "Invalid input", response = ValidationErrorsDTO.class),
-            @ApiResponse(code = 404, message = "Suit/Case/Tag not found")
+            @ApiResponse(code = 404, message = "Suit/caze/Tag not found")
     })
     @ApiImplicitParams({
             @ApiImplicitParam(name = "projectId", value = "ID of project",
@@ -177,7 +177,7 @@ public class TagController {
     @ApiOperation(value = "Delete tag by id", nickname = "removeTag")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),
-            @ApiResponse(code = 404, message = "Suit/Case/Tag not found")
+            @ApiResponse(code = 404, message = "Suit/caze/Tag not found")
     })
     @ApiImplicitParams({
             @ApiImplicitParam(name = "projectId", value = "ID of project",

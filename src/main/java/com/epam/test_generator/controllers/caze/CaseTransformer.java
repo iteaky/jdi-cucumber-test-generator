@@ -1,7 +1,8 @@
-package com.epam.test_generator.transformers;
+package com.epam.test_generator.controllers.caze;
 
-import com.epam.test_generator.dto.CaseDTO;
+import com.epam.test_generator.controllers.caze.response.CaseDTO;
 import com.epam.test_generator.entities.Case;
+import com.epam.test_generator.transformers.AbstractDozerTransformer;
 import org.springframework.stereotype.Component;
 
 @Component

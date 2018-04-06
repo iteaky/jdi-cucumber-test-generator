@@ -26,7 +26,7 @@ public class JaversConfig {
 
     /**
      * Config javers to connect to existing sql repository. Set Tag and Step classes as Value type
-     * for getting theirs copies in Case history.
+     * for getting theirs copies in caze history.
      */
     @Bean
     public Javers javersConfigForCase(PlatformTransactionManager txManager) {
@@ -47,7 +47,7 @@ public class JaversConfig {
     }
 
     /**
-     * Config javers to connect to existing sql repository. Set Tag and Case classes as Value type
+     * Config javers to connect to existing sql repository. Set Tag and caze classes as Value type
      * for getting theirs copies in Suit history.
      */
     @Bean

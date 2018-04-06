@@ -1,7 +1,7 @@
 package com.epam.test_generator.file_generator;
 
 
-import com.epam.test_generator.dto.CaseDTO;
+import com.epam.test_generator.controllers.caze.response.CaseDTO;
 import com.epam.test_generator.dto.StepDTO;
 import com.epam.test_generator.dto.SuitDTO;
 import com.epam.test_generator.dto.TagDTO;

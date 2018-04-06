@@ -4,6 +4,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
+import com.epam.test_generator.controllers.caze.response.CaseDTO;
 import com.epam.test_generator.entities.Case;
 import com.epam.test_generator.entities.Step;
 import com.epam.test_generator.entities.StepSuggestion;
@@ -50,8 +51,8 @@ public class DozerMapperTest {
         final CaseDTO caseDTO = new CaseDTO();
 
         caze.setId(1L);
-        caze.setName("Case name");
-        caze.setDescription("Case description");
+        caze.setName("caze name");
+        caze.setDescription("caze description");
         caze.setPriority(1);
 
         dozerMapper.map(caze, caseDTO);
@@ -69,7 +70,7 @@ public class DozerMapperTest {
 
         step.setId(1L);
         step.setType(StepType.GIVEN);
-        step.setDescription("Case description");
+        step.setDescription("caze description");
         step.setRowNumber(1);
 
         dozerMapper.map(step, stepDTO);

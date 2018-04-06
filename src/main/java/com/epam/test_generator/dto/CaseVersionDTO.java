@@ -3,7 +3,7 @@ package com.epam.test_generator.dto;
 import java.util.List;
 
 /**
- * This DTO is used for organise history of test cases. Case version has information about all changes of the current
+ * This DTO is used for organise history of test cases. caze version has information about all changes of the current
  * case. It includes list of {@Link PropertyDifferenceDTO} objects, which contains information about properties that have
  * been changed.
  */

@@ -1,8 +1,8 @@
-package com.epam.test_generator.controllers;
+package com.epam.test_generator.controllers.caze;
 
-import com.epam.test_generator.dto.CaseDTO;
-import com.epam.test_generator.dto.CaseUpdateDTO;
-import com.epam.test_generator.dto.EditCaseDTO;
+import com.epam.test_generator.controllers.caze.request.CaseUpdateDTO;
+import com.epam.test_generator.controllers.caze.request.EditCaseDTO;
+import com.epam.test_generator.controllers.caze.response.CaseDTO;
 import com.epam.test_generator.dto.SuitDTO;
 import com.epam.test_generator.dto.ValidationErrorsDTO;
 import com.epam.test_generator.entities.Event;
@@ -68,7 +68,7 @@ public class CaseController {
     @ApiOperation(value = "Get case by id", nickname = "getCase")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "OK", response = CaseDTO.class),
-        @ApiResponse(code = 404, message = "Suit/Case not found")
+        @ApiResponse(code = 404, message = "Suit/caze not found")
     })
     @ApiImplicitParams({
         @ApiImplicitParam(name = "projectId", value = "ID of project",
@@ -122,7 +122,7 @@ public class CaseController {
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "OK"),
         @ApiResponse(code = 400, message = "Invalid input", response = ValidationErrorsDTO.class),
-        @ApiResponse(code = 404, message = "Suit/Case not found")
+        @ApiResponse(code = 404, message = "Suit/caze not found")
     })
     @ApiImplicitParams({
         @ApiImplicitParam(name = "projectId", value = "ID of project",
@@ -140,9 +140,9 @@ public class CaseController {
     @RequestMapping(value = "/projects/{projectId}/suits/{suitId}/cases/{caseId}",
         method = RequestMethod.PUT, consumes = "application/json")
     public ResponseEntity<CaseUpdateDTO> updateCase(@PathVariable("projectId") long projectId,
-                                                             @PathVariable("suitId") long suitId,
-                                                             @PathVariable("caseId") long caseId,
-                                                             @RequestBody @Valid EditCaseDTO editCaseDTO) {
+                                                    @PathVariable("suitId") long suitId,
+                                                    @PathVariable("caseId") long caseId,
+                                                    @RequestBody @Valid EditCaseDTO editCaseDTO) {
         final CaseUpdateDTO updatedCaseDTOwithFailedStepIds = caseService
             .updateCase(projectId, suitId, caseId, editCaseDTO);
 
@@ -179,7 +179,7 @@ public class CaseController {
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "OK"),
         @ApiResponse(code = 400, message = "Suit doesn't contain the case"),
-        @ApiResponse(code = 404, message = "Suit/Case not found")
+        @ApiResponse(code = 404, message = "Suit/caze not found")
     })
     @ApiImplicitParams({
         @ApiImplicitParam(name = "projectId", value = "ID of project",

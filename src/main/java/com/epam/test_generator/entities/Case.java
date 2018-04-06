@@ -22,8 +22,8 @@ import org.springframework.statemachine.annotation.WithStateMachine;
 
 
 /**
- * This class represents Test case essence. Test Case is a set of actions that are used for checking some
- * software's behavior. Case consists of some simple fields like id of the case, it's name, description,
+ * This class represents Test case essence. Test caze is a set of actions that are used for checking some
+ * software's behavior. caze consists of some simple fields like id of the case, it's name, description,
  * history information, result of testing and etc, also it includes sequence of steps and tags. List of
  * {@link Step} objects represents steps that must be done for verification within current case. List of
  * {@Link Tag} objects represents types of current case.
@@ -271,7 +271,7 @@ public class Case implements Serializable, Persistable<Long> {
     @Override
     public String toString() {
         return String.format(
-                "Case{ id= %s ,name= %s, description= %s, steps= %s, creationDate= %s, priority= %s, tags= %s, status= %s, comment= %s};",
+                "caze{ id= %s ,name= %s, description= %s, steps= %s, creationDate= %s, priority= %s, tags= %s, status= %s, comment= %s};",
                 id, name, description, steps, creationDate, priority, tags, steps, comment);
     }
 

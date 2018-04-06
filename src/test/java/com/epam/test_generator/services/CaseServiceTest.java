@@ -17,10 +17,10 @@ import static org.mockito.Mockito.when;
 import com.epam.test_generator.dao.interfaces.CaseDAO;
 import com.epam.test_generator.dao.interfaces.CaseVersionDAO;
 import com.epam.test_generator.dao.interfaces.SuitVersionDAO;
-import com.epam.test_generator.dto.CaseDTO;
-import com.epam.test_generator.dto.CaseUpdateDTO;
+import com.epam.test_generator.controllers.caze.response.CaseDTO;
+import com.epam.test_generator.controllers.caze.request.CaseUpdateDTO;
 import com.epam.test_generator.dto.CaseVersionDTO;
-import com.epam.test_generator.dto.EditCaseDTO;
+import com.epam.test_generator.controllers.caze.request.EditCaseDTO;
 import com.epam.test_generator.dto.PropertyDifferenceDTO;
 import com.epam.test_generator.dto.StepDTO;
 import com.epam.test_generator.dto.SuitDTO;
@@ -37,7 +37,7 @@ import com.epam.test_generator.pojo.PropertyDifference;
 import com.epam.test_generator.services.exceptions.BadRequestException;
 import com.epam.test_generator.services.exceptions.NotFoundException;
 import com.epam.test_generator.state.machine.StateMachineAdapter;
-import com.epam.test_generator.transformers.CaseTransformer;
+import com.epam.test_generator.controllers.caze.CaseTransformer;
 import com.epam.test_generator.transformers.CaseVersionTransformer;
 import com.epam.test_generator.transformers.SuitTransformer;
 import com.google.common.collect.Lists;
@@ -123,14 +123,14 @@ public class CaseServiceTest {
     public void setUp() {
         final List<Case> listCases = new ArrayList<>();
 
-        listCases.add(new Case(1L, "name 1", "Case 1",
+        listCases.add(new Case(1L, "name 1", "caze 1",
                 listSteps, 1, setOfTags, "comment 1"));
-        listCases.add(new Case(2L, "name 2", "Case 2",
+        listCases.add(new Case(2L, "name 2", "caze 2",
                 listSteps, 2, setOfTags, "comment 2"));
 
-        caze = new Case(SIMPLE_CASE_ID, "Case name", "Case desc",
+        caze = new Case(SIMPLE_CASE_ID, "caze name", "caze desc",
                 listSteps, 1, setOfTags, "comment");
-        expectedCaseDTO = new CaseDTO(SIMPLE_CASE_ID, "Case name", "Case desc",
+        expectedCaseDTO = new CaseDTO(SIMPLE_CASE_ID, "caze name", "caze desc",
                 expectedListSteps, 1, expectedSetTags, Status.NOT_DONE, "comment");
         suit = new Suit(SIMPLE_SUIT_ID, "Suit 1", "Suit desc",
                 listCases, 1, setOfTags, 1);
@@ -316,10 +316,10 @@ public class CaseServiceTest {
     @Test
     public void remove_Cases_Success(){
         final List<CaseDTO> expectedRemovedCasesDTO = new ArrayList<>();
-        expectedRemovedCasesDTO.add(new CaseDTO(1L, "name 1", "Case 1",
+        expectedRemovedCasesDTO.add(new CaseDTO(1L, "name 1", "caze 1",
                 expectedListSteps, 1, expectedSetTags,
                 Status.NOT_RUN,"comment 1"));
-        expectedRemovedCasesDTO.add(new CaseDTO(2L, "name 2", "Case 2",
+        expectedRemovedCasesDTO.add(new CaseDTO(2L, "name 2", "caze 2",
                 expectedListSteps, 2, expectedSetTags,
                 Status.NOT_RUN, "comment 2"));
 

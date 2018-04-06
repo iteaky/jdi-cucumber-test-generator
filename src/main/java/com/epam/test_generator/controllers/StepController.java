@@ -35,7 +35,7 @@ public class StepController {
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "OK",
             response = StepDTO.class, responseContainer = "List"),
-        @ApiResponse(code = 404, message = "Suit/Case not found")
+        @ApiResponse(code = 404, message = "Suit/caze not found")
     })
     @ApiImplicitParams({
         @ApiImplicitParam(name = "projectId", value = "ID of project",
@@ -59,7 +59,7 @@ public class StepController {
     @ApiOperation(value = "Get step by id", nickname = "getStep")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "OK", response = StepDTO.class),
-        @ApiResponse(code = 404, message = "Suit/Case/Step not found")
+        @ApiResponse(code = 404, message = "Suit/caze/Step not found")
     })
     @ApiImplicitParams({
         @ApiImplicitParam(name = "projectId", value = "ID of project",
@@ -89,7 +89,7 @@ public class StepController {
     @ApiResponses(value = {
         @ApiResponse(code = 201, message = "Created", response = Long.class),
         @ApiResponse(code = 400, message = "Invalid input", response = ValidationErrorsDTO.class),
-        @ApiResponse(code = 404, message = "Suit/Case not found")
+        @ApiResponse(code = 404, message = "Suit/caze not found")
     })
     @ApiImplicitParams({
         @ApiImplicitParam(name = "projectId", value = "ID of project",
@@ -119,7 +119,7 @@ public class StepController {
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "OK"),
         @ApiResponse(code = 400, message = "Invalid input", response = ValidationErrorsDTO.class),
-        @ApiResponse(code = 404, message = "Suit/Case/Step not found")
+        @ApiResponse(code = 404, message = "Suit/caze/Step not found")
     })
     @ApiImplicitParams({
         @ApiImplicitParam(name = "projectId", value = "ID of project",
@@ -157,7 +157,7 @@ public class StepController {
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "OK"),
         @ApiResponse(code = 400, message = "Invalid input", response = ValidationErrorsDTO.class),
-        @ApiResponse(code = 404, message = "Suit/Case/Step not found")
+        @ApiResponse(code = 404, message = "Suit/caze/Step not found")
     })
     @ApiImplicitParams({
         @ApiImplicitParam(name = "projectId", value = "ID of project",
@@ -187,7 +187,7 @@ public class StepController {
     @ApiOperation(value = "Delete step by id", nickname = "removeCase")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "OK"),
-        @ApiResponse(code = 404, message = "Suit/Case/Step not found")
+        @ApiResponse(code = 404, message = "Suit/caze/Step not found")
     })
     @ApiImplicitParams({
         @ApiImplicitParam(name = "projectId", value = "ID of project",

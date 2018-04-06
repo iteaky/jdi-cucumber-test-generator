@@ -19,9 +19,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.epam.test_generator.dto.CaseDTO;
-import com.epam.test_generator.dto.CaseUpdateDTO;
-import com.epam.test_generator.dto.EditCaseDTO;
+import com.epam.test_generator.controllers.caze.CaseController;
+import com.epam.test_generator.controllers.caze.response.CaseDTO;
+import com.epam.test_generator.controllers.caze.request.CaseUpdateDTO;
+import com.epam.test_generator.controllers.caze.request.EditCaseDTO;
 import com.epam.test_generator.dto.SuitDTO;
 import com.epam.test_generator.entities.Action;
 import com.epam.test_generator.entities.Event;
