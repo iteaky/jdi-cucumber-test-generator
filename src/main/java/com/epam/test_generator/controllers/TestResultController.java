@@ -43,7 +43,7 @@ public class TestResultController {
             paramType = "header", dataType = "string", required = true)
     })
     @Secured({"ROLE_ADMIN", "ROLE_TEST_ENGINEER", "ROLE_TEST_LEAD"})
-    @RequestMapping(value = "/projects/{projectId}/tests/run",
+    @RequestMapping(value = "/projects/{projectId}/tests",
         method = RequestMethod.POST, consumes = "application/json")
     public ResponseEntity<Void> runTests(@PathVariable("projectId") long projectId,
                                          @RequestBody @Valid List<RawSuitResultDTO> rawSuitResultDTOS,
@@ -70,7 +70,7 @@ public class TestResultController {
             paramType = "query", dataType = "int")
     })
     @Secured({"ROLE_ADMIN", "ROLE_TEST_ENGINEER", "ROLE_TEST_LEAD"})
-    @RequestMapping(value = "/projects/{projectId}/tests/results/",
+    @RequestMapping(value = "/projects/{projectId}/tests/results",
         method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<List<TestResultDTO>> getTestRunResultsFromTo(
         @PathVariable("projectId") long projectId,

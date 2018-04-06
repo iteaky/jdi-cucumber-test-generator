@@ -190,6 +190,8 @@ public class CaseController {
             required = true, dataType = "long", paramType = "path"),
         @ApiImplicitParam(name = "Authorization", value = "add here your token", paramType = "header", dataType = "string", required = true)
     })
+
+    @Deprecated //because we have removeCases
     @Secured({"ROLE_ADMIN", "ROLE_TEST_ENGINEER", "ROLE_TEST_LEAD"})
     @RequestMapping(value = "/projects/{projectId}/suits/{suitId}/cases/{caseId}", method = RequestMethod.DELETE)
     public ResponseEntity<CaseDTO> removeCase(@PathVariable("projectId") long projectId,

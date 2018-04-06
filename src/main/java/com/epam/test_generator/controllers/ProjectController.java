@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -146,10 +145,10 @@ public class ProjectController {
     })
     @ResponseStatus(HttpStatus.OK)
     @Secured({"ROLE_ADMIN", "ROLE_TEST_LEAD"})
-    @RequestMapping(value = "/projects/{projectId}/users", method = RequestMethod.PUT,
+    @RequestMapping(value = "/projects/{projectId}/users/{userId}", method = RequestMethod.PUT,
         produces = "application/json")
     public ResponseEntity<Void> assignUserToProject(@PathVariable("projectId") long projectId,
-                                                    @RequestParam long userId) {
+                                                    @PathVariable("userId") long userId) {
         projectService.addUserToProject(projectId, userId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -169,10 +168,10 @@ public class ProjectController {
     })
     @ResponseStatus(HttpStatus.OK)
     @Secured({"ROLE_ADMIN", "ROLE_TEST_LEAD"})
-    @RequestMapping(value = "/projects/{projectId}/users", method = RequestMethod.DELETE,
+    @RequestMapping(value = "/projects/{projectId}/users/{userId}", method = RequestMethod.DELETE,
         produces = "application/json")
     public ResponseEntity<Void> removeUserFromProject(@PathVariable("projectId") long projectId,
-                                                    @RequestParam long userId) {
+                                                    @PathVariable("userId") long userId) {
         projectService.removeUserFromProject(projectId, userId);
         return new ResponseEntity<>(HttpStatus.OK);
     }

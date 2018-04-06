@@ -47,7 +47,7 @@ public class AdminController {
 
     @ApiImplicitParam(name = "Authorization", value = "add here your token", paramType = "header", dataType = "string", required = true)
     @Secured("ROLE_ADMIN")
-    @RequestMapping(value = "/admin/changeroles", method = RequestMethod.PUT)
+    @RequestMapping(value = "/admin/role", method = RequestMethod.PUT)
     public ResponseEntity changeUserRole(@RequestBody @Valid ChangeUserRoleDTO changeUserRoleDTO) {
 
         adminService.changeUserRole(changeUserRoleDTO);
@@ -94,7 +94,7 @@ public class AdminController {
     @Secured({"ROLE_ADMIN"})
     @ApiOperation(value = "Create jira settings")
     @ApiImplicitParam(name = "Authorization", value = "add here your token", paramType = "header", dataType = "string", required = true)
-    @RequestMapping(value = "admin/jira_settings", method = RequestMethod.POST, consumes = "application/json")
+    @RequestMapping(value = "admin/jira-settings", method = RequestMethod.POST, consumes = "application/json")
     public ResponseEntity createJiraSettings(@RequestBody @Valid JiraSettingsDTO jiraSettingsDTO) {
         jiraSettingsService.createJiraSettings(jiraSettingsDTO);
         return new ResponseEntity(HttpStatus.OK);
@@ -103,7 +103,7 @@ public class AdminController {
     @Secured({"ROLE_ADMIN"})
     @ApiOperation(value = "Get jira settings")
     @ApiImplicitParam(name = "Authorization", value = "add here your token", paramType = "header", dataType = "string", required = true)
-    @RequestMapping(value = "admin/jira_settings", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "admin/jira-settings", method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<List<JiraSettings>> getJiraSettings() {
         return new ResponseEntity<>(jiraSettingsService.getJiraSettings(), HttpStatus.OK);
     }
