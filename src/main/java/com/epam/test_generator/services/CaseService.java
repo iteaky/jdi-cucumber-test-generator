@@ -3,13 +3,14 @@ package com.epam.test_generator.services;
 import static com.epam.test_generator.services.utils.UtilsService.caseBelongsToSuit;
 import static com.epam.test_generator.services.utils.UtilsService.checkNotNull;
 
+import com.epam.test_generator.controllers.CaseVersion.CaseVersionTransformer;
+import com.epam.test_generator.controllers.CaseVersion.response.CaseVersionGetDTO;
 import com.epam.test_generator.dao.interfaces.CaseDAO;
 import com.epam.test_generator.dao.interfaces.CaseVersionDAO;
 import com.epam.test_generator.dao.interfaces.RemovedIssueDAO;
 import com.epam.test_generator.dao.interfaces.SuitVersionDAO;
 import com.epam.test_generator.dto.CaseDTO;
 import com.epam.test_generator.dto.CaseUpdateDTO;
-import com.epam.test_generator.dto.CaseVersionDTO;
 import com.epam.test_generator.dto.EditCaseDTO;
 import com.epam.test_generator.dto.StepDTO;
 import com.epam.test_generator.dto.SuitUpdateDTO;
@@ -22,7 +23,6 @@ import com.epam.test_generator.pojo.CaseVersion;
 import com.epam.test_generator.services.exceptions.BadRequestException;
 import com.epam.test_generator.state.machine.StateMachineAdapter;
 import com.epam.test_generator.transformers.CaseTransformer;
-import com.epam.test_generator.transformers.CaseVersionTransformer;
 import com.epam.test_generator.transformers.TagTransformer;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -30,6 +30,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.statemachine.StateMachine;
@@ -48,9 +49,6 @@ public class CaseService {
 
     @Autowired
     private Validator validator;
-
-    @Autowired
-    private CaseVersionTransformer caseVersionTransformer;
 
     @Autowired
     private CaseDAO caseDAO;
@@ -261,7 +259,7 @@ public class CaseService {
         }
     }
 
-    public List<CaseVersionDTO> getCaseVersions(Long projectId, Long suitId, Long caseId) {
+    public List<CaseVersionGetDTO> getCaseVersions(Long projectId, Long suitId, Long caseId) {
         Suit suit = suitService.getSuit(projectId, suitId);
 
         Case caze = caseDAO.findOne(caseId);
@@ -271,7 +269,10 @@ public class CaseService {
 
         List<CaseVersion> caseVersions = caseVersionDAO.findAll(caseId);
 
-        return caseVersionTransformer.toDtoList(caseVersions);
+        return caseVersions
+                .stream()
+                .map(CaseVersionTransformer::toDTO)
+                .collect(Collectors.toList());
     }
 
     /**

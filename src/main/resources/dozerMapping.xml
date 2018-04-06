@@ -51,20 +51,4 @@
             <b>role</b>
         </field>
     </mapping>
-    <mapping map-null="false">
-        <class-a>com.epam.test_generator.pojo.CaseVersion</class-a>
-        <class-b>com.epam.test_generator.dto.CaseVersionDTO</class-b>
-    </mapping>
-    <mapping map-null="false">
-        <class-a>com.epam.test_generator.pojo.PropertyDifference</class-a>
-        <class-b>com.epam.test_generator.dto.PropertyDifferenceDTO</class-b>
-        <field custom-converter="com.epam.test_generator.transformers.CustomCaseVersionConverter">
-            <a>oldValue</a>
-            <b>oldValue</b>
-        </field>
-        <field custom-converter="com.epam.test_generator.transformers.CustomCaseVersionConverter">
-            <a>newValue</a>
-            <b>newValue</b>
-        </field>
-    </mapping>
 </mappings>
