@@ -48,7 +48,7 @@ public class ProjectService {
     }
 
     public List<Project> getProjectsByUserId(Long userId) {
-        final User user = userService.getUserById(userId);
+        final User user = checkNotNull(userService.getUserById(userId));
         return projectDAO.findByUsers(user);
     }
 

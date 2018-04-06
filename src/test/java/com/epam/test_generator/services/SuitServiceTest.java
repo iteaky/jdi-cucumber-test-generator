@@ -17,6 +17,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.epam.test_generator.dao.interfaces.CaseVersionDAO;
+import com.epam.test_generator.dao.interfaces.ProjectDAO;
 import com.epam.test_generator.dao.interfaces.SuitDAO;
 import com.epam.test_generator.dao.interfaces.SuitVersionDAO;
 import com.epam.test_generator.dto.CaseDTO;
@@ -47,6 +48,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -65,6 +67,9 @@ public class SuitServiceTest {
 
     @Mock
     private CaseVersionDAO caseVersionDAO;
+
+    @Mock
+    private ProjectDAO projectDAO;
 
     @Mock
     private ProjectService projectService;
@@ -235,10 +240,11 @@ public class SuitServiceTest {
     @Test(expected = NotFoundException.class)
     public void updateSuitInProject_InvalidProjectId_NotFound()
         throws MethodArgumentNotValidException {
+        ReflectionTestUtils.setField(projectService, "projectDAO", projectDAO);
         when(cascadeUpdateService
             .cascadeSuitCasesUpdate(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID, expectedSuitDTO))
             .thenReturn(null);
-        when(projectService.getProjectByProjectId(SIMPLE_PROJECT_ID)).thenReturn(expectedProject);
+        when(projectService.getProjectByProjectId(INVALID_PROJECT_ID)).thenCallRealMethod();
         when(suitTransformer.fromDto(any())).thenReturn(expectedSuit);
         when(suitDAO.findOne(anyLong())).thenReturn(expectedSuit);
         suitService.updateSuit(INVALID_PROJECT_ID, SIMPLE_SUIT_ID, expectedSuitDTO);
@@ -270,7 +276,8 @@ public class SuitServiceTest {
 
     @Test(expected = NotFoundException.class)
     public void removeSuitFromProject_InvalidProjectId_NotFound() {
-        when(projectService.getProjectByProjectId(SIMPLE_PROJECT_ID)).thenReturn(expectedProject);
+        ReflectionTestUtils.setField(projectService, "projectDAO", projectDAO);
+        when(projectService.getProjectByProjectId(INVALID_PROJECT_ID)).thenCallRealMethod();
         when(suitDAO.findOne(anyLong())).thenReturn(expectedSuit);
         when(suitTransformer.toDto(any())).thenReturn(expectedSuitDTO);
         suitService.removeSuit(INVALID_PROJECT_ID, SIMPLE_SUIT_ID);
@@ -369,7 +376,8 @@ public class SuitServiceTest {
 
     @Test(expected = NotFoundException.class)
     public void getSuitsFromProject_inValidId_NotFound() {
-        when(projectService.getProjectByProjectId(SIMPLE_PROJECT_ID)).thenReturn(expectedProject);
+        ReflectionTestUtils.setField(projectService, "projectDAO", projectDAO);
+        when(projectService.getProjectByProjectId(INVALID_PROJECT_ID)).thenCallRealMethod();
         suitService.getSuitsFromProject(INVALID_PROJECT_ID);
     }
 
