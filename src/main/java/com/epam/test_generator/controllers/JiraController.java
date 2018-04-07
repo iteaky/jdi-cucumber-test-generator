@@ -34,7 +34,7 @@ public class JiraController {
     @Secured({"ROLE_ADMIN", "ROLE_TEST_LEAD"})
     @ApiImplicitParam(name = "Authorization", value = "add here your token",
         paramType = "header", dataType = "string", required = true)
-    @RequestMapping(value = "/{jiraSettingsId}/jiraFilters", method = RequestMethod.GET,
+    @RequestMapping(value = "/{jiraSettingsId}/jira-filters", method = RequestMethod.GET,
         produces = "application/json")
     public ResponseEntity<List<JiraFilter>> getFilters(
         @PathVariable("jiraSettingsId") Long clientId) {
@@ -82,7 +82,7 @@ public class JiraController {
     @Secured({"ROLE_ADMIN", "ROLE_TEST_LEAD"})
     @ApiImplicitParam(name = "Authorization", value = "add here your token", paramType = "header",
             dataType = "string", required = true)
-    @RequestMapping(value = "/{jiraSettingsId}/{jiraKey}/projectByFilters", method = RequestMethod
+    @RequestMapping(value = "/{jiraSettingsId}/{jiraKey}/project-by-filters", method = RequestMethod
         .POST,
         consumes =
         "application/json")
@@ -115,7 +115,7 @@ public class JiraController {
 
     @Secured({"ROLE_ADMIN", "ROLE_TEST_LEAD"})
     @ApiImplicitParam(name = "Authorization", value = "add here your token", paramType = "header", dataType = "string", required = true)
-    @RequestMapping(value = "/{jiraSettingsId}/syncFromJira", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/{jiraSettingsId}/import", method = RequestMethod.PUT, produces = "application/json")
     public ResponseEntity<String> syncFromJira(@PathVariable("jiraSettingsId") Long id) {
         jiraService.syncFromJira(id);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -123,7 +123,7 @@ public class JiraController {
 
     @Secured({"ROLE_ADMIN", "ROLE_TEST_LEAD"})
     @ApiImplicitParam(name = "Authorization", value = "add here your token", paramType = "header", dataType = "string", required = true)
-    @RequestMapping(value = "/{jiraSettingsId}/syncToJira", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/{jiraSettingsId}/export", method = RequestMethod.PUT, produces = "application/json")
     public ResponseEntity<String> syncToJira(@PathVariable("jiraSettingsId") Long id) {
 
         jiraService.syncToJira(id);
