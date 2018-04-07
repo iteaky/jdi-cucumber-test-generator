@@ -31,33 +31,37 @@ public class PasswordService {
     @Value("${override.domain:#{null}}")
     private String OVERRIDE_DOMAIN;
 
-    private final static String PASSWORD_RESET_PATH = "/user?action=confirm-email-reset";
-    private final static String CONFIRM_ACCOUNT_PATH = "/user?action=confirm-email";
-    private final static String TOKEN = "token=";
+    private final static String PASSWORD_RESET_PATH = "/user/password";
+    private final static String PASSWORD_RESET_PARAM = "action=check-temp-token";
+    private final static String CONFIRM_ACCOUNT_PATH = "/user";
+    private final static String CONFIRM_ACCOUNT_PARAM = "action=confirm-email";
+    private final static String TOKEN = "&token=";
 
     /**
      * Generates URI path to reset password by user token
-     * @param request
+     *
      * @param token user token
      * @return URI path
      */
     public String createResetUrl(HttpServletRequest request, Token token) {
-        return getSecurityUrl(request, PASSWORD_RESET_PATH, token).toString();
+        return getSecurityUrl(request, PASSWORD_RESET_PATH, PASSWORD_RESET_PARAM, token).toString();
     }
 
     /**
      * Generates URI path to confirm user account by token
-     * @param request
+     *
      * @param token user token
      * @return URI path
      */
     public String createConfirmUrl(HttpServletRequest request, Token token) {
-        return getSecurityUrl(request, CONFIRM_ACCOUNT_PATH, token).toString();
+        return getSecurityUrl(request, CONFIRM_ACCOUNT_PATH, CONFIRM_ACCOUNT_PARAM, token)
+            .toString();
     }
 
 
     /**
      * Resets password for user specified in passwordResetDTO
+     *
      * @param passwordResetDTO info about user token and password
      */
     public void passwordReset(PasswordResetDTO passwordResetDTO) {
@@ -76,18 +80,18 @@ public class PasswordService {
         return tokenDAO.findByToken(token);
     }
 
-    private URI getSecurityUrl(HttpServletRequest request, String path, Token token) {
+    private URI getSecurityUrl(HttpServletRequest request, String path, String param, Token token) {
         try {
             if (OVERRIDE_DOMAIN == null) {
                 return new URI(request.getScheme(),
-                               null,
-                               request.getServerName(),
-                               request.getServerPort(),
-                               request.getContextPath() + path,
-                               TOKEN + token.getToken(),
-                               null);
+                    null,
+                    request.getServerName(),
+                    request.getServerPort(),
+                    request.getContextPath() + path,
+                    param + TOKEN + token.getToken(),
+                    null);
             }
-            return new URI(OVERRIDE_DOMAIN + path + "&" + TOKEN + token.getToken());
+            return new URI(OVERRIDE_DOMAIN + path + "?" + param + TOKEN + token.getToken());
         } catch (URISyntaxException e) {
             throw new IncorrectURI(e.getMessage());
         }

@@ -22,9 +22,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 /**
- * Controls user registration process.
+ * Allows to register a new user, confirm his email to activate the account and change the password.
  */
 @RestController
+@RequestMapping(value = "/user")
 public class UserController {
 
     @Autowired
@@ -39,7 +40,7 @@ public class UserController {
     @Autowired
     private PasswordService passwordService;
 
-    @RequestMapping(value = "/user", params = "action=registration",method = RequestMethod.POST)
+    @RequestMapping(params = "action=registration",method = RequestMethod.POST)
     public ResponseEntity registerUserAccount(@RequestBody @Valid RegistrationUserDTO userDTO,  HttpServletRequest request) {
 
         User user = userService.createUser(userDTO);
@@ -47,14 +48,14 @@ public class UserController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @GetMapping(value = "/user", params = {"action=confirm-email","token"})
+    @GetMapping(params = {"action=confirm-email","token"})
     public ResponseEntity<String> confirmEmail(@RequestParam String token) {
         userService.confirmUser(token);
 
         return new ResponseEntity<>("Your account is verified!", HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/user", params = "action=forgot-password", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
+    @RequestMapping(value = "/forgot-password", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
     public ResponseEntity passwordForgot(@RequestBody EmailDTO email,
                                          HttpServletRequest request) throws Exception {
 
@@ -65,7 +66,7 @@ public class UserController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/user", params = "action=change-password", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
+    @RequestMapping(value = "/change-password", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
     public ResponseEntity passwordReset(@RequestBody @Valid PasswordResetDTO passwordResetDTO) {
         passwordService.passwordReset(passwordResetDTO);
 
@@ -73,7 +74,7 @@ public class UserController {
 
     }
 
-    @GetMapping(value = "/user", params = {"action=confirm-email-reset","token"})
+    @GetMapping(value = "/password", params = {"action=check-temp-token","token"})
     public ResponseEntity displayResetPasswordPage(@RequestParam String token) {
         tokenService.checkToken(token);
 
