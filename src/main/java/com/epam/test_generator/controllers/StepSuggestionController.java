@@ -69,7 +69,7 @@ public class StepSuggestionController {
                     dataType = "string")
     })
     @Secured({"ROLE_ADMIN", "ROLE_TEST_ENGINEER", "ROLE_TEST_LEAD", "ROLE_GUEST"})
-    @RequestMapping(value = "/stepSuggestions", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/step-suggestions", method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<List<StepSuggestionDTO>> getStepsSuggestions(
             @RequestParam(value = "stepType", required = false) StepType stepType,
             @RequestParam(value = "page", required = false) Integer pageNumber,
@@ -79,7 +79,6 @@ public class StepSuggestionController {
                 HttpStatus.OK);
     }
 
-    @Deprecated
     @ApiOperation(value = "Get all step suggestions by type",
             nickname = "getStepsSuggestionsByType")
     @ApiResponses(value = {
@@ -93,7 +92,7 @@ public class StepSuggestionController {
             @ApiImplicitParam(name = "Authorization", value = "add here your token", paramType = "header", dataType = "string", required = true)
     })
     @Secured({"ROLE_ADMIN", "ROLE_TEST_ENGINEER", "ROLE_TEST_LEAD", "ROLE_GUEST"})
-    @RequestMapping(value = "/stepSuggestions/{stepType}",
+    @RequestMapping(value = "/step-suggestions/{stepType}",
             method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<List<StepSuggestionDTO>> getStepsSuggestionsByType(
             @PathVariable("stepType") StepType stepType) {
@@ -114,7 +113,7 @@ public class StepSuggestionController {
     })
     @Secured({"ROLE_ADMIN", "ROLE_TEST_ENGINEER", "ROLE_TEST_LEAD"})
     @ResponseStatus(HttpStatus.CREATED)
-    @RequestMapping(value = "/stepSuggestions", method = RequestMethod.POST,
+    @RequestMapping(value = "/step-suggestions", method = RequestMethod.POST,
         consumes = "application/json", produces = "application/json")
     public ResponseEntity<Long> addStepSuggestion(
         @RequestBody @Valid StepSuggestionCreateDTO stepSuggestionCreateDTO) {
@@ -139,7 +138,7 @@ public class StepSuggestionController {
             paramType = "header", dataType = "string", required = true)
     })
     @Secured({"ROLE_ADMIN", "ROLE_TEST_ENGINEER", "ROLE_TEST_LEAD"})
-    @RequestMapping(value = "/stepSuggestions/{stepSuggestionId}", method = RequestMethod.PUT, produces = "application/json")
+    @RequestMapping(value = "/step-suggestions/{stepSuggestionId}", method = RequestMethod.PUT, produces = "application/json")
     public ResponseEntity<Void> updateStepSuggestion(
         @PathVariable("stepSuggestionId") long stepSuggestionId,
         @RequestBody @Valid StepSuggestionUpdateDTO stepSuggestionUpdateDTO) {
@@ -160,7 +159,7 @@ public class StepSuggestionController {
         @ApiImplicitParam(name = "Authorization", value = "add here your token", paramType = "header", dataType = "string", required = true)
     })
     @Secured({"ROLE_ADMIN", "ROLE_TEST_ENGINEER", "ROLE_TEST_LEAD"})
-    @RequestMapping(value = "/stepSuggestions/{stepSuggestionId}",
+    @RequestMapping(value = "/step-suggestions/{stepSuggestionId}",
         method = RequestMethod.DELETE, produces = "application/json")
     public ResponseEntity<Void> removeStepSuggestion(
         @PathVariable("stepSuggestionId") long stepSuggestionId) {

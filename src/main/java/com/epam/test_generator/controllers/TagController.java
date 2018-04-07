@@ -49,7 +49,7 @@ public class TagController {
 
         return new ResponseEntity<>(tagService.getAllProjectTags(projectId), HttpStatus.OK);
     }
-
+    @Deprecated
     @ApiOperation(value = "Get all tags from all cases in suit", nickname = "getAllTagsFromAllCasesInSuit")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK", response = TagDTO.class, responseContainer = "Set"),
@@ -75,6 +75,7 @@ public class TagController {
         return new ResponseEntity<>(tagService.getAllTagsFromAllCasesInSuit(projectId, suitId), HttpStatus.OK);
     }
 
+    @Deprecated
     @ApiOperation(value = "Get all tags from the case", nickname = "getTags")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK", response = TagDTO.class, responseContainer = "Set"),
@@ -104,6 +105,7 @@ public class TagController {
         return new ResponseEntity<>(caseDTO.getTags(), HttpStatus.OK);
     }
 
+    @Deprecated
     @ApiOperation(value = "Add a new tag to the case", nickname = "addTagToCase")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Created", response = Long.class),
@@ -138,6 +140,7 @@ public class TagController {
                 HttpStatus.CREATED);
     }
 
+    @Deprecated
     @ApiOperation(value = "Update tag by id", nickname = "updateTag")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),
@@ -174,6 +177,7 @@ public class TagController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @Deprecated
     @ApiOperation(value = "Delete tag by id", nickname = "removeTag")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),

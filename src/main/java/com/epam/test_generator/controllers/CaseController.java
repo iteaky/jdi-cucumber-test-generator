@@ -149,6 +149,7 @@ public class CaseController {
         return new ResponseEntity<>(updatedCaseDTOwithFailedStepIds, HttpStatus.OK);
     }
 
+    @Deprecated
     @ApiOperation(value = "Update, create or delete list of cases", nickname = "updateCases")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "OK", response = Long.class, responseContainer = "List"),
@@ -191,7 +192,7 @@ public class CaseController {
         @ApiImplicitParam(name = "Authorization", value = "add here your token", paramType = "header", dataType = "string", required = true)
     })
 
-    @Deprecated //because we have removeCases
+    @Deprecated
     @Secured({"ROLE_ADMIN", "ROLE_TEST_ENGINEER", "ROLE_TEST_LEAD"})
     @RequestMapping(value = "/projects/{projectId}/suits/{suitId}/cases/{caseId}", method = RequestMethod.DELETE)
     public ResponseEntity<CaseDTO> removeCase(@PathVariable("projectId") long projectId,

@@ -153,6 +153,7 @@ public class StepController {
      * @param steps array list of steps from JSON object
      * @return HTTP status of operation
      */
+    @Deprecated
     @ApiOperation(value = "Cascade update of the list with steps", nickname = "updateSteps")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "OK"),

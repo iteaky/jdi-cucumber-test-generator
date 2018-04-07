@@ -133,7 +133,7 @@ public class SuitController {
         @ApiResponse(code = 404, message = "Suit not found")
     })
     @Secured({"ROLE_ADMIN", "ROLE_TEST_ENGINEER", "ROLE_TEST_LEAD"})
-    @RequestMapping(value = "/projects/{projectId}/suits/updateRowNumbers", method = RequestMethod.PUT,
+    @RequestMapping(value = "/projects/{projectId}/suits/row-numbers", method = RequestMethod.PUT,
         consumes = "application/json")
     @ApiImplicitParam(name = "Authorization", value = "add here your token", paramType = "header", dataType = "string", required = true)
     public ResponseEntity<List<SuitRowNumberUpdateDTO>> updateSuitRowNumber
@@ -165,7 +165,7 @@ public class SuitController {
     }
 
     @Secured({"ROLE_ADMIN", "ROLE_TEST_ENGINEER", "ROLE_TEST_LEAD"})
-    @RequestMapping(value = "/projects/{projectId}/suits/{suitId}/featureFile",
+    @RequestMapping(value = "/projects/{projectId}/suits/{suitId}/feature-file",
         method = RequestMethod.POST, consumes = "application/json")
     @ApiImplicitParam(name = "Authorization", value = "add here your token", paramType = "header", dataType = "string", required = true)
     public ResponseEntity<String> downloadFile(@RequestBody @Valid SuitDTO suitDTO)
