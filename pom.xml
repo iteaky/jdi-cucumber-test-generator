@@ -21,7 +21,7 @@
         </jacoco.it.execution.data.file>
         <jacoco.ut.execution.data.file>${project.build.directory}/coverage-reports/jacoco-ut.exec
         </jacoco.ut.execution.data.file>
-        <skip.unit.tests>false</skip.unit.tests>
+        <skip.tests>false</skip.tests>
         <spring-security.version>4.2.3.RELEASE</spring-security.version>
         <jira.version>6.3.11</jira.version>
         <jira.data.version>6.3</jira.data.version>
@@ -100,15 +100,13 @@
                 <version>2.20.1</version>
                 <configuration>
                     <argLine>${surefireArgLine}</argLine>
-                    <skipTests>${skip.unit.tests}</skipTests>
+                    <skipTests>${skip.tests}</skipTests>
                     <excludes>
-                        <exclude>src/main/webapp</exclude>
-                        <exclude>src/test/java/com/epam/test_generator/dao</exclude>
-                        <exclude>src/test/java/com/epam/test_generator/dto</exclude>
-                        <exclude>src/test/java/com/epam/test_generator/file_generator</exclude>
-                        <exclude>src/test/java/com/epam/test_generator/services</exclude>
-                        <exclude>src/test/java/com/epam/test_generator</exclude>
+                        <exclude>${surefire.excludedtests}</exclude>
                     </excludes>
+                    <includes>
+                        <include>${surefire.includedtests}</include>
+                    </includes>
                 </configuration>
             </plugin>
         </plugins>
@@ -386,4 +384,31 @@
         </dependency>
 
     </dependencies>
+
+    <profiles>
+        <profile>
+            <id>allTests</id>
+            <properties>
+                <surefire.excludedtests>-</surefire.excludedtests>
+                <surefire.includedtests>**</surefire.includedtests>
+            </properties>
+        </profile>
+        <profile>
+            <id>integrationTestsOnly</id>
+            <properties>
+                <surefire.excludedtests>-</surefire.excludedtests>
+                <surefire.includedtests>**/com/epam/test_generator/api/**</surefire.includedtests>
+            </properties>
+        </profile>
+        <profile>
+            <id>unitTestsOnly</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <surefire.excludedtests>**/com/epam/test_generator/api/**</surefire.excludedtests>
+                <surefire.includedtests>**</surefire.includedtests>
+            </properties>
+        </profile>
+    </profiles>
 </project>
