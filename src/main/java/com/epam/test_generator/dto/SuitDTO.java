@@ -15,7 +15,6 @@ public class SuitDTO {
 
     private Long id;
 
-    @NotNull
     @Size(min = 1, max = 255)
     private String name;
 
@@ -25,7 +24,6 @@ public class SuitDTO {
     @Valid
     private List<CaseDTO> cases;
 
-    @NotNull
     @Min(value = 1)
     @Max(value = 5)
     private Integer priority;
@@ -33,10 +31,6 @@ public class SuitDTO {
     private Date creationDate;
 
     private Set<TagDTO> tags;
-
-    private String jiraProjectKey;
-
-    private String jiraKey;
 
     @NotNull
     private Status status;
@@ -53,45 +47,6 @@ public class SuitDTO {
         this.id = id;
         this.name = name;
         this.description = description;
-    }
-
-    public SuitDTO(Long id, String name, String description, List<CaseDTO> cases, Integer priority,
-                   Date creationDate, Set<TagDTO> tags, Integer rowNumber) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.cases = cases;
-        this.priority = priority;
-        this.creationDate = creationDate;
-        this.tags = tags;
-        this.rowNumber = rowNumber;
-    }
-
-    public SuitDTO(Long id, String name, String description, List<CaseDTO> cases, Integer priority,
-                   Set<TagDTO> tags, Integer rowNumber) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.cases = cases;
-        this.priority = priority;
-        this.tags = tags;
-        this.rowNumber = rowNumber;
-    }
-
-    public String getJiraProjectKey() {
-        return jiraProjectKey;
-    }
-
-    public void setJiraProjectKey(String jiraProjectKey) {
-        this.jiraProjectKey = jiraProjectKey;
-    }
-
-    public String getJiraKey() {
-        return jiraKey;
-    }
-
-    public void setJiraKey(String jiraKey) {
-        this.jiraKey = jiraKey;
     }
 
     public Long getId() {

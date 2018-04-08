@@ -88,4 +88,11 @@ public class SuitCreateDTO {
         this.description = description;
     }
 
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
+    }
 }

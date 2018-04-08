@@ -111,19 +111,19 @@ public class SuitController {
             required = true, dataType = "long", paramType = "path"),
         @ApiImplicitParam(name = "suitId", value = "ID of suit to update",
             required = true, dataType = "long", paramType = "path"),
-        @ApiImplicitParam(name = "suitDTO", value = "Updated suit object",
-            required = true, dataType = "SuitDTO", paramType = "body"),
+        @ApiImplicitParam(name = "suitUpdateDTO", value = "Updated suit object",
+            required = true, dataType = "SuitUpdateDTO", paramType = "body"),
         @ApiImplicitParam(name = "Authorization", value = "add here your token", paramType = "header", dataType = "string", required = true)
     })
     @Secured({"ROLE_ADMIN", "ROLE_TEST_ENGINEER", "ROLE_TEST_LEAD"})
     @RequestMapping(value = "/projects/{projectId}/suits/{suitId}", method = RequestMethod.PUT,
         consumes = "application/json", produces = "application/json")
-    public ResponseEntity<SuitUpdateDTO> updateSuit(@PathVariable("projectId") long projectId,
+    public ResponseEntity<SuitDTO> updateSuit(@PathVariable("projectId") long projectId,
                                                              @PathVariable("suitId") long suitId,
-                                                             @RequestBody @Valid SuitDTO suitDTO) throws MethodArgumentNotValidException {
-        final SuitUpdateDTO updatedSuitDTOwithFailedStepIds = suitService.updateSuit(projectId, suitId, suitDTO);
+                                                             @RequestBody @Valid SuitUpdateDTO suitUpdateDTO) throws MethodArgumentNotValidException {
+        final SuitDTO updatedSuitDTO = suitService.updateSuit(projectId, suitId, suitUpdateDTO);
 
-        return new ResponseEntity<>(updatedSuitDTOwithFailedStepIds, HttpStatus.OK);
+        return new ResponseEntity<>(updatedSuitDTO, HttpStatus.OK);
     }
 
 

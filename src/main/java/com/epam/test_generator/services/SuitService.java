@@ -31,7 +31,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
-
 @Transactional
 @Service
 public class SuitService {
@@ -49,9 +48,6 @@ public class SuitService {
     private CaseVersionDAO caseVersionDAO;
 
     @Autowired
-    private CascadeUpdateService cascadeUpdateService;
-
-    @Autowired
     private RemovedIssueDAO removedIssueDAO;
 
     @Autowired
@@ -63,7 +59,6 @@ public class SuitService {
     public List<SuitDTO> getSuitsDTO() {
         return suitTransformer.toDtoList(suitDAO.findAll());
     }
-
 
     public List<Suit> getSuits() {
         return suitDAO.findAll();
@@ -108,7 +103,6 @@ public class SuitService {
         return suitTransformer.toDto(suit);
     }
 
-
     public Suit getSuitByJiraKey(String key) {
         Suit project = suitDAO.findByJiraKey(key);
         checkNotNull(project);
@@ -121,30 +115,23 @@ public class SuitService {
      *
      * @param projectId id of project
      * @param suitId id of suit to update
-     * @param suitDTO info to update
-     * @return {@link SuitUpdateDTO} which contains {@link SuitDTO} and {@link List<Long>}
+     * @param suitUpdateDTO info to update
+     * @return {@link SuitDTO} which contains {@link SuitDTO} and {@link List<Long>}
      * (in fact id of {@link StepDTO} with FAILED {@link Status} which belong this suit)
      */
-    public SuitUpdateDTO updateSuit(long projectId, long suitId, SuitDTO suitDTO)
+    public SuitDTO updateSuit(long projectId, long suitId, SuitUpdateDTO suitUpdateDTO)
         throws MethodArgumentNotValidException {
-        final List<Long> failedStepIds = cascadeUpdateService
-            .cascadeSuitCasesUpdate(projectId, suitId, suitDTO);
+
         Suit suit = getSuit(projectId, suitId);
-        final SuitDTO simpleSuitDTO = getSimpleSuitDTO(suitDTO);
 
-        suitTransformer.mapDTOToEntity(simpleSuitDTO, suit);
+        suitTransformer.mapDTOToEntity(suitUpdateDTO, suit);
         suit.setLastModifiedDate(LocalDateTime.now());
+
         suitDAO.save(suit);
-
-
         suitVersionDAO.save(suit);
         caseVersionDAO.save(suit.getCases());
 
-        SuitDTO updatedSuitDTO = suitTransformer.toDto(suit);
-        SuitUpdateDTO updatedSuitDTOwithFailedStepIds = new SuitUpdateDTO(updatedSuitDTO,
-            failedStepIds);
-
-        return updatedSuitDTOwithFailedStepIds;
+        return suitTransformer.toDto(suit);
     }
 
     /**
@@ -169,8 +156,7 @@ public class SuitService {
 
         Project project = projectService.getProjectByProjectId(projectId);
         project.getSuits().remove(suit);
-        SuitDTO removedSuitDTO = suitTransformer.toDto(suit);
-        return removedSuitDTO;
+        return suitTransformer.toDto(suit);
     }
 
     public List<SuitDTO> getSuitsFromProject(Long projectId) {
@@ -225,19 +211,6 @@ public class SuitService {
         return rowNumberUpdates;
     }
 
-    private SuitDTO getSimpleSuitDTO(SuitDTO suitDTO) {
-        final SuitDTO snapShot = new SuitDTO();
-        snapShot.setId(suitDTO.getId());
-        snapShot.setName(suitDTO.getName());
-        snapShot.setDescription(suitDTO.getDescription());
-        snapShot.setPriority(suitDTO.getPriority());
-        snapShot.setTags(suitDTO.getTags());
-        snapShot.setStatus(suitDTO.getStatus());
-        snapShot.setCreationDate(suitDTO.getCreationDate());
-        snapShot.setRowNumber(suitDTO.getRowNumber());
-        return snapShot;
-    }
-
     public List<SuitVersionDTO> getSuitVersions(Long projectId, Long suitId) {
         Project project = projectService.getProjectByProjectId(projectId);
         checkNotNull(project);
@@ -273,8 +246,6 @@ public class SuitService {
         suitVersionDAO.save(suitToRestore);
         caseVersionDAO.save(suitToRestore.getCases());
 
-        SuitDTO restoredSuitDTO = suitTransformer.toDto(restoredSuit);
-
-        return restoredSuitDTO;
+        return suitTransformer.toDto(restoredSuit);
     }
 }

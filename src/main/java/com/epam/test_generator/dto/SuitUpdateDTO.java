@@ -1,7 +1,12 @@
 package com.epam.test_generator.dto;
 
 import com.epam.test_generator.entities.Status;
+
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Size;
 import java.util.List;
+import java.util.Set;
 
 /**
  *  This class is needed as the return value in updateSuit method.
@@ -10,61 +15,52 @@ import java.util.List;
  *  suit or case)
  */
 public class SuitUpdateDTO {
-    private SuitDTO updatedSuitDto;
-    private List<Long> failedStepIds;
 
-    public SuitUpdateDTO(SuitDTO updatedSuitDto, List<Long> failedStepIds) {
-        this.updatedSuitDto = updatedSuitDto;
-        this.failedStepIds = failedStepIds;
+    @Size(min = 1, max = 255)
+    private String name;
+
+    @Min(value = 1)
+    @Max(value = 5)
+    private Integer priority;
+
+    @Size(max = 255)
+    private String description;
+
+    private Set<TagDTO> tags;
+
+    public SuitUpdateDTO() {
+
     }
 
-    public SuitDTO getUpdatedSuitDto() {
-        return updatedSuitDto;
+    public Integer getPriority() {
+        return priority;
     }
 
-    public void setUpdatedSuitDto(SuitDTO updatedSuitDto) {
-        this.updatedSuitDto = updatedSuitDto;
+    public void setPriority(Integer priority) {
+        this.priority = priority;
     }
 
-    public List<Long> getFailedStepIds() {
-        return failedStepIds;
+    public Set<TagDTO> getTags() {
+        return tags;
     }
 
-    public void setFailedStepIds(List<Long> failedStepIds) {
-        this.failedStepIds = failedStepIds;
+    public void setTags(Set<TagDTO> tags) {
+        this.tags = tags;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        SuitUpdateDTO that = (SuitUpdateDTO) o;
-
-        if (getUpdatedSuitDto() != null ? !getUpdatedSuitDto().equals(that.getUpdatedSuitDto())
-            : that.getUpdatedSuitDto() != null) {
-            return false;
-        }
-        return getFailedStepIds() != null ? getFailedStepIds().equals(that.getFailedStepIds())
-            : that.getFailedStepIds() == null;
+    public String getName() {
+        return name;
     }
 
-    @Override
-    public int hashCode() {
-        int result = getUpdatedSuitDto() != null ? getUpdatedSuitDto().hashCode() : 0;
-        result = 31 * result + (getFailedStepIds() != null ? getFailedStepIds().hashCode() : 0);
-        return result;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    @Override
-    public String toString() {
-        return "SuitUpdateDTO{" +
-            "updatedSuitDto=" + updatedSuitDto +
-            ", failedStepIds=" + failedStepIds +
-            '}';
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

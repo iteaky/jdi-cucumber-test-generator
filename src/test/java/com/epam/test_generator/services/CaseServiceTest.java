@@ -114,9 +114,6 @@ public class CaseServiceTest {
     private StateMachineAdapter stateMachineAdapter;
 
     @Mock
-    private CascadeUpdateService cascadeUpdateService;
-
-    @Mock
     private StateMachine<Status, Event> stateMachine;
 
     @Before
@@ -236,7 +233,6 @@ public class CaseServiceTest {
     @Test(expected = NotFoundException.class)
     public void add_CaseToSuit_NotFoundExceptionFromSuit() {
         doThrow(NotFoundException.class).when(suitService).getSuit(anyLong(), anyLong());
-        when(suitTransformer.fromDto(any(SuitDTO.class))).thenReturn(null);
         caseService.addCaseToSuit(SIMPLE_PROJECT_ID , SIMPLE_SUIT_ID, new CaseDTO());
     }
 
@@ -244,7 +240,6 @@ public class CaseServiceTest {
     public void update_Case_Success(){
         when(suitService.getSuit(anyLong(), anyLong())).thenReturn(suit);
         when(caseDAO.findOne(anyLong())).thenReturn(caze);
-        when(cascadeUpdateService.cascadeCaseStepsUpdate(SIMPLE_PROJECT_ID , SIMPLE_SUIT_ID, SIMPLE_CASE_ID, editCaseDTO)).thenReturn(anyList());
         when(caseDAO.save(caze)).thenReturn(caze);
         when(caseTransformer.toDto(caze)).thenReturn(expectedCaseDTO);
 
@@ -259,7 +254,6 @@ public class CaseServiceTest {
         assertEquals(actualUpdatedCaseDTOwithFailedStepIds, expectedUpdatedCaseDTOwithFailedStepIds);
         verify(suitService).getSuit(eq(SIMPLE_PROJECT_ID) , eq(SIMPLE_SUIT_ID));
         verify(caseDAO).findOne(eq(SIMPLE_CASE_ID));
-        verify(cascadeUpdateService).cascadeCaseStepsUpdate(SIMPLE_PROJECT_ID,SIMPLE_SUIT_ID,SIMPLE_CASE_ID,editCaseDTO);
         verify(caseDAO).save(eq(caze));
         verify(caseTransformer).toDto(eq(caze));
         verify(caseVersionDAO).save(eq(caze));
