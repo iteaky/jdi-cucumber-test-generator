@@ -1,7 +1,5 @@
 package com.epam.test_generator.controllers;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTCreator;
 import com.epam.test_generator.DatabaseConfigForTests;
 import com.epam.test_generator.config.WebConfig;
 import com.epam.test_generator.config.security.JwtAuthenticationProvider;
@@ -82,10 +80,6 @@ public class SuitControllerSecurityTest {
     @Mock
     private SuitService suitService;
 
-    private JWTCreator.Builder validUserBuilder;
-
-    private JWTCreator.Builder invalidUserBuilder;
-
     @InjectMocks
     @Autowired
     private SuitController suitController;
@@ -131,25 +125,9 @@ public class SuitControllerSecurityTest {
         project1.setId(1L);
         project2.setId(2L);
 
-        validUserBuilder = initUserBuilder(validUser);
-        invalidUserBuilder = initUserBuilder(invalidUser);
-
-        when(validUser.getUserBuilder("cucumber")).thenReturn(validUserBuilder);
-        when(invalidUser.getUserBuilder("cucumber")).thenReturn(invalidUserBuilder);
-
         when(suitService.getSuitsFromProject(anyLong())).thenReturn(Lists.newArrayList());
 
         ReflectionTestUtils.setField(suitController, "suitService", suitService);
-    }
-
-    private JWTCreator.Builder initUserBuilder(User user) {
-        return JWT.create()
-                .withIssuer("cucumber")
-                .withClaim("id", user.getId())
-                .withClaim("email", user.getEmail())
-                .withClaim("given_name", user.getName())
-                .withClaim("family_name",user.getSurname())
-                .withClaim("role", user.getRole().getName());
     }
 
     @Test

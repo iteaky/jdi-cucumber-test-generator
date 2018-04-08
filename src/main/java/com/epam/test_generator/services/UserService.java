@@ -13,7 +13,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.jws.soap.SOAPBinding;
 import java.util.List;
 
 import static com.epam.test_generator.services.utils.UtilsService.checkNotNull;
@@ -145,7 +144,7 @@ public class UserService {
     public void invalidateAttempts(Long userId) {
         User user = getUserById(userId);
         if (user != null) {
-            user.invalidateAttempts();
+            user.resetAttempts();
             userDAO.save(user);
         }
     }

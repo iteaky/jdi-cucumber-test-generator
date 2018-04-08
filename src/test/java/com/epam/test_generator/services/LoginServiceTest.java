@@ -1,7 +1,5 @@
 package com.epam.test_generator.services;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.epam.test_generator.dto.LoginUserDTO;
 import com.epam.test_generator.entities.Role;
@@ -42,8 +40,6 @@ public class LoginServiceTest {
     @Mock
     private Role role;
 
-    private JWTCreator.Builder builder;
-
     private String badToken;
     private String goodToken;
 
@@ -60,15 +56,6 @@ public class LoginServiceTest {
         when(user.getAttempts()).thenReturn(5);
         when(user.getRole()).thenReturn(role);
         when(role.getName()).thenReturn("GUEST");
-        builder = JWT.create()
-                .withIssuer("cucumber")
-                .withClaim("id", user.getId())
-                .withClaim("email", user.getEmail())
-                .withClaim("given_name", user.getName())
-                .withClaim("family_name",user. getSurname())
-                .withClaim("role", user.getRole().getName());
-
-        when(user.getUserBuilder("cucumber")).thenReturn(builder);
 
         badToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJciIsImlkIjoyfQ.dpsptV5O_062nzcMUeZa4QLTsAmQfXhQntfnpcMlZLU";
         goodToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJjdWN1bWJlciIsImlkIjoyfQ.dpsptV5O_062nzcMUeZa4QLTsAmQfXhQntfnpcMlZLU";
