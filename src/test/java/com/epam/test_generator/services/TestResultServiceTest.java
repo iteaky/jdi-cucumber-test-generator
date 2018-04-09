@@ -157,22 +157,19 @@ public class TestResultServiceTest {
 
     @Test
     public void getTestResults() {
-        final LocalDate now = LocalDate.now();
-        final Date from = Date.from(now.atStartOfDay(ZoneId.systemDefault()).toInstant());
-        final Date to = Date.from(now.plusDays(3).atStartOfDay(ZoneId.systemDefault()).toInstant());
+        final LocalDate from = LocalDate.now();
+        final LocalDate to = LocalDate.now().plusDays(3);
         testResultService.getTestResults(PROJECT_ID, from, to);
         verify(testResultDAO).findAllByProjectIdAndDateAfterAndDateBefore(eq(PROJECT_ID), eq(from), eq(to));
     }
 
     private TestResult generateTestResult(LocalDate localDate, Integer day) {
         final TestResult testResult = new TestResult();
-        final Date date = Date
-            .from(localDate.plusDays(day).atStartOfDay(ZoneId.systemDefault()).toInstant());
         testResult.setAmountOfPassed(1);
         testResult.setAmountOfFailed(0);
         testResult.setAmountOfSkipped(3);
         testResult.setStatus(Status.PASSED);
-        testResult.setDate(date);
+        testResult.setDate(localDate);
         testResult.setProject(project);
         return testResult;
     }

@@ -18,18 +18,11 @@ public abstract class AbstractResult {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-//    /**
-//     * This constructor is required by JPA. All subclasses of this class will inherit this constructor.
-//     */
-//    protected AbstractResult(){
-//
-//    }
-
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

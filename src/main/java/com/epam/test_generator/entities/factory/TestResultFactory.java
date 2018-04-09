@@ -15,7 +15,6 @@ import com.epam.test_generator.services.ProjectService;
 import com.epam.test_generator.services.StepService;
 import com.epam.test_generator.services.SuitService;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -50,37 +49,15 @@ public class TestResultFactory {
     public TestResult createTestResultFrom(Long projectId, String executedBy,
                                            List<RawSuitResultDTO> suitResultDTOS) {
 
-        final TestResult testResult = new TestResult();
+        TestResult testResult = new TestResult();
 
-        testResult.setDate(Calendar.getInstance().getTime());
         testResult.setExecutedBy(executedBy);
         testResult.setProject(projectService.getProjectByProjectId(projectId));
         testResult.setSuits(getListOfSuitResultsFrom(projectId, suitResultDTOS));
-        testResult.summarizeDuration();
-        testResult.evaluateStatus();
-        testResult.countTestResultStatistics();
-        countingOfTestRunStatisticsFor(testResult);
 
         return testResult;
     }
 
-
-    private List<Status> getStatuses(TestResult testResult) {
-        return testResult.getSuits()
-            .stream()
-            .map(SuitResult::getStatus)
-            .collect(Collectors.toList());
-    }
-
-    /**
-     * Summarize amount of Passed, Skipped and Failed tests of Tests executions.
-     *
-     * @param testResult {@link TestResult}
-     */
-    private void countingOfTestRunStatisticsFor(TestResult testResult) {
-
-
-    }
 
 
     private List<SuitResult> getListOfSuitResultsFrom(Long projectId,
