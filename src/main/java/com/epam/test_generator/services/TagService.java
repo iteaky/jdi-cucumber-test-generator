@@ -47,7 +47,7 @@ public class TagService {
 
 
     /**
-     *  Return all tags from Project's Suits and Cases.
+     *  Return all tags from project's Suits and Cases.
      */
     public Set<TagDTO> getAllProjectTags(long projectId) {
         Set<TagDTO> tagCases = projectService.getProjectByProjectId(projectId).getSuits()

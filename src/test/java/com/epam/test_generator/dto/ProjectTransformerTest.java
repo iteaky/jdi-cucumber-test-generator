@@ -3,11 +3,11 @@ package com.epam.test_generator.dto;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
-import com.epam.test_generator.controllers.Project.ProjectTransformer;
-import com.epam.test_generator.controllers.Project.request.ProjectCreateDTO;
-import com.epam.test_generator.controllers.Project.request.ProjectUpdateDTO;
-import com.epam.test_generator.controllers.Project.response.ProjectDTO;
-import com.epam.test_generator.controllers.Project.response.ProjectFullDTO;
+import com.epam.test_generator.controllers.project.ProjectTransformer;
+import com.epam.test_generator.controllers.project.request.ProjectCreateDTO;
+import com.epam.test_generator.controllers.project.request.ProjectUpdateDTO;
+import com.epam.test_generator.controllers.project.response.ProjectDTO;
+import com.epam.test_generator.controllers.project.response.ProjectFullDTO;
 import com.epam.test_generator.entities.Project;
 import com.epam.test_generator.entities.Status;
 import com.epam.test_generator.entities.Suit;
@@ -41,9 +41,10 @@ public class ProjectTransformerTest {
 
     private Suit suit;
     private SuitDTO suitDTO;
+    private Project project;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp(){
         suit = new Suit();
         suit.setName(NAME);
         suit.setPriority(1);
@@ -57,6 +58,14 @@ public class ProjectTransformerTest {
         suitDTO.setStatus(Status.NOT_DONE);
         suitDTO.setRowNumber(1);
         suitDTO.setDescription(DESCRIPTION);
+
+        project = new Project();
+        project.setId(ID);
+        project.setName(NAME);
+        project.setDescription(DESCRIPTION);
+        project.setJiraKey(JIRA_KEY);
+        project.setActive(true);
+        project.setUsers(Collections.emptySet());
     }
 
     @Test
@@ -77,14 +86,6 @@ public class ProjectTransformerTest {
 
     @Test
     public void toDTO_Project_Success() {
-        Project project = new Project();
-        project.setId(ID);
-        project.setName(NAME);
-        project.setDescription(DESCRIPTION);
-        project.setJiraKey(JIRA_KEY);
-        project.setActive(true);
-        project.setUsers(Collections.emptySet());
-
         ProjectDTO expectedProjectDTO = new ProjectDTO();
         expectedProjectDTO.setId(ID);
         expectedProjectDTO.setName(NAME);
@@ -100,13 +101,6 @@ public class ProjectTransformerTest {
     @Test
     public void toFullDTO_Project_Success() {
         when(suitTransformer.toDto(any(Suit.class))).thenReturn(suitDTO);
-        Project project = new Project();
-        project.setId(ID);
-        project.setName(NAME);
-        project.setDescription(DESCRIPTION);
-        project.setJiraKey(JIRA_KEY);
-        project.setActive(true);
-        project.setUsers(Collections.emptySet());
         project.setSuits(Collections.singletonList(suit));
 
         ProjectFullDTO expectedProjectDTO = new ProjectFullDTO();

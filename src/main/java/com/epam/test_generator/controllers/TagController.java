@@ -30,7 +30,7 @@ public class TagController {
     @ApiOperation(value = "Get all tags from project", nickname = "getAllProjectTags")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK", response = TagDTO.class, responseContainer = "Set"),
-            @ApiResponse(code = 404, message = "Project not found")
+            @ApiResponse(code = 404, message = "project not found")
     })
     @ApiImplicitParams({
             @ApiImplicitParam(name = "projectId", value = "ID of project",

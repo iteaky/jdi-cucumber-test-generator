@@ -15,11 +15,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.epam.test_generator.controllers.Project.ProjectController;
-import com.epam.test_generator.controllers.Project.request.ProjectCreateDTO;
-import com.epam.test_generator.controllers.Project.request.ProjectUpdateDTO;
-import com.epam.test_generator.controllers.Project.response.ProjectDTO;
-import com.epam.test_generator.controllers.Project.response.ProjectFullDTO;
+import com.epam.test_generator.controllers.project.ProjectController;
+import com.epam.test_generator.controllers.project.request.ProjectCreateDTO;
+import com.epam.test_generator.controllers.project.request.ProjectUpdateDTO;
+import com.epam.test_generator.controllers.project.response.ProjectDTO;
+import com.epam.test_generator.controllers.project.response.ProjectFullDTO;
 import com.epam.test_generator.services.ProjectService;
 import com.epam.test_generator.services.exceptions.NotFoundException;
 import com.epam.test_generator.services.exceptions.ProjectClosedException;
@@ -56,8 +56,8 @@ public class ProjectControllerTest {
             .build();
         projectDTO = new ProjectDTO();
         projectDTO.setId(SIMPLE_PROJECT_ID);
-        projectDTO.setName("Project name");
-        projectDTO.setDescription("Project description");
+        projectDTO.setName("project name");
+        projectDTO.setDescription("project description");
     }
 
     @Test

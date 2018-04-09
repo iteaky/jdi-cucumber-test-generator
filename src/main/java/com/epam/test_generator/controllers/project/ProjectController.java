@@ -1,9 +1,9 @@
-package com.epam.test_generator.controllers.Project;
+package com.epam.test_generator.controllers.project;
 
-import com.epam.test_generator.controllers.Project.request.ProjectCreateDTO;
-import com.epam.test_generator.controllers.Project.request.ProjectUpdateDTO;
-import com.epam.test_generator.controllers.Project.response.ProjectDTO;
-import com.epam.test_generator.controllers.Project.response.ProjectFullDTO;
+import com.epam.test_generator.controllers.project.request.ProjectCreateDTO;
+import com.epam.test_generator.controllers.project.request.ProjectUpdateDTO;
+import com.epam.test_generator.controllers.project.response.ProjectDTO;
+import com.epam.test_generator.controllers.project.response.ProjectFullDTO;
 import com.epam.test_generator.dto.ValidationErrorsDTO;
 import com.epam.test_generator.services.ProjectService;
 import io.swagger.annotations.ApiImplicitParam;
@@ -53,7 +53,7 @@ public class ProjectController {
     @ApiOperation(value = "Get project by id", nickname = "getProject")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "OK", response = ProjectFullDTO.class),
-        @ApiResponse(code = 404, message = "Project not found")
+        @ApiResponse(code = 404, message = "project not found")
     })
     @ApiImplicitParams({
         @ApiImplicitParam(name = "projectId", value = "ID of project to return",
@@ -96,8 +96,8 @@ public class ProjectController {
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "OK"),
         @ApiResponse(code = 400, message = "Invalid input", response = ValidationErrorsDTO.class),
-        @ApiResponse(code = 404, message = "Project not found"),
-        @ApiResponse(code = 403, message = "Project is closed(readonly)")
+        @ApiResponse(code = 404, message = "project not found"),
+        @ApiResponse(code = 403, message = "project is closed(readonly)")
     })
     @ApiImplicitParams({
         @ApiImplicitParam(name = "projectId", value = "ID of project to update",
@@ -119,7 +119,7 @@ public class ProjectController {
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "OK"),
         @ApiResponse(code = 404, message = "project not found"),
-        @ApiResponse(code = 403, message = "Project id closed(readonly)")
+        @ApiResponse(code = 403, message = "project id closed(readonly)")
     })
     @ApiImplicitParams({
         @ApiImplicitParam(name = "projectId", value = "ID of project to close",
@@ -137,8 +137,8 @@ public class ProjectController {
     @ApiOperation(value = "Assign user to project", nickname = "addUserToProject")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Added", response = Long.class),
-        @ApiResponse(code = 404, message = "Project or user not found"),
-        @ApiResponse(code = 403, message = "Project id closed(readonly)")
+        @ApiResponse(code = 404, message = "project or user not found"),
+        @ApiResponse(code = 403, message = "project id closed(readonly)")
     })
     @ApiImplicitParams({
         @ApiImplicitParam(name = "projectId", value = "ID of project to which user will be added",
@@ -160,8 +160,8 @@ public class ProjectController {
     @ApiOperation(value = "Remove user from project", nickname = "removeUserFromProject")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Removed", response = Long.class),
-        @ApiResponse(code = 404, message = "Project or user not found"),
-        @ApiResponse(code = 403, message = "Project id closed(readonly)")
+        @ApiResponse(code = 404, message = "project or user not found"),
+        @ApiResponse(code = 403, message = "project id closed(readonly)")
     })
     @ApiImplicitParams({
         @ApiImplicitParam(name = "projectId", value = "ID of project",
