@@ -3,7 +3,7 @@ package com.epam.test_generator.services;
 import static com.epam.test_generator.services.utils.UtilsService.caseBelongsToSuit;
 import static com.epam.test_generator.services.utils.UtilsService.checkNotNull;
 
-import com.epam.test_generator.controllers.caze.request.updateCaseDTO;
+import com.epam.test_generator.controllers.caze.request.UpdateCaseDTO;
 import com.epam.test_generator.controllers.caze.response.CaseUpdatedDTO;
 import com.epam.test_generator.dao.interfaces.CaseDAO;
 import com.epam.test_generator.dao.interfaces.CaseVersionDAO;
@@ -75,7 +75,6 @@ public class CaseService {
     private RemovedIssueDAO removedIssueDAO;
 
 
-
     public List<Case> getCases() {
         return caseDAO.findAll();
     }
@@ -128,15 +127,14 @@ public class CaseService {
         return addedCaseDTO;
     }
 
-
     /**
-     * Adds case to existing suit using updateCaseDTO
+     * Adds case to existing suit using UpdateCaseDTO
      * @param projectId id of project where to add case
      * @param suitId id of suit where to add case
-     * @param editCaseDTO case to add
+     * @param updateCaseDTO case to add
      * @return {@link CaseDTO} of added case to suit
      */
-    public CaseDTO addCaseToSuit(Long projectId, Long suitId, updateCaseDTO updateCaseDTO)
+    public CaseDTO addCaseToSuit(Long projectId, Long suitId, UpdateCaseDTO updateCaseDTO)
         throws MethodArgumentNotValidException {
         CaseDTO caseDTO = new CaseDTO(updateCaseDTO.getId(), updateCaseDTO.getName(),
             updateCaseDTO.getDescription(), new ArrayList<>(),
@@ -153,7 +151,7 @@ public class CaseService {
     }
 
     /**
-     * Updates case info to info specified in updateCaseDTO
+     * Updates case info to info specified in UpdateCaseDTO
      * @param projectId id of project where to update case
      * @param suitId id of suit where to update case
      * @param caseId id of case which to update
@@ -161,7 +159,7 @@ public class CaseService {
      * @return {@link SuitUpdateDTO} which contains {@link CaseDTO} and {@link List<Long>}
      * (in fact id of {@link StepDTO} with FAILED {@link Status} which belong this suit)
      */
-    public CaseUpdatedDTO updateCase(Long projectId, Long suitId, Long caseId, updateCaseDTO updateCaseDTO) {
+    public CaseUpdatedDTO updateCase(Long projectId, Long suitId, Long caseId, UpdateCaseDTO updateCaseDTO) {
         Suit suit = suitService.getSuit(projectId, suitId);
 
         Case caze = caseDAO.findOne(caseId);
@@ -308,10 +306,10 @@ public class CaseService {
      * @return list {@link CaseDTO} with all changed cases
      * @throws MethodArgumentNotValidException
      */
-    public List<CaseDTO> updateCases(Long projectId, long suitId, List<updateCaseDTO> updateCaseDTOS)
+    public List<CaseDTO> updateCases(Long projectId, long suitId, List<UpdateCaseDTO> updateCaseDTOS)
         throws MethodArgumentNotValidException {
         List<CaseDTO> updatedCases = new ArrayList<>();
-        for (updateCaseDTO caseDTO : updateCaseDTOS) {
+        for (UpdateCaseDTO caseDTO : updateCaseDTOS) {
             switch (caseDTO.getAction()) {
                 case DELETE:
                     if (caseDTO.getId() == null) {

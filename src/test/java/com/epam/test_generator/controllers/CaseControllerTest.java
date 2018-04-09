@@ -20,7 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.epam.test_generator.controllers.caze.CaseController;
-import com.epam.test_generator.controllers.caze.request.updateCaseDTO;
+import com.epam.test_generator.controllers.caze.request.UpdateCaseDTO;
 import com.epam.test_generator.controllers.caze.response.CaseDTO;
 import com.epam.test_generator.controllers.caze.response.CaseUpdatedDTO;
 import com.epam.test_generator.dto.SuitDTO;
@@ -55,7 +55,7 @@ public class CaseControllerTest {
     private SuitDTO suitDTO;
     private List<CaseDTO> caseDTOList;
 
-    private List<updateCaseDTO> updateCaseDTOList;
+    private List<UpdateCaseDTO> updateCaseDTOList;
 
     private static final long SIMPLE_PROJECT_ID = 0L;
     private static final long SIMPLE_SUIT_ID = 1L;
@@ -118,13 +118,13 @@ public class CaseControllerTest {
 
         updateCaseDTOList = new ArrayList<>();
 
-        updateCaseDTO updateCaseDTO1 = new updateCaseDTO(1l,"descr", "name", 1,
+        UpdateCaseDTO updateCaseDTO1 = new UpdateCaseDTO(1l,"descr", "name", 1,
             Status.NOT_RUN, Collections.emptyList(), Action.CREATE, "comment");
         updateCaseDTO1.setId(CASE_IDS[0]);
-        updateCaseDTO updateCaseDTO2 = new updateCaseDTO(1l,"descr", "name", 1,
+        UpdateCaseDTO updateCaseDTO2 = new UpdateCaseDTO(1l,"descr", "name", 1,
             Status.NOT_RUN, Collections.emptyList(), Action.UPDATE, "comment");
         updateCaseDTO2.setId(CASE_IDS[1]);
-        updateCaseDTO updateCaseDTO3 = new updateCaseDTO(1l,"descr", "name", 1,
+        UpdateCaseDTO updateCaseDTO3 = new UpdateCaseDTO(1l,"descr", "name", 1,
             Status.NOT_RUN, Collections.emptyList(), Action.UPDATE, "comment");
         updateCaseDTO3.setId(CASE_IDS[2]);
 
@@ -354,14 +354,14 @@ public class CaseControllerTest {
 
         verify(casesService, times(1))
             .updateCase(eq(SIMPLE_PROJECT_ID), eq(SIMPLE_SUIT_ID), eq(SIMPLE_CASE_ID),
-                any(updateCaseDTO.class));
+                any(UpdateCaseDTO.class));
         verifyNoMoreInteractions(casesService);
     }
 
     @Test
     public void updateCase_SuitOrCaseNotExist_NotFound() throws Exception {
         doThrow(NotFoundException.class).when(casesService)
-            .updateCase(anyLong(), anyLong(), anyLong(), any(updateCaseDTO.class));
+            .updateCase(anyLong(), anyLong(), anyLong(), any(UpdateCaseDTO.class));
 
         mockMvc.perform(
             put("/projects/" + SIMPLE_PROJECT_ID + "/suits/" + SIMPLE_SUIT_ID + "/cases/"
@@ -372,13 +372,13 @@ public class CaseControllerTest {
 
         verify(casesService)
             .updateCase(eq(SIMPLE_PROJECT_ID), eq(SIMPLE_SUIT_ID), eq(SIMPLE_CASE_ID),
-                any(updateCaseDTO.class));
+                any(UpdateCaseDTO.class));
     }
 
     @Test
     public void updateCase_SuitNotContainsCase_StatusBadRequest() throws Exception {
         doThrow(BadRequestException.class).when(casesService)
-            .updateCase(anyLong(), anyLong(), anyLong(), any(updateCaseDTO.class));
+            .updateCase(anyLong(), anyLong(), anyLong(), any(UpdateCaseDTO.class));
 
         mockMvc.perform(
             put("/projects/" + SIMPLE_PROJECT_ID + "/suits/" + SIMPLE_SUIT_ID + "/cases/"
@@ -389,7 +389,7 @@ public class CaseControllerTest {
 
         verify(casesService)
             .updateCase(eq(SIMPLE_PROJECT_ID), eq(SIMPLE_SUIT_ID), eq(SIMPLE_CASE_ID),
-                any(updateCaseDTO.class));
+                any(UpdateCaseDTO.class));
     }
 
     @Test
@@ -405,7 +405,7 @@ public class CaseControllerTest {
 
         verify(casesService, times(0))
             .updateCase(eq(SIMPLE_PROJECT_ID), eq(SIMPLE_SUIT_ID), eq(SIMPLE_CASE_ID),
-                any(updateCaseDTO.class));
+                any(UpdateCaseDTO.class));
     }
 
     @Test
@@ -422,7 +422,7 @@ public class CaseControllerTest {
 
         verify(casesService, times(0))
             .updateCase(eq(SIMPLE_PROJECT_ID), eq(SIMPLE_SUIT_ID), eq(SIMPLE_CASE_ID),
-                any(updateCaseDTO.class));
+                any(UpdateCaseDTO.class));
     }
 
     @Test
@@ -439,7 +439,7 @@ public class CaseControllerTest {
 
         verify(casesService, times(0))
             .updateCase(eq(SIMPLE_PROJECT_ID), eq(SIMPLE_SUIT_ID), eq(SIMPLE_CASE_ID),
-                any(updateCaseDTO.class));
+                any(UpdateCaseDTO.class));
     }
 
     @Test
@@ -455,13 +455,13 @@ public class CaseControllerTest {
 
         verify(casesService, times(0))
             .updateCase(eq(SIMPLE_PROJECT_ID), eq(SIMPLE_SUIT_ID), eq(SIMPLE_CASE_ID),
-                any(updateCaseDTO.class));
+                any(UpdateCaseDTO.class));
     }
 
     @Test
     public void updateCase_RuntimeException_StatusInternalServerError() throws Exception {
         doThrow(RuntimeException.class).when(casesService)
-            .updateCase(anyLong(), anyLong(), anyLong(), any(updateCaseDTO.class));
+            .updateCase(anyLong(), anyLong(), anyLong(), any(UpdateCaseDTO.class));
 
         mockMvc.perform(
             put("/projects/" + SIMPLE_PROJECT_ID + "/suits/" + SIMPLE_SUIT_ID + "/cases/"
@@ -472,7 +472,7 @@ public class CaseControllerTest {
 
         verify(casesService)
             .updateCase(eq(SIMPLE_PROJECT_ID), eq(SIMPLE_SUIT_ID), eq(SIMPLE_CASE_ID),
-                any(updateCaseDTO.class));
+                any(UpdateCaseDTO.class));
     }
 
     @Test

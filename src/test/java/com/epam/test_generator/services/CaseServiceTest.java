@@ -14,7 +14,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.epam.test_generator.controllers.caze.request.updateCaseDTO;
+import com.epam.test_generator.controllers.caze.request.UpdateCaseDTO;
 import com.epam.test_generator.controllers.caze.response.CaseUpdatedDTO;
 import com.epam.test_generator.dao.interfaces.CaseDAO;
 import com.epam.test_generator.dao.interfaces.CaseVersionDAO;
@@ -75,7 +75,7 @@ public class CaseServiceTest {
     private Case caseToRestore;
 
     private List<StepDTO> listStepDtos = new ArrayList<>();
-    private updateCaseDTO updateCaseDTO;
+    private UpdateCaseDTO updateCaseDTO;
 
     private List<CaseVersion> caseVersions;
     private List<CaseVersionDTO> expectedCaseVersions;
@@ -244,7 +244,7 @@ public class CaseServiceTest {
         when(caseDAO.save(caze)).thenReturn(caze);
         when(caseDTOsTransformer.toDto(caze)).thenReturn(expectedCaseDTO);
 
-        updateCaseDTO = new updateCaseDTO(1L, caze.getDescription(), caze.getName(), caze.getPriority(),
+        updateCaseDTO = new UpdateCaseDTO(1L, caze.getDescription(), caze.getName(), caze.getPriority(),
                 caze.getStatus(), Collections.emptyList(), Action.UPDATE, caze.getComment());
 
         CaseUpdatedDTO expectedUpdatedCaseDTOwithFailedStepIds =
@@ -264,7 +264,7 @@ public class CaseServiceTest {
     public void update_Case_NotFoundExceptionFromSuit() {
         when(suitService.getSuit(anyLong(), anyLong())).thenReturn(null);
 
-        caseService.updateCase(SIMPLE_PROJECT_ID , SIMPLE_SUIT_ID, SIMPLE_CASE_ID, new updateCaseDTO());
+        caseService.updateCase(SIMPLE_PROJECT_ID , SIMPLE_SUIT_ID, SIMPLE_CASE_ID, new UpdateCaseDTO());
     }
 
     @Test(expected = NotFoundException.class)
@@ -272,7 +272,7 @@ public class CaseServiceTest {
         when(suitService.getSuit(anyLong(), anyLong())).thenReturn(suit);
         when(caseDAO.findOne(anyLong())).thenReturn(null);
 
-        caseService.updateCase(SIMPLE_PROJECT_ID , SIMPLE_SUIT_ID, SIMPLE_CASE_ID, new updateCaseDTO());
+        caseService.updateCase(SIMPLE_PROJECT_ID , SIMPLE_SUIT_ID, SIMPLE_CASE_ID, new UpdateCaseDTO());
     }
 
     @Test
@@ -465,7 +465,7 @@ public class CaseServiceTest {
     @Test
     public void updateCases_ActionIsDelete_VerifyRemoveCaseInvoked()
         throws MethodArgumentNotValidException {
-        updateCaseDTO = new updateCaseDTO(1l,"desc", "name", 1, Status.NOT_RUN, Collections.emptyList(), Action.DELETE,  "comment");
+        updateCaseDTO = new UpdateCaseDTO(1l,"desc", "name", 1, Status.NOT_RUN, Collections.emptyList(), Action.DELETE,  "comment");
         updateCaseDTO.setId(SIMPLE_CASE_ID);
         CaseDTO expectedCaseDTO = new CaseDTO(1l,"name", "desc", Collections.emptyList(),
                 1, Collections.emptySet(), Status.NOT_RUN, "comment");
@@ -484,7 +484,7 @@ public class CaseServiceTest {
     @Test
     public void updateCases_ActionIsUpdate_VerifyUpdateCaseInvoked()
         throws MethodArgumentNotValidException {
-        updateCaseDTO = new updateCaseDTO(1l,"desc", "name", 1,
+        updateCaseDTO = new UpdateCaseDTO(1l,"desc", "name", 1,
                 Status.NOT_RUN, Collections.emptyList(), Action.UPDATE,  "comment");
         updateCaseDTO.setId(SIMPLE_CASE_ID);
         CaseDTO expectedCaseDTO = new CaseDTO(1l,"name", "desc", Collections.emptyList(),
@@ -505,7 +505,7 @@ public class CaseServiceTest {
     @Test
     public void updateCases_ActionIsCreate_VerifyAddCaseInvoked()
         throws MethodArgumentNotValidException {
-        updateCaseDTO = new updateCaseDTO(1l, "desc", "name", 1,
+        updateCaseDTO = new UpdateCaseDTO(1l, "desc", "name", 1,
                 Status.NOT_RUN, Collections.emptyList(), Action.CREATE,  "comment");
         updateCaseDTO.setId(SIMPLE_CASE_ID);
         CaseDTO expectedCaseDTO = new CaseDTO(1l,"name", "desc", Collections.emptyList(),
