@@ -6,7 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 
 @Entity
-public class SuitResult extends AbstractResult{
+public class SuitResult extends AbstractResult implements ResultTrait {
 
     private String name;
     private long duration;
@@ -36,5 +36,7 @@ public class SuitResult extends AbstractResult{
 
     public void setCaseResults(List<CaseResult> caseResults) {
         this.caseResults = caseResults;
+        setStatus(ResultTrait.computeStatus(caseResults));
+        setDuration(ResultTrait.computeDuration(caseResults));
     }
 }

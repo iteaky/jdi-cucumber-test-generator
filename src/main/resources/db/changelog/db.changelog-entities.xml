@@ -162,6 +162,9 @@
             <column name="ID" type="BIGINT(19)" autoIncrement="true">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
+            <column name="DURATION" type="BIGINT(19)">
+                <constraints nullable="true"/>
+            </column>
             <column name="DESCRIPTION" type="VARCHAR(255)"/>
             <column name="STATUS" type="VARCHAR(255)"/>
         </createTable>

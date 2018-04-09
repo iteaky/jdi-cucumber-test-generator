@@ -5,7 +5,6 @@ import com.epam.test_generator.dto.RawStepResultDTO;
 import com.epam.test_generator.dto.RawSuitResultDTO;
 import com.epam.test_generator.entities.Case;
 import com.epam.test_generator.entities.results.CaseResult;
-import com.epam.test_generator.entities.Status;
 import com.epam.test_generator.entities.results.StepResult;
 import com.epam.test_generator.entities.Suit;
 import com.epam.test_generator.entities.results.SuitResult;
@@ -15,7 +14,6 @@ import com.epam.test_generator.services.ProjectService;
 import com.epam.test_generator.services.StepService;
 import com.epam.test_generator.services.SuitService;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,8 +56,6 @@ public class TestResultFactory {
         return testResult;
     }
 
-
-
     private List<SuitResult> getListOfSuitResultsFrom(Long projectId,
                                                       List<RawSuitResultDTO> suitResultDTOS) {
 
@@ -81,28 +77,10 @@ public class TestResultFactory {
 
         suitResult.setName(suit.getName());
         suitResult.setCaseResults(getListOfCaseResultsFrom(projectId, rawSuitResultDTO));
-        suitResult.setDuration(summarizeDurations(suitResult.getCaseResults()));
-        suitResult.setStatus(evaluateStatusFrom(getStatuses(suitResult)));
 
         return suitResult;
 
     }
-
-    private List<Status> getStatuses(SuitResult suitResult) {
-        return suitResult.getCaseResults()
-            .stream()
-            .map(CaseResult::getStatus)
-            .collect(Collectors.toList());
-    }
-
-
-    private long summarizeDurations(List<CaseResult> caseResults) {
-        return caseResults
-            .stream()
-            .mapToLong(CaseResult::getDuration)
-            .sum();
-    }
-
 
     private List<CaseResult> getListOfCaseResultsFrom(Long projectId,
                                                       RawSuitResultDTO rawSuitResultDTO) {
@@ -118,44 +96,17 @@ public class TestResultFactory {
         return caseResults;
     }
 
-
     private CaseResult createCaseResultFrom(Long projectId, long suitId,
                                             RawCaseResultDTO caseResultDTO) {
         final Case aCase = caseService.getCase(projectId, suitId, caseResultDTO.getId());
         final CaseResult caseResult = new CaseResult();
         caseResult.setName(aCase.getName());
         caseResult.setComment(aCase.getComment());
-        caseResult.setDuration(caseResultDTO.getDuration());
-        caseResult.setStatus(getCaseResultStatusFrom(caseResultDTO));
         caseResult.setSteps(getListStepResults(projectId, suitId, caseResultDTO));
+        caseResult.setDuration(caseResultDTO.getDuration());
 
         return caseResult;
     }
-
-    private Status getCaseResultStatusFrom(RawCaseResultDTO caseResultDTO) {
-        if (!Status.SKIPPED.equals(caseResultDTO.getStatus())) {
-
-            final List<Status> stepsStatuses = caseResultDTO.getSteps()
-                .stream()
-                .map(RawStepResultDTO::getStatus)
-                .collect(Collectors.toList());
-
-            return evaluateStatusFrom(stepsStatuses);
-        } else {
-            return Status.SKIPPED;
-        }
-    }
-
-
-    private List<StepResult> getListStepResults(Long projectId, Long suitId,
-                                                RawCaseResultDTO rawCaseResultDTO) {
-        return rawCaseResultDTO.getSteps()
-            .stream()
-            .map(stepResultDTO -> createStepResult(projectId, suitId,
-                rawCaseResultDTO.getId(), stepResultDTO))
-            .collect(Collectors.toList());
-    }
-
 
     private StepResult createStepResult(Long projectId, Long suitId,
                                         Long caseId,
@@ -168,19 +119,14 @@ public class TestResultFactory {
         return stepResult;
     }
 
-    /**
-     * Evaluate summarized status from collection of statuses
-     *
-     * @param statuses collection of {@link Status}
-     * @return results evaluated by given rules
-     */
-    private Status evaluateStatusFrom(Collection<Status> statuses) {
-        if (statuses.stream().anyMatch(Status.FAILED::equals)) {
-            return Status.FAILED;
-        }
-        if (statuses.stream().anyMatch(Status.PASSED::equals)) {
-            return Status.PASSED;
-        }
-        return Status.SKIPPED;
+
+    private List<StepResult> getListStepResults(Long projectId, Long suitId,
+                                                RawCaseResultDTO rawCaseResultDTO) {
+        return rawCaseResultDTO.getSteps()
+            .stream()
+            .map(stepResultDTO -> createStepResult(projectId, suitId,
+                rawCaseResultDTO.getId(), stepResultDTO))
+            .collect(Collectors.toList());
     }
+
 }

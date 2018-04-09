@@ -6,10 +6,10 @@ import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 
 @Entity
-public class CaseResult extends AbstractResult {
+public class CaseResult extends AbstractResult implements ResultTrait {
 
     private String name;
-    private long duration;
+
     private String comment;
     @OneToMany(cascade = {CascadeType.ALL})
     private List<StepResult> steps;
@@ -20,14 +20,6 @@ public class CaseResult extends AbstractResult {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public long getDuration() {
-        return duration;
-    }
-
-    public void setDuration(long duration) {
-        this.duration = duration;
     }
 
     public String getComment() {
@@ -42,7 +34,8 @@ public class CaseResult extends AbstractResult {
         return steps;
     }
 
-    public void setSteps(List<StepResult> steps) {
+    public void setSteps(List<StepResult> steps){
         this.steps = steps;
+        setStatus(ResultTrait.computeStatus(steps));
     }
 }

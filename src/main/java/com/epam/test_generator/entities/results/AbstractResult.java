@@ -18,6 +18,8 @@ public abstract class AbstractResult {
     @Enumerated(EnumType.STRING)
     private Status status;
 
+    private long duration;
+
     public Long getId() {
         return id;
     }
@@ -34,4 +36,11 @@ public abstract class AbstractResult {
         return status;
     }
 
+    public long getDuration() {
+        return duration;
+    }
+
+    public void setDuration(long duration) {
+        this.duration = duration;
+    }
 }

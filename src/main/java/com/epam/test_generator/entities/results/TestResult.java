@@ -1,9 +1,7 @@
 package com.epam.test_generator.entities.results;
 
 import com.epam.test_generator.entities.Project;
-import com.epam.test_generator.entities.results.api.TestResultTrait;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -11,7 +9,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 @Entity
-public class TestResult extends AbstractResult implements TestResultTrait {
+public class TestResult extends AbstractResult implements ResultTrait {
 
     private LocalDate date;
 
@@ -93,10 +91,42 @@ public class TestResult extends AbstractResult implements TestResultTrait {
 
     public void setSuits(List<SuitResult> suits) {
         this.suits = suits;
-        TestResultTrait.super.setSuits(suits);
+        countTestResultStatistics(suits);
+        setStatus(ResultTrait.computeStatus(suits));
+        setDuration(ResultTrait.computeDuration(suits));
     }
 
     public Project getProject() {
         return project;
     }
+
+    /**
+     * Summarize amount of Passed, Skipped and Failed tests of Tests executions.
+     *
+     * @param results list of {@link AbstractResult}
+     */
+    private void countTestResultStatistics(List<? extends AbstractResult> results) {
+        int amountOfPassed = 0;
+        int amountOfSkipped = 0;
+        int amountOfFailed = 0;
+
+        for (AbstractResult suitResult : results) {
+            switch (suitResult.getStatus()) {
+                case PASSED:
+                    amountOfPassed++;
+                    break;
+                case SKIPPED:
+                    amountOfSkipped++;
+                    break;
+                case FAILED:
+                    amountOfFailed++;
+                    break;
+            }
+        }
+
+        setAmountOfPassed(amountOfPassed);
+        setAmountOfFailed(amountOfFailed);
+        setAmountOfSkipped(amountOfSkipped);
+    }
+
 }

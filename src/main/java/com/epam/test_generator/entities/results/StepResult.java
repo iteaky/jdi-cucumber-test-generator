@@ -1,10 +1,13 @@
 package com.epam.test_generator.entities.results;
 
-import com.epam.test_generator.entities.results.api.StepResultTrait;
 import javax.persistence.Entity;
+import javax.persistence.Transient;
 
 @Entity
-public class StepResult extends AbstractResult implements StepResultTrait {
+public class StepResult extends AbstractResult {
+
+    @Transient
+    private long duration;
 
     private String description;
 
