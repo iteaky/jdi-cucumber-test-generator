@@ -13,9 +13,6 @@ public class ProjectCreateDTO {
     @Size(max = 255)
     private String description;
 
-    private String jiraKey;
-
-
     public ProjectCreateDTO() {
     }
 
@@ -35,15 +32,6 @@ public class ProjectCreateDTO {
         this.description = description;
     }
 
-
-    public String getJiraKey() {
-        return jiraKey;
-    }
-
-    public void setJiraKey(String jiraKey) {
-        this.jiraKey = jiraKey;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -54,12 +42,11 @@ public class ProjectCreateDTO {
         }
         ProjectCreateDTO that = (ProjectCreateDTO) o;
         return Objects.equals(name, that.name)
-            && Objects.equals(description, that.description)
-            && Objects.equals(jiraKey, that.jiraKey);
+            && Objects.equals(description, that.description);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, description, jiraKey);
+        return Objects.hash(name, description);
     }
 }

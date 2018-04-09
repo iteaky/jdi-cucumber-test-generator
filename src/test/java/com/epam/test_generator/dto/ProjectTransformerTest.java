@@ -73,12 +73,10 @@ public class ProjectTransformerTest {
         Project expectedProject = new Project();
         expectedProject.setName(NAME);
         expectedProject.setDescription(DESCRIPTION);
-        expectedProject.setJiraKey(JIRA_KEY);
 
         ProjectCreateDTO projectCreateDTO = new ProjectCreateDTO();
         projectCreateDTO.setName(NAME);
         projectCreateDTO.setDescription(DESCRIPTION);
-        projectCreateDTO.setJiraKey(JIRA_KEY);
 
         Project resultProject = projectTransformer.fromDto(projectCreateDTO);
         Assert.assertEquals(expectedProject, resultProject);

@@ -31,7 +31,6 @@ public class ProjectTransformer {
         Project project = new Project();
         project.setName(projectDTO.getName());
         project.setDescription(projectDTO.getDescription());
-        project.setJiraKey(projectDTO.getJiraKey());
         return project;
     }
 
