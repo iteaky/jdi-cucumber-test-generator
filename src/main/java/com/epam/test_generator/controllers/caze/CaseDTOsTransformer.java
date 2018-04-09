@@ -1,16 +1,12 @@
 package com.epam.test_generator.controllers.caze;
 
 import com.epam.test_generator.controllers.caze.request.AddCaseToSuitDTO;
-import com.epam.test_generator.controllers.caze.request.UpdateCaseDTO;
 import com.epam.test_generator.controllers.caze.response.CaseDTO;
 import com.epam.test_generator.entities.Case;
-import com.epam.test_generator.transformers.AbstractDozerTransformer;
 import com.epam.test_generator.transformers.StepTransformer;
 import com.epam.test_generator.transformers.TagTransformer;
-import liquibase.integration.ant.TagDatabaseTask;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 

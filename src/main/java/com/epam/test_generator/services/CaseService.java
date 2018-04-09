@@ -4,8 +4,9 @@ import static com.epam.test_generator.services.utils.UtilsService.caseBelongsToS
 import static com.epam.test_generator.services.utils.UtilsService.checkNotNull;
 
 import com.epam.test_generator.controllers.caze.request.AddCaseToSuitDTO;
+import com.epam.test_generator.controllers.caze.request.EditCaseDTO;
 import com.epam.test_generator.controllers.caze.request.UpdateCaseDTO;
-import com.epam.test_generator.controllers.caze.response.CaseUpdatedDTO;
+import com.epam.test_generator.controllers.caze.response.UpdatedCaseDTO;
 import com.epam.test_generator.dao.interfaces.CaseDAO;
 import com.epam.test_generator.dao.interfaces.CaseVersionDAO;
 import com.epam.test_generator.dao.interfaces.RemovedIssueDAO;
@@ -127,13 +128,14 @@ public class CaseService {
     }
 
     /**
-     * Adds case to existing suit using UpdateCaseDTO
+     * Adds case to existing suit using EditCaseDTO
      * @param projectId id of project where to add case
      * @param suitId id of suit where to add case
      * @param updateCaseDTO case to add
      * @return {@link CaseDTO} of added case to suit
      */
-    public CaseDTO addCaseToSuit(Long projectId, Long suitId, UpdateCaseDTO updateCaseDTO)
+    @Deprecated
+    public CaseDTO addCaseToSuit(Long projectId, Long suitId, EditCaseDTO updateCaseDTO)
         throws MethodArgumentNotValidException {
         AddCaseToSuitDTO caseDTO = new AddCaseToSuitDTO(updateCaseDTO.getName(),
             updateCaseDTO.getDescription(), updateCaseDTO.getPriority(),
@@ -150,7 +152,7 @@ public class CaseService {
     }
 
     /**
-     * Updates case info to info specified in UpdateCaseDTO
+     * Updates case info to info specified in EditCaseDTO
      * @param projectId id of project where to update case
      * @param suitId id of suit where to update case
      * @param caseId id of case which to update
@@ -158,7 +160,7 @@ public class CaseService {
      * @return {@link SuitUpdateDTO} which contains {@link CaseDTO} and {@link List<Long>}
      * (in fact id of {@link StepDTO} with FAILED {@link Status} which belong this suit)
      */
-    public CaseUpdatedDTO updateCase(Long projectId, Long suitId, Long caseId, UpdateCaseDTO updateCaseDTO) {
+    public UpdatedCaseDTO updateCase(Long projectId, Long suitId, Long caseId, UpdateCaseDTO updateCaseDTO) {
         Suit suit = suitService.getSuit(projectId, suitId);
 
         Case caze = caseDAO.findOne(caseId);
@@ -182,12 +184,59 @@ public class CaseService {
         caze = caseDAO.save(caze);
 
         CaseDTO updatedCaseDTO = caseDTOsTransformer.toDto(caze);
-        CaseUpdatedDTO updatedCaseDTOwithFailedStepIds =
-            new CaseUpdatedDTO(updatedCaseDTO, failedStepIds);
+        UpdatedCaseDTO updatedCaseDTOwithFailedStepIds =
+            new UpdatedCaseDTO(updatedCaseDTO, failedStepIds);
 
         caseVersionDAO.save(caze);
         suitVersionDAO.save(suit);
         return updatedCaseDTOwithFailedStepIds;
+    }
+
+    /**
+     * Updates all cases to specified in list of updateCaseDTOs
+     * @param projectId id of project where to update cases
+     * @param suitId id of suit where to update cases
+     * @param editCaseDTOS list of cases to update
+     * @return list {@link CaseDTO} with all changed cases
+     * @throws MethodArgumentNotValidException
+     */
+    @Deprecated
+    public List<CaseDTO> updateCases(Long projectId, long suitId, List<EditCaseDTO> editCaseDTOS)
+            throws MethodArgumentNotValidException {
+        List<CaseDTO> updatedCases = new ArrayList<>();
+        for (EditCaseDTO editCaseDTO : editCaseDTOS) {
+            switch (editCaseDTO.getAction()) {
+                case DELETE:
+                    if (editCaseDTO.getId() == null) {
+                        throw new BadRequestException("No id in caze to remove");
+                    }
+                    updatedCases.add(removeCase(projectId, suitId, editCaseDTO.getId()));
+                    break;
+                case CREATE:
+                    updatedCases.add(addCaseToSuit(projectId, suitId, editCaseDTO));
+                    break;
+                case UPDATE:
+                    if (editCaseDTO.getId() == null) {
+                        throw new BadRequestException("No id in caze to update");
+                    }
+                    UpdateCaseDTO updateCaseDTO = new UpdateCaseDTO(
+                            editCaseDTO.getDescription(),
+                            editCaseDTO.getName(),
+                            editCaseDTO.getPriority(),
+                            editCaseDTO.getStatus(),
+                            editCaseDTO.getSteps(),
+                            editCaseDTO.getComment()
+                    );
+                    CaseDTO updatedCaseDTO = updateCase(projectId, suitId, editCaseDTO.getId(), updateCaseDTO)
+                            .getUpdatedCaseDto();
+                    updatedCases.add(updatedCaseDTO);
+                    break;
+                default:
+                    throw new BadRequestException("Wrong action argument");
+            }
+        }
+
+        return updatedCases;
     }
 
     /**
@@ -197,6 +246,7 @@ public class CaseService {
      * @param caseId id of case to delete
      * @return removed {@link CaseDTO}
      */
+    @Deprecated
     public CaseDTO removeCase(Long projectId, Long suitId, Long caseId) {
         Suit suit = suitService.getSuit(projectId, suitId);
 
@@ -295,44 +345,6 @@ public class CaseService {
         CaseDTO restoredCaseDTO = caseDTOsTransformer.toDto(restoredCase);
 
         return restoredCaseDTO;
-    }
-
-    /**
-     * Updates all cases to specified in list of updateCaseDTOS
-     * @param projectId id of project where to update cases
-     * @param suitId id of suit where to update cases
-     * @param updateCaseDTOS list of cases to update
-     * @return list {@link CaseDTO} with all changed cases
-     * @throws MethodArgumentNotValidException
-     */
-    public List<CaseDTO> updateCases(Long projectId, long suitId, List<UpdateCaseDTO> updateCaseDTOS)
-        throws MethodArgumentNotValidException {
-        List<CaseDTO> updatedCases = new ArrayList<>();
-        for (UpdateCaseDTO updateCaseDTO : updateCaseDTOS) {
-            switch (updateCaseDTO.getAction()) {
-                case DELETE:
-                    if (updateCaseDTO.getId() == null) {
-                        throw new BadRequestException("No id in caze to remove");
-                    }
-                    updatedCases.add(removeCase(projectId, suitId, updateCaseDTO.getId()));
-                    break;
-                case CREATE:
-                    updatedCases.add(addCaseToSuit(projectId, suitId, updateCaseDTO));
-                    break;
-                case UPDATE:
-                    if (updateCaseDTO.getId() == null) {
-                        throw new BadRequestException("No id in caze to update");
-                    }
-                    CaseDTO updatedCaseDTO = updateCase(projectId, suitId, updateCaseDTO.getId(), updateCaseDTO)
-                        .getUpdatedCaseDto();
-                    updatedCases.add(updatedCaseDTO);
-                    break;
-                default:
-                    throw new BadRequestException("Wrong action argument");
-            }
-        }
-
-        return updatedCases;
     }
 
     public Status performEvent(Long projectId, Long suitId, Long caseId, Event event)

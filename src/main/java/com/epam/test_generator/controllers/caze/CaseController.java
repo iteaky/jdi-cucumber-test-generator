@@ -1,8 +1,9 @@
 package com.epam.test_generator.controllers.caze;
 
 import com.epam.test_generator.controllers.caze.request.AddCaseToSuitDTO;
-import com.epam.test_generator.controllers.caze.response.CaseUpdatedDTO;
+import com.epam.test_generator.controllers.caze.request.EditCaseDTO;
 import com.epam.test_generator.controllers.caze.request.UpdateCaseDTO;
+import com.epam.test_generator.controllers.caze.response.UpdatedCaseDTO;
 import com.epam.test_generator.controllers.caze.response.CaseDTO;
 import com.epam.test_generator.dto.SuitDTO;
 import com.epam.test_generator.dto.ValidationErrorsDTO;
@@ -132,19 +133,19 @@ public class CaseController {
             required = true, dataType = "long", paramType = "path"),
         @ApiImplicitParam(name = "caseId", value = "ID of case to update",
             required = true, dataType = "long", paramType = "path"),
-        @ApiImplicitParam(name = "UpdateCaseDTO", value = "Updated case object",
-            required = true, dataType = "UpdateCaseDTO", paramType = "body"),
+        @ApiImplicitParam(name = "EditCaseDTO", value = "Updated case object",
+            required = true, dataType = "EditCaseDTO", paramType = "body"),
         @ApiImplicitParam(name = "Authorization", value = "add here your token",
             paramType = "header", dataType = "string", required = true)
     })
     @Secured({"ROLE_ADMIN", "ROLE_TEST_ENGINEER", "ROLE_TEST_LEAD"})
     @RequestMapping(value = "/projects/{projectId}/suits/{suitId}/cases/{caseId}",
         method = RequestMethod.PUT, consumes = "application/json")
-    public ResponseEntity<CaseUpdatedDTO> updateCase(@PathVariable("projectId") long projectId,
+    public ResponseEntity<UpdatedCaseDTO> updateCase(@PathVariable("projectId") long projectId,
                                                      @PathVariable("suitId") long suitId,
                                                      @PathVariable("caseId") long caseId,
                                                      @RequestBody @Valid UpdateCaseDTO updateCaseDTO) {
-        final CaseUpdatedDTO updatedCaseDTOwithFailedStepIds = caseService
+        final UpdatedCaseDTO updatedCaseDTOwithFailedStepIds = caseService
             .updateCase(projectId, suitId, caseId, updateCaseDTO);
 
         return new ResponseEntity<>(updatedCaseDTOwithFailedStepIds, HttpStatus.OK);
@@ -168,7 +169,7 @@ public class CaseController {
         method = RequestMethod.PUT, consumes = "application/json")
     public ResponseEntity<List<CaseDTO>> updateCases(@PathVariable("projectId") long projectId,
                                                   @PathVariable("suitId") long suitId,
-                                                  @RequestBody @Valid List<UpdateCaseDTO> editDTOList)
+                                                  @RequestBody @Valid List<EditCaseDTO> editDTOList)
         throws MethodArgumentNotValidException {
 
         List<CaseDTO> updatedCasesDTO = caseService.updateCases(projectId, suitId, editDTOList);
