@@ -26,8 +26,8 @@ public interface UserTrait {
     }
 
     default void updateFailureAttempts(int maxAttempts){
-        int attempts = getAttempts();
-        if (maxAttempts <= ++attempts) {
+        int attempts = getAttempts() + 1;
+        if (maxAttempts <= attempts) {
             setLocked(true);
         }
         setAttempts(attempts);

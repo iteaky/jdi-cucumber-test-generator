@@ -8,7 +8,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.epam.test_generator.dao.interfaces.UserDAO;
 import com.epam.test_generator.dto.LoginUserDTO;
 import com.epam.test_generator.entities.User;
-import com.epam.test_generator.entities.api.UserBuilder;
+import com.epam.test_generator.entities.api.JwtTokenBuilder;
 import com.epam.test_generator.services.exceptions.UnauthorizedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
@@ -79,7 +79,7 @@ public class LoginService {
     public String getLoginJWTToken(LoginUserDTO loginUserDTO) {
 
         User user = userService.getUserByEmail(loginUserDTO.getEmail());
-        JWTCreator.Builder builder = UserBuilder.getUserBuilder(user, ELEMENT_FOR_UNIQUE_TOKEN);
+        JWTCreator.Builder builder = JwtTokenBuilder.buildFor(user, ELEMENT_FOR_UNIQUE_TOKEN);
         try {
             return builder.sign(Algorithm.HMAC256(this.environment.getProperty("jwt_secret")));
         } catch (UnsupportedEncodingException e) {
