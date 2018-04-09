@@ -12,7 +12,7 @@ import com.epam.test_generator.DatabaseConfigForTests;
 import com.epam.test_generator.config.WebConfig;
 import com.epam.test_generator.config.security.JwtAuthenticationProvider;
 import com.epam.test_generator.dao.interfaces.UserDAO;
-import com.epam.test_generator.controllers.Admin.request.UpdateUserRoleDTO;
+import com.epam.test_generator.controllers.admin.request.UpdateUserRoleDTO;
 import com.epam.test_generator.dto.LoginUserDTO;
 import com.epam.test_generator.entities.Role;
 import com.epam.test_generator.entities.User;

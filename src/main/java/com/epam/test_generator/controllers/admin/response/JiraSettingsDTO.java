@@ -1,10 +1,10 @@
-package com.epam.test_generator.controllers.Admin.response;
+package com.epam.test_generator.controllers.admin.response;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Objects;
 
-public class JiraSettingsGetDTO {
+public class JiraSettingsDTO {
 
     @NotNull
     private Long id;
@@ -17,13 +17,13 @@ public class JiraSettingsGetDTO {
     @Size(min = 1, max = 255)
     private String login;
 
-    public JiraSettingsGetDTO(Long id, String uri, String login) {
+    public JiraSettingsDTO(Long id, String uri, String login) {
         this.id = id;
         this.uri = uri;
         this.login = login;
     }
 
-    public JiraSettingsGetDTO() {
+    public JiraSettingsDTO() {
     }
 
     public Long getId() {
@@ -67,7 +67,7 @@ public class JiraSettingsGetDTO {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        JiraSettingsGetDTO that = (JiraSettingsGetDTO) o;
+        JiraSettingsDTO that = (JiraSettingsDTO) o;
         return Objects.equals(id, that.id) &&
             Objects.equals(uri, that.uri) &&
             Objects.equals(login, that.login);

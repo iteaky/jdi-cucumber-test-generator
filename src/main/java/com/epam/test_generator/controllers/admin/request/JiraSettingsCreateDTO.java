@@ -1,4 +1,4 @@
-package com.epam.test_generator.controllers.Admin.request;
+package com.epam.test_generator.controllers.admin.request;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;

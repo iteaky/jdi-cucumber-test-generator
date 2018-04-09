@@ -7,7 +7,8 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.epam.test_generator.controllers.Admin.request.JiraSettingsCreateDTO;
+import com.epam.test_generator.controllers.admin.request.JiraSettingsCreateDTO;
+import com.epam.test_generator.controllers.admin.request.JiraSettingsUpdateDTO;
 import com.epam.test_generator.dao.interfaces.JiraSettingsDAO;
 import com.epam.test_generator.entities.JiraSettings;
 import com.epam.test_generator.services.exceptions.JiraAuthenticationException;
@@ -33,6 +34,7 @@ public class JiraSettingsServiceTest {
     private JiraSettingsService jiraSettingsService;
 
     private JiraSettingsCreateDTO jiraSettingsCreateDTO;
+    private JiraSettingsUpdateDTO jiraSettingsUpdateDTO;
 
     private static final Long JIRA_SETTINGS_ID = 1L;
     private static final String JIRA_URI = "uri";
@@ -42,6 +44,7 @@ public class JiraSettingsServiceTest {
     @Before
     public void setUp() throws Exception {
         jiraSettingsCreateDTO = new JiraSettingsCreateDTO();
+        jiraSettingsUpdateDTO = new JiraSettingsUpdateDTO();
     }
 
     @Test
@@ -74,17 +77,17 @@ public class JiraSettingsServiceTest {
 
     @Test
     public void updateJiraSettings_CorrectData_Success() {
-        jiraSettingsCreateDTO.setLogin("new_login");
-        jiraSettingsCreateDTO.setPassword("new_password");
-        jiraSettingsCreateDTO.setUri("new_uri");
+        jiraSettingsUpdateDTO.setLogin("new_login");
+        jiraSettingsUpdateDTO.setPassword("new_password");
+        jiraSettingsUpdateDTO.setUri("new_uri");
 
         JiraSettings existedJiraSettings = new JiraSettings(JIRA_URI, JIRA_LOGIN, JIRA_PASSWORD);
         when(jiraSettingsDAO.findById(anyLong())).thenReturn(existedJiraSettings);
 
-        jiraSettingsService.updateJiraSettings(JIRA_SETTINGS_ID, jiraSettingsCreateDTO);
+        jiraSettingsService.updateJiraSettings(JIRA_SETTINGS_ID, jiraSettingsUpdateDTO);
 
-        JiraSettings expectedJiraSettings = new JiraSettings(jiraSettingsCreateDTO.getUri(),
-            jiraSettingsCreateDTO.getLogin(), jiraSettingsCreateDTO.getPassword());
+        JiraSettings expectedJiraSettings = new JiraSettings(jiraSettingsUpdateDTO.getUri(),
+                jiraSettingsUpdateDTO.getLogin(), jiraSettingsUpdateDTO.getPassword());
 
         verify(jiraSettingsDAO).save(eq(expectedJiraSettings));
     }
@@ -93,7 +96,7 @@ public class JiraSettingsServiceTest {
     public void updateJiraSettings_WrongId_Exception() {
 
         when(jiraSettingsDAO.findById(anyLong())).thenReturn(null);
-        jiraSettingsService.updateJiraSettings(JIRA_SETTINGS_ID, jiraSettingsCreateDTO);
+        jiraSettingsService.updateJiraSettings(JIRA_SETTINGS_ID, jiraSettingsUpdateDTO);
     }
 
     @Test

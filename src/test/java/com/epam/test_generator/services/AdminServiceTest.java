@@ -1,6 +1,6 @@
 package com.epam.test_generator.services;
 
-import com.epam.test_generator.controllers.Admin.request.UpdateUserRoleDTO;
+import com.epam.test_generator.controllers.admin.request.UpdateUserRoleDTO;
 import com.epam.test_generator.entities.Role;
 import com.epam.test_generator.entities.User;
 import com.epam.test_generator.services.exceptions.BadRoleException;

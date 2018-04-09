@@ -1,8 +1,8 @@
 package com.epam.test_generator.controllers;
 
-import com.epam.test_generator.controllers.Admin.AdminController;
-import com.epam.test_generator.controllers.Admin.request.UpdateUserRoleDTO;
-import com.epam.test_generator.controllers.Admin.request.JiraSettingsCreateDTO;
+import com.epam.test_generator.controllers.admin.AdminController;
+import com.epam.test_generator.controllers.admin.request.UpdateUserRoleDTO;
+import com.epam.test_generator.controllers.admin.request.JiraSettingsCreateDTO;
 import com.epam.test_generator.services.AdminService;
 import com.epam.test_generator.services.JiraSettingsService;
 import org.codehaus.jackson.map.ObjectMapper;

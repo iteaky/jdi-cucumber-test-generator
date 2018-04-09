@@ -1,6 +1,6 @@
 package com.epam.test_generator.services;
 
-import com.epam.test_generator.controllers.Admin.request.UpdateUserRoleDTO;
+import com.epam.test_generator.controllers.admin.request.UpdateUserRoleDTO;
 import com.epam.test_generator.entities.Role;
 import com.epam.test_generator.entities.User;
 import com.epam.test_generator.services.exceptions.BadRoleException;
@@ -33,14 +33,14 @@ public class AdminService {
             throw new UnauthorizedException(
                     "User with email: " + updateUserRoleDTO.getEmail() + " not found.");
         }
-        final Role aNewRole = getRole(updateUserRoleDTO);
+        final Role aNewRole = getRole(updateUserRoleDTO.getRole());
 
         userByEmail.setRole(aNewRole);
     }
 
-    private Role getRole(UpdateUserRoleDTO updateUserRoleDTO) {
+    private Role getRole(String roleName) {
 
-        final Role aRole = roleService.getRoleByName(updateUserRoleDTO.getRole());
+        final Role aRole = roleService.getRoleByName(roleName);
 
         if (aRole == null) {
             throw new BadRoleException("Invalid name for Role");
