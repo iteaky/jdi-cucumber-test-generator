@@ -10,11 +10,10 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.epam.test_generator.controllers.caze.request.AddCaseToSuitDTO;
+import com.epam.test_generator.controllers.caze.request.CreateCaseDTO;
 import com.epam.test_generator.dao.interfaces.CaseVersionDAO;
 import com.epam.test_generator.dao.interfaces.SuitVersionDAO;
 import com.epam.test_generator.dao.interfaces.TagDAO;
-import com.epam.test_generator.controllers.caze.response.CaseDTO;
 import com.epam.test_generator.dto.SuitDTO;
 import com.epam.test_generator.dto.TagDTO;
 import com.epam.test_generator.entities.Case;
@@ -204,7 +203,7 @@ public class TagServiceTest {
         when(suitService.getSuit(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID)).thenReturn(suit);
         when(suitTransformer.fromDto(any(SuitDTO.class))).thenReturn(suit);
         when(caseService.getCase(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID,SIMPLE_CASE_ID)).thenReturn(caze);
-        when(caseDTOsTransformer.fromDto(any(AddCaseToSuitDTO.class))).thenReturn(caze);
+        when(caseDTOsTransformer.fromDto(any(CreateCaseDTO.class))).thenReturn(caze);
         when(tagDAO.findOne(anyLong())).thenReturn(expectedTag);
         when(tagDAO.save(any(Tag.class))).thenReturn(expectedTag);
 
@@ -239,7 +238,7 @@ public class TagServiceTest {
         when(suitService.getSuit(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID)).thenReturn(suit);
         when(suitTransformer.fromDto(any(SuitDTO.class))).thenReturn(suit);
         when(caseService.getCase(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID,SIMPLE_CASE_ID)).thenReturn(caze);
-        when(caseDTOsTransformer.fromDto(any(AddCaseToSuitDTO.class))).thenReturn(caze);
+        when(caseDTOsTransformer.fromDto(any(CreateCaseDTO.class))).thenReturn(caze);
 		when(tagDAO.findOne(anyLong())).thenReturn(null);
 
         tagService.updateTag(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID, SIMPLE_CASE_ID, SIMPLE_TAG_ID, new TagDTO());
@@ -250,7 +249,7 @@ public class TagServiceTest {
         when(suitService.getSuit(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID)).thenReturn(suit);
         when(suitTransformer.fromDto(any(SuitDTO.class))).thenReturn(suit);
         when(caseService.getCase(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID,SIMPLE_CASE_ID)).thenReturn(caze);
-        when(caseDTOsTransformer.fromDto(any(AddCaseToSuitDTO.class))).thenReturn(caze);
+        when(caseDTOsTransformer.fromDto(any(CreateCaseDTO.class))).thenReturn(caze);
         when(tagDAO.findOne(anyLong())).thenReturn(expectedTag);
 
         tagService.removeTag(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID, SIMPLE_CASE_ID, SIMPLE_TAG_ID);
@@ -280,7 +279,7 @@ public class TagServiceTest {
         when(suitService.getSuit(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID)).thenReturn(suit);
         when(suitTransformer.fromDto(any(SuitDTO.class))).thenReturn(suit);
         when(caseService.getCase(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID,SIMPLE_CASE_ID)).thenReturn(caze);
-        when(caseDTOsTransformer.fromDto(any(AddCaseToSuitDTO.class))).thenReturn(caze);
+        when(caseDTOsTransformer.fromDto(any(CreateCaseDTO.class))).thenReturn(caze);
 		when(tagDAO.findOne(anyLong())).thenReturn(null);
 
         tagService.removeTag(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID, SIMPLE_CASE_ID, SIMPLE_TAG_ID);

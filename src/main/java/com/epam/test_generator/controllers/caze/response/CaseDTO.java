@@ -210,8 +210,8 @@ public class CaseDTO {
     @Override
     public String toString() {
         return String.format(
-            "CaseDTO{ id= %s ,name= %s, description= %s, steps= %s, creationDate= %s, priority= %s, tags= %s, status= %s, comment= %s};",
-            id, name, description, steps, creationDate, priority, tags, steps, comment);
+                "CaseDTO{ id= %s ,name= %s, description= %s, steps= %s, creationDate= %s, priority= %s, tags= %s, status= %s, comment= %s};",
+                id, name, description, steps, creationDate, priority, tags, steps, comment);
     }
 }
 

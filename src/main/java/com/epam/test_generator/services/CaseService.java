@@ -3,10 +3,10 @@ package com.epam.test_generator.services;
 import static com.epam.test_generator.services.utils.UtilsService.caseBelongsToSuit;
 import static com.epam.test_generator.services.utils.UtilsService.checkNotNull;
 
-import com.epam.test_generator.controllers.caze.request.AddCaseToSuitDTO;
+import com.epam.test_generator.controllers.caze.request.CreateCaseDTO;
 import com.epam.test_generator.controllers.caze.request.EditCaseDTO;
 import com.epam.test_generator.controllers.caze.request.UpdateCaseDTO;
-import com.epam.test_generator.controllers.caze.response.UpdatedCaseDTO;
+import com.epam.test_generator.controllers.caze.response.CaseWithFailedStepsDTO;
 import com.epam.test_generator.dao.interfaces.CaseDAO;
 import com.epam.test_generator.dao.interfaces.CaseVersionDAO;
 import com.epam.test_generator.dao.interfaces.RemovedIssueDAO;
@@ -101,13 +101,13 @@ public class CaseService {
      *
      * @param projectId id of project where to add case
      * @param suitId    id of suit where to add case
-     * @param addCaseToSuitDTO   case to add
+     * @param createCaseDTO   case to add
      * @return {@link CaseDTO} of added case to suit
      */
-    public CaseDTO addCaseToSuit(Long projectId, Long suitId, @Valid AddCaseToSuitDTO addCaseToSuitDTO) {
+    public CaseDTO addCaseToSuit(Long projectId, Long suitId, @Valid CreateCaseDTO createCaseDTO) {
         Suit suit = suitService.getSuit(projectId, suitId);
 
-        Case caze = caseDTOsTransformer.fromDto(addCaseToSuitDTO);
+        Case caze = caseDTOsTransformer.fromDto(createCaseDTO);
 
         caze.setJiraParentKey(suit.getJiraKey());
         caze.setJiraProjectKey(suit.getJiraProjectKey());
@@ -137,7 +137,7 @@ public class CaseService {
     @Deprecated
     public CaseDTO addCaseToSuit(Long projectId, Long suitId, EditCaseDTO updateCaseDTO)
         throws MethodArgumentNotValidException {
-        AddCaseToSuitDTO caseDTO = new AddCaseToSuitDTO(updateCaseDTO.getName(),
+        CreateCaseDTO caseDTO = new CreateCaseDTO(updateCaseDTO.getName(),
             updateCaseDTO.getDescription(), updateCaseDTO.getPriority(),
                 updateCaseDTO.getComment(),  new HashSet<>());
 
@@ -160,7 +160,7 @@ public class CaseService {
      * @return {@link SuitUpdateDTO} which contains {@link CaseDTO} and {@link List<Long>}
      * (in fact id of {@link StepDTO} with FAILED {@link Status} which belong this suit)
      */
-    public UpdatedCaseDTO updateCase(Long projectId, Long suitId, Long caseId, UpdateCaseDTO updateCaseDTO) {
+    public CaseWithFailedStepsDTO updateCase(Long projectId, Long suitId, Long caseId, UpdateCaseDTO updateCaseDTO) {
         Suit suit = suitService.getSuit(projectId, suitId);
 
         Case caze = caseDAO.findOne(caseId);
@@ -184,12 +184,12 @@ public class CaseService {
         caze = caseDAO.save(caze);
 
         CaseDTO updatedCaseDTO = caseDTOsTransformer.toDto(caze);
-        UpdatedCaseDTO updatedCaseDTOwithFailedStepIds =
-            new UpdatedCaseDTO(updatedCaseDTO, failedStepIds);
+        CaseWithFailedStepsDTO caseWithFailedStepsDTOwithFailedStepIds =
+            new CaseWithFailedStepsDTO(updatedCaseDTO, failedStepIds);
 
         caseVersionDAO.save(caze);
         suitVersionDAO.save(suit);
-        return updatedCaseDTOwithFailedStepIds;
+        return caseWithFailedStepsDTOwithFailedStepIds;
     }
 
     /**

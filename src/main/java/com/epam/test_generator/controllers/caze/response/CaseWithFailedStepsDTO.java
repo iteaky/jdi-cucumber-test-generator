@@ -10,12 +10,12 @@ import java.util.List;
  *  {@link List<Long>} (in fact id of {@link StepDTO} with FAILED {@link Status} which belong this
  *  suit or case)
  */
-public class UpdatedCaseDTO {
+public class CaseWithFailedStepsDTO {
 
     private CaseDTO updatedCaseDto;
     private List<Long> failedStepIds;
 
-    public UpdatedCaseDTO(CaseDTO updatedCaseDto, List<Long> failedStepIds) {
+    public CaseWithFailedStepsDTO(CaseDTO updatedCaseDto, List<Long> failedStepIds) {
         this.updatedCaseDto = updatedCaseDto;
         this.failedStepIds = failedStepIds;
     }
@@ -45,7 +45,7 @@ public class UpdatedCaseDTO {
             return false;
         }
 
-        UpdatedCaseDTO that = (UpdatedCaseDTO) o;
+        CaseWithFailedStepsDTO that = (CaseWithFailedStepsDTO) o;
 
         if (getUpdatedCaseDto() != null ? !getUpdatedCaseDto().equals(that.getUpdatedCaseDto())
             : that.getUpdatedCaseDto() != null) {
@@ -64,7 +64,7 @@ public class UpdatedCaseDTO {
 
     @Override
     public String toString() {
-        return "UpdatedCaseDTO{" +
+        return "CaseWithFailedStepsDTO{" +
             "updatedCaseDto=" + updatedCaseDto +
             ", failedStepIds=" + failedStepIds +
             '}';

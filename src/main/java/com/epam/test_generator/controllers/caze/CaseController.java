@@ -1,9 +1,9 @@
 package com.epam.test_generator.controllers.caze;
 
-import com.epam.test_generator.controllers.caze.request.AddCaseToSuitDTO;
+import com.epam.test_generator.controllers.caze.request.CreateCaseDTO;
 import com.epam.test_generator.controllers.caze.request.EditCaseDTO;
 import com.epam.test_generator.controllers.caze.request.UpdateCaseDTO;
-import com.epam.test_generator.controllers.caze.response.UpdatedCaseDTO;
+import com.epam.test_generator.controllers.caze.response.CaseWithFailedStepsDTO;
 import com.epam.test_generator.controllers.caze.response.CaseDTO;
 import com.epam.test_generator.dto.SuitDTO;
 import com.epam.test_generator.dto.ValidationErrorsDTO;
@@ -114,9 +114,9 @@ public class CaseController {
         consumes = "application/json", produces = "application/json")
     public ResponseEntity<CaseDTO> addCaseToSuit(@PathVariable("projectId") long projectId,
                                                  @PathVariable("suitId") long suitId,
-                                                 @RequestBody @Valid AddCaseToSuitDTO addCaseToSuitDTO) {
+                                                 @RequestBody @Valid CreateCaseDTO createCaseDTO) {
 
-        return new ResponseEntity<>(caseService.addCaseToSuit(projectId, suitId, addCaseToSuitDTO),
+        return new ResponseEntity<>(caseService.addCaseToSuit(projectId, suitId, createCaseDTO),
             HttpStatus.CREATED);
     }
 
@@ -141,14 +141,14 @@ public class CaseController {
     @Secured({"ROLE_ADMIN", "ROLE_TEST_ENGINEER", "ROLE_TEST_LEAD"})
     @RequestMapping(value = "/projects/{projectId}/suits/{suitId}/cases/{caseId}",
         method = RequestMethod.PUT, consumes = "application/json")
-    public ResponseEntity<UpdatedCaseDTO> updateCase(@PathVariable("projectId") long projectId,
-                                                     @PathVariable("suitId") long suitId,
-                                                     @PathVariable("caseId") long caseId,
-                                                     @RequestBody @Valid UpdateCaseDTO updateCaseDTO) {
-        final UpdatedCaseDTO updatedCaseDTOwithFailedStepIds = caseService
+    public ResponseEntity<CaseWithFailedStepsDTO> updateCase(@PathVariable("projectId") long projectId,
+                                                             @PathVariable("suitId") long suitId,
+                                                             @PathVariable("caseId") long caseId,
+                                                             @RequestBody @Valid UpdateCaseDTO updateCaseDTO) {
+        final CaseWithFailedStepsDTO caseWithFailedStepsDTOwithFailedStepIds = caseService
             .updateCase(projectId, suitId, caseId, updateCaseDTO);
 
-        return new ResponseEntity<>(updatedCaseDTOwithFailedStepIds, HttpStatus.OK);
+        return new ResponseEntity<>(caseWithFailedStepsDTOwithFailedStepIds, HttpStatus.OK);
     }
 
     @ApiOperation(value = "Update, create or delete list of cases", nickname = "updateCases")

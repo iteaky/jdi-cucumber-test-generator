@@ -1,6 +1,6 @@
 package com.epam.test_generator.controllers.caze;
 
-import com.epam.test_generator.controllers.caze.request.AddCaseToSuitDTO;
+import com.epam.test_generator.controllers.caze.request.CreateCaseDTO;
 import com.epam.test_generator.controllers.caze.response.CaseDTO;
 import com.epam.test_generator.entities.Case;
 import com.epam.test_generator.transformers.StepTransformer;
@@ -46,13 +46,13 @@ public class CaseDTOsTransformer{
         return caseDTO;
     }
 
-    public Case fromDto(AddCaseToSuitDTO addCaseToSuitDTO) {
+    public Case fromDto(CreateCaseDTO createCaseDTO) {
         Case caze = new Case();
-        caze.setName(addCaseToSuitDTO.getName());
-        caze.setDescription(addCaseToSuitDTO.getDescription());
-        caze.setPriority(addCaseToSuitDTO.getPriority());
-        caze.setComment(addCaseToSuitDTO.getComment());
-        caze.setTags(addCaseToSuitDTO.getTags().stream().map(new TagTransformer()::fromDto).collect(Collectors.toSet()));
+        caze.setName(createCaseDTO.getName());
+        caze.setDescription(createCaseDTO.getDescription());
+        caze.setPriority(createCaseDTO.getPriority());
+        caze.setComment(createCaseDTO.getComment());
+        caze.setTags(createCaseDTO.getTags().stream().map(new TagTransformer()::fromDto).collect(Collectors.toSet()));
         return caze;
     }
 

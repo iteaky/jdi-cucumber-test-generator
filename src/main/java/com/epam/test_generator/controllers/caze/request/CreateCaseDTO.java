@@ -1,7 +1,7 @@
 package com.epam.test_generator.controllers.caze.request;
 
 import com.epam.test_generator.dto.TagDTO;
-import com.epam.test_generator.entities.Status;
+
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Set;
 
-public class AddCaseToSuitDTO {
+public class CreateCaseDTO {
 
     @NotNull
     @Size(min = 1, max = 250)
@@ -30,10 +30,10 @@ public class AddCaseToSuitDTO {
     @Valid
     private Set<TagDTO> tags;
 
-    public AddCaseToSuitDTO() {
+    public CreateCaseDTO() {
     }
 
-    public AddCaseToSuitDTO(String name, String description, Integer priority, String comment, Set<TagDTO> tags) {
+    public CreateCaseDTO(String name, String description, Integer priority, String comment, Set<TagDTO> tags) {
         this.name = name;
         this.description = description;
         this.priority = priority;
@@ -86,18 +86,18 @@ public class AddCaseToSuitDTO {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof AddCaseToSuitDTO)) {
+        if (!(o instanceof CreateCaseDTO)) {
             return false;
         }
 
-        final AddCaseToSuitDTO addCaseToSuitDTO = (AddCaseToSuitDTO) o;
+        final CreateCaseDTO createCaseDTO = (CreateCaseDTO) o;
 
-        return ( (name != null ? name.equals(addCaseToSuitDTO.name) : addCaseToSuitDTO.name == null)
-                && (description != null ? description.equals(addCaseToSuitDTO.description)
-                : addCaseToSuitDTO.description == null)
-                && (priority != null ? priority.equals(addCaseToSuitDTO.priority) : addCaseToSuitDTO.priority == null)
-                && (comment != null ? comment.equals(addCaseToSuitDTO.comment) : addCaseToSuitDTO.comment == null))
-                && (tags != null ? tags.equals(addCaseToSuitDTO.tags) : addCaseToSuitDTO.tags == null);
+        return ( (name != null ? name.equals(createCaseDTO.name) : createCaseDTO.name == null)
+                && (description != null ? description.equals(createCaseDTO.description)
+                : createCaseDTO.description == null)
+                && (priority != null ? priority.equals(createCaseDTO.priority) : createCaseDTO.priority == null)
+                && (comment != null ? comment.equals(createCaseDTO.comment) : createCaseDTO.comment == null))
+                && (tags != null ? tags.equals(createCaseDTO.tags) : createCaseDTO.tags == null);
     }
 
     @Override
@@ -113,7 +113,7 @@ public class AddCaseToSuitDTO {
     @Override
     public String toString() {
         return String.format(
-                "AddCaseToSuitDTO{ name= %s, description= %s, priority= %s, comment= %s, tags= %s };",
+                "CreateCaseDTO{ name= %s, description= %s, priority= %s, comment= %s, tags= %s };",
                 name, description, priority, comment, tags);
     }
 }

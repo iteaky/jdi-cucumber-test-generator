@@ -14,10 +14,10 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.epam.test_generator.controllers.caze.request.AddCaseToSuitDTO;
+import com.epam.test_generator.controllers.caze.request.CreateCaseDTO;
 import com.epam.test_generator.controllers.caze.request.EditCaseDTO;
 import com.epam.test_generator.controllers.caze.request.UpdateCaseDTO;
-import com.epam.test_generator.controllers.caze.response.UpdatedCaseDTO;
+import com.epam.test_generator.controllers.caze.response.CaseWithFailedStepsDTO;
 import com.epam.test_generator.dao.interfaces.CaseDAO;
 import com.epam.test_generator.dao.interfaces.CaseVersionDAO;
 import com.epam.test_generator.dao.interfaces.SuitVersionDAO;
@@ -78,7 +78,7 @@ public class CaseServiceTest {
 
     private List<StepDTO> listStepDtos = new ArrayList<>();
     private EditCaseDTO editCaseDTO;
-    private AddCaseToSuitDTO addCaseToSuitDTO;
+    private CreateCaseDTO createCaseDTO;
     private UpdateCaseDTO updateCaseDTO;
 
     private List<CaseVersion> caseVersions;
@@ -133,7 +133,7 @@ public class CaseServiceTest {
                 listSteps, 1, setOfTags, "comment");
         expectedCaseDTO = new CaseDTO(SIMPLE_CASE_ID, "caze name", "caze desc",
                 expectedListSteps, 1, expectedSetTags, Status.NOT_DONE, "comment");
-        addCaseToSuitDTO = new AddCaseToSuitDTO("caze name", "caze desc",
+        createCaseDTO = new CreateCaseDTO("caze name", "caze desc",
                1, "comment", expectedSetTags);
         suit = new Suit(SIMPLE_SUIT_ID, "Suit 1", "Suit desc",
                 listCases, 1, setOfTags, 1);
@@ -222,15 +222,15 @@ public class CaseServiceTest {
     @Test
     public void add_CaseToSuit_Success()  {
         when(suitService.getSuit(anyLong(), anyLong())).thenReturn(suit);
-        when(caseDTOsTransformer.fromDto(any(AddCaseToSuitDTO.class))).thenReturn(caze);
+        when(caseDTOsTransformer.fromDto(any(CreateCaseDTO.class))).thenReturn(caze);
         when(caseDAO.save(any(Case.class))).thenReturn(caze);
         when(caseDTOsTransformer.toDto(any(Case.class))).thenReturn(expectedCaseDTO);
 
-        final CaseDTO actualCaseDTO = caseService.addCaseToSuit(SIMPLE_PROJECT_ID , SIMPLE_SUIT_ID, addCaseToSuitDTO);
+        final CaseDTO actualCaseDTO = caseService.addCaseToSuit(SIMPLE_PROJECT_ID , SIMPLE_SUIT_ID, createCaseDTO);
         assertEquals(expectedCaseDTO, actualCaseDTO);
 
         verify(suitService).getSuit(eq(SIMPLE_PROJECT_ID) , eq(SIMPLE_SUIT_ID));
-        verify(caseDTOsTransformer).fromDto(eq(addCaseToSuitDTO));
+        verify(caseDTOsTransformer).fromDto(eq(createCaseDTO));
         verify(caseDAO).save(eq(caze));
         verify(caseVersionDAO).save(eq(caze));
         verify(caseDTOsTransformer).toDto(eq(caze));
@@ -240,7 +240,7 @@ public class CaseServiceTest {
     public void add_CaseToSuit_NotFoundExceptionFromSuit() {
         doThrow(NotFoundException.class).when(suitService).getSuit(anyLong(), anyLong());
         when(suitTransformer.fromDto(any(SuitDTO.class))).thenReturn(null);
-        caseService.addCaseToSuit(SIMPLE_PROJECT_ID , SIMPLE_SUIT_ID, new AddCaseToSuitDTO());
+        caseService.addCaseToSuit(SIMPLE_PROJECT_ID , SIMPLE_SUIT_ID, new CreateCaseDTO());
     }
 
     @Test
@@ -253,12 +253,12 @@ public class CaseServiceTest {
         updateCaseDTO = new UpdateCaseDTO(caze.getDescription(), caze.getName(), caze.getPriority(),
                 caze.getStatus(), Collections.emptyList(),caze.getComment());
 
-        UpdatedCaseDTO expectedUpdatedCaseDTOwithFailedStepIds =
-            new UpdatedCaseDTO(expectedCaseDTO, Collections.emptyList());
-        UpdatedCaseDTO actualUpdatedCaseDTOwithFailedStepIds =
+        CaseWithFailedStepsDTO expectedCaseWithFailedStepsDTOwithFailedStepIds =
+            new CaseWithFailedStepsDTO(expectedCaseDTO, Collections.emptyList());
+        CaseWithFailedStepsDTO actualCaseWithFailedStepsDTOwithFailedStepIds =
                 caseService.updateCase(SIMPLE_PROJECT_ID , SIMPLE_SUIT_ID, SIMPLE_CASE_ID, updateCaseDTO);
 
-        assertEquals(actualUpdatedCaseDTOwithFailedStepIds, expectedUpdatedCaseDTOwithFailedStepIds);
+        assertEquals(actualCaseWithFailedStepsDTOwithFailedStepIds, expectedCaseWithFailedStepsDTOwithFailedStepIds);
         verify(suitService).getSuit(eq(SIMPLE_PROJECT_ID) , eq(SIMPLE_SUIT_ID));
         verify(caseDAO).findOne(eq(SIMPLE_CASE_ID));
         verify(caseDAO).save(eq(caze));
@@ -497,7 +497,7 @@ public class CaseServiceTest {
         editCaseDTO.setId(SIMPLE_CASE_ID);
         CaseDTO expectedCaseDTO = new CaseDTO(1l,"name", "desc", Collections.emptyList(),
             1, Collections.emptySet(), Status.NOT_RUN, "comment");
-        UpdatedCaseDTO expectedDto = new UpdatedCaseDTO(expectedCaseDTO, Collections.emptyList());
+        CaseWithFailedStepsDTO expectedDto = new CaseWithFailedStepsDTO(expectedCaseDTO, Collections.emptyList());
         List<CaseDTO> expectedCaseDTOs = Arrays.asList(expectedCaseDTO);
 
         CaseService mock = mock(CaseService.class);
