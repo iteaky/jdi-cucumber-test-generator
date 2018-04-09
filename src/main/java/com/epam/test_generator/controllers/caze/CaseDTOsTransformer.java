@@ -11,19 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-//public class CaseDTOsTransformer extends AbstractDozerTransformer<Case, CaseDTO> {
-
 public class CaseDTOsTransformer{
-
-    /*@Override
-    protected Class<Case> getEntityClass() {
-        return Case.class;
-    }
-
-    @Override
-    protected Class<CaseDTO> getDTOClass() {
-        return CaseDTO.class;
-    }*/
 
     public List<CaseDTO> toDtoList(List<Case> cases) {
         return cases.stream().map(this::toDto).collect(Collectors.toList());
