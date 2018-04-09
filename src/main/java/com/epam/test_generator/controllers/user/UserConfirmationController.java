@@ -1,4 +1,4 @@
-package com.epam.test_generator.controllers;
+package com.epam.test_generator.controllers.user;
 
 import com.epam.test_generator.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
