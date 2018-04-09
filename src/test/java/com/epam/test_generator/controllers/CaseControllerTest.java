@@ -20,6 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.epam.test_generator.controllers.caze.CaseController;
+import com.epam.test_generator.controllers.caze.request.AddCaseToSuitDTO;
 import com.epam.test_generator.controllers.caze.request.UpdateCaseDTO;
 import com.epam.test_generator.controllers.caze.response.CaseDTO;
 import com.epam.test_generator.controllers.caze.response.CaseUpdatedDTO;
@@ -198,7 +199,7 @@ public class CaseControllerTest {
 
     @Test
     public void addCase_CaseDTO_Created() throws Exception {
-        when(casesService.addCaseToSuit(anyLong(), anyLong(), any(CaseDTO.class)))
+        when(casesService.addCaseToSuit(anyLong(), anyLong(), any(AddCaseToSuitDTO.class)))
             .thenReturn(caseDTO);
 
         mockMvc
@@ -212,14 +213,14 @@ public class CaseControllerTest {
             .andExpect(jsonPath("$.status", is(caseDTO.getStatus().toString())));
 
         verify(casesService, times(1))
-            .addCaseToSuit(eq(SIMPLE_PROJECT_ID), eq(SIMPLE_SUIT_ID), any(CaseDTO.class));
+            .addCaseToSuit(eq(SIMPLE_PROJECT_ID), eq(SIMPLE_SUIT_ID), any(AddCaseToSuitDTO.class));
         verifyNoMoreInteractions(casesService);
     }
 
     @Test
     public void addCase_SuitAndCaseDTO_NotFound() throws Exception {
         caseDTO.setId(null);
-        when(casesService.addCaseToSuit(anyLong(), anyLong(), any(CaseDTO.class)))
+        when(casesService.addCaseToSuit(anyLong(), anyLong(), any(AddCaseToSuitDTO.class)))
             .thenThrow(new NotFoundException());
 
         mockMvc
@@ -229,7 +230,7 @@ public class CaseControllerTest {
             .andExpect(status().isNotFound());
 
         verify(casesService)
-            .addCaseToSuit(eq(SIMPLE_PROJECT_ID), eq(SIMPLE_SUIT_ID), any(CaseDTO.class));
+            .addCaseToSuit(eq(SIMPLE_PROJECT_ID), eq(SIMPLE_SUIT_ID), any(AddCaseToSuitDTO.class));
     }
 
     @Test
@@ -243,7 +244,7 @@ public class CaseControllerTest {
                 .content(mapper.writeValueAsString(caseDTO)))
             .andExpect(status().isBadRequest());
         verify(casesService, times(0))
-            .addCaseToSuit(eq(SIMPLE_PROJECT_ID), eq(SIMPLE_SUIT_ID), any(CaseDTO.class));
+            .addCaseToSuit(eq(SIMPLE_PROJECT_ID), eq(SIMPLE_SUIT_ID), any(AddCaseToSuitDTO.class));
     }
 
     @Test
@@ -258,7 +259,7 @@ public class CaseControllerTest {
             .andExpect(status().isBadRequest());
 
         verify(casesService, times(0))
-            .addCaseToSuit(eq(SIMPLE_PROJECT_ID), eq(SIMPLE_SUIT_ID), any(CaseDTO.class));
+            .addCaseToSuit(eq(SIMPLE_PROJECT_ID), eq(SIMPLE_SUIT_ID), any(AddCaseToSuitDTO.class));
     }
 
     @Test
@@ -273,7 +274,7 @@ public class CaseControllerTest {
             .andExpect(status().isBadRequest());
 
         verify(casesService, times(0))
-            .addCaseToSuit(eq(SIMPLE_PROJECT_ID), eq(SIMPLE_SUIT_ID), any(CaseDTO.class));
+            .addCaseToSuit(eq(SIMPLE_PROJECT_ID), eq(SIMPLE_SUIT_ID), any(AddCaseToSuitDTO.class));
     }
 
     @Test
@@ -288,7 +289,7 @@ public class CaseControllerTest {
             .andExpect(status().isBadRequest());
 
         verify(casesService, times(0))
-            .addCaseToSuit(eq(SIMPLE_PROJECT_ID), eq(SIMPLE_SUIT_ID), any(CaseDTO.class));
+            .addCaseToSuit(eq(SIMPLE_PROJECT_ID), eq(SIMPLE_SUIT_ID), any(AddCaseToSuitDTO.class));
     }
 
     @Test
@@ -303,7 +304,7 @@ public class CaseControllerTest {
             .andExpect(status().isBadRequest());
 
         verify(casesService, times(0))
-            .addCaseToSuit(eq(SIMPLE_PROJECT_ID), eq(SIMPLE_SUIT_ID), any(CaseDTO.class));
+            .addCaseToSuit(eq(SIMPLE_PROJECT_ID), eq(SIMPLE_SUIT_ID), any(AddCaseToSuitDTO.class));
     }
 
     @Test
@@ -318,12 +319,12 @@ public class CaseControllerTest {
             .andExpect(status().isBadRequest());
 
         verify(casesService, times(0))
-            .addCaseToSuit(eq(SIMPLE_PROJECT_ID), eq(SIMPLE_SUIT_ID), any(CaseDTO.class));
+            .addCaseToSuit(eq(SIMPLE_PROJECT_ID), eq(SIMPLE_SUIT_ID), any(AddCaseToSuitDTO.class));
     }
 
     @Test
     public void addCase_RuntimeException_StatusInternalServerError() throws Exception {
-        when(casesService.addCaseToSuit(anyLong(), anyLong(), any(CaseDTO.class)))
+        when(casesService.addCaseToSuit(anyLong(), anyLong(), any(AddCaseToSuitDTO.class)))
             .thenThrow(new RuntimeException());
 
         mockMvc
@@ -332,7 +333,7 @@ public class CaseControllerTest {
                 .content(mapper.writeValueAsString(caseDTO)))
             .andExpect(status().isInternalServerError());
 
-        verify(casesService).addCaseToSuit(anyLong(), anyLong(), any(CaseDTO.class));
+        verify(casesService).addCaseToSuit(anyLong(), anyLong(), any(AddCaseToSuitDTO.class));
     }
 
     @Test

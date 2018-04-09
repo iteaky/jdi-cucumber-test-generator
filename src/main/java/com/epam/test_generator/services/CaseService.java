@@ -3,6 +3,7 @@ package com.epam.test_generator.services;
 import static com.epam.test_generator.services.utils.UtilsService.caseBelongsToSuit;
 import static com.epam.test_generator.services.utils.UtilsService.checkNotNull;
 
+import com.epam.test_generator.controllers.caze.request.AddCaseToSuitDTO;
 import com.epam.test_generator.controllers.caze.request.UpdateCaseDTO;
 import com.epam.test_generator.controllers.caze.response.CaseUpdatedDTO;
 import com.epam.test_generator.dao.interfaces.CaseDAO;
@@ -99,19 +100,17 @@ public class CaseService {
      *
      * @param projectId id of project where to add case
      * @param suitId    id of suit where to add case
-     * @param caseDTO   case to add
+     * @param addCaseToSuitDTO   case to add
      * @return {@link CaseDTO} of added case to suit
      */
-    public CaseDTO addCaseToSuit(Long projectId, Long suitId, @Valid CaseDTO caseDTO) {
+    public CaseDTO addCaseToSuit(Long projectId, Long suitId, @Valid AddCaseToSuitDTO addCaseToSuitDTO) {
         Suit suit = suitService.getSuit(projectId, suitId);
 
-        caseDTO.setJiraParentKey(suit.getJiraKey());
-        caseDTO.setJiraProjectKey(suit.getJiraProjectKey());
+        Case caze = caseDTOsTransformer.fromDto(addCaseToSuitDTO);
 
-        Case caze = caseDTOsTransformer.fromDto(caseDTO);
-
+        caze.setJiraParentKey(suit.getJiraKey());
+        caze.setJiraProjectKey(suit.getJiraProjectKey());
         Date currentTime = Calendar.getInstance().getTime();
-
         caze.setCreationDate(currentTime);
         caze.setUpdateDate(currentTime);
         caze.setLastModifiedDate(LocalDateTime.now());
@@ -122,9 +121,9 @@ public class CaseService {
         caseVersionDAO.save(caze);
         suitVersionDAO.save(suit);
 
-        CaseDTO addedCaseDTO = caseDTOsTransformer.toDto(caze);
+        CaseDTO caseDTO = caseDTOsTransformer.toDto(caze);
 
-        return addedCaseDTO;
+        return caseDTO;
     }
 
     /**
@@ -136,9 +135,9 @@ public class CaseService {
      */
     public CaseDTO addCaseToSuit(Long projectId, Long suitId, UpdateCaseDTO updateCaseDTO)
         throws MethodArgumentNotValidException {
-        CaseDTO caseDTO = new CaseDTO(updateCaseDTO.getId(), updateCaseDTO.getName(),
-            updateCaseDTO.getDescription(), new ArrayList<>(),
-            updateCaseDTO.getPriority(), new HashSet<>(), updateCaseDTO.getStatus(), updateCaseDTO.getComment());
+        AddCaseToSuitDTO caseDTO = new AddCaseToSuitDTO(updateCaseDTO.getName(),
+            updateCaseDTO.getDescription(), updateCaseDTO.getPriority(),
+                updateCaseDTO.getComment(),  new HashSet<>());
 
         BeanPropertyBindingResult beanPropertyBindingResult =
             new BeanPropertyBindingResult(caseDTO, CaseDTO.class.getSimpleName());
@@ -309,22 +308,22 @@ public class CaseService {
     public List<CaseDTO> updateCases(Long projectId, long suitId, List<UpdateCaseDTO> updateCaseDTOS)
         throws MethodArgumentNotValidException {
         List<CaseDTO> updatedCases = new ArrayList<>();
-        for (UpdateCaseDTO caseDTO : updateCaseDTOS) {
-            switch (caseDTO.getAction()) {
+        for (UpdateCaseDTO updateCaseDTO : updateCaseDTOS) {
+            switch (updateCaseDTO.getAction()) {
                 case DELETE:
-                    if (caseDTO.getId() == null) {
+                    if (updateCaseDTO.getId() == null) {
                         throw new BadRequestException("No id in caze to remove");
                     }
-                    updatedCases.add(removeCase(projectId, suitId, caseDTO.getId()));
+                    updatedCases.add(removeCase(projectId, suitId, updateCaseDTO.getId()));
                     break;
                 case CREATE:
-                    updatedCases.add(addCaseToSuit(projectId, suitId, caseDTO));
+                    updatedCases.add(addCaseToSuit(projectId, suitId, updateCaseDTO));
                     break;
                 case UPDATE:
-                    if (caseDTO.getId() == null) {
+                    if (updateCaseDTO.getId() == null) {
                         throw new BadRequestException("No id in caze to update");
                     }
-                    CaseDTO updatedCaseDTO = updateCase(projectId, suitId, caseDTO.getId(), caseDTO)
+                    CaseDTO updatedCaseDTO = updateCase(projectId, suitId, updateCaseDTO.getId(), updateCaseDTO)
                         .getUpdatedCaseDto();
                     updatedCases.add(updatedCaseDTO);
                     break;

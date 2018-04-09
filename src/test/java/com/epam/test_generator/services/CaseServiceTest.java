@@ -14,6 +14,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.epam.test_generator.controllers.caze.request.AddCaseToSuitDTO;
 import com.epam.test_generator.controllers.caze.request.UpdateCaseDTO;
 import com.epam.test_generator.controllers.caze.response.CaseUpdatedDTO;
 import com.epam.test_generator.dao.interfaces.CaseDAO;
@@ -76,6 +77,7 @@ public class CaseServiceTest {
 
     private List<StepDTO> listStepDtos = new ArrayList<>();
     private UpdateCaseDTO updateCaseDTO;
+    private AddCaseToSuitDTO addCaseToSuitDTO;
 
     private List<CaseVersion> caseVersions;
     private List<CaseVersionDTO> expectedCaseVersions;
@@ -129,6 +131,8 @@ public class CaseServiceTest {
                 listSteps, 1, setOfTags, "comment");
         expectedCaseDTO = new CaseDTO(SIMPLE_CASE_ID, "caze name", "caze desc",
                 expectedListSteps, 1, expectedSetTags, Status.NOT_DONE, "comment");
+        addCaseToSuitDTO = new AddCaseToSuitDTO("caze name", "caze desc",
+               1, "comment", expectedSetTags);
         suit = new Suit(SIMPLE_SUIT_ID, "Suit 1", "Suit desc",
                 listCases, 1, setOfTags, 1);
         caseToRestore = new Case(SIMPLE_CASE_ID, "new name", "new description",
@@ -216,15 +220,15 @@ public class CaseServiceTest {
     @Test
     public void add_CaseToSuit_Success()  {
         when(suitService.getSuit(anyLong(), anyLong())).thenReturn(suit);
-        when(caseDTOsTransformer.fromDto(any(CaseDTO.class))).thenReturn(caze);
+        when(caseDTOsTransformer.fromDto(any(AddCaseToSuitDTO.class))).thenReturn(caze);
         when(caseDAO.save(any(Case.class))).thenReturn(caze);
         when(caseDTOsTransformer.toDto(any(Case.class))).thenReturn(expectedCaseDTO);
 
-        final CaseDTO actualCaseDTO = caseService.addCaseToSuit(SIMPLE_PROJECT_ID , SIMPLE_SUIT_ID, expectedCaseDTO);
+        final CaseDTO actualCaseDTO = caseService.addCaseToSuit(SIMPLE_PROJECT_ID , SIMPLE_SUIT_ID, addCaseToSuitDTO);
         assertEquals(expectedCaseDTO, actualCaseDTO);
 
         verify(suitService).getSuit(eq(SIMPLE_PROJECT_ID) , eq(SIMPLE_SUIT_ID));
-        verify(caseDTOsTransformer).fromDto(eq(expectedCaseDTO));
+        verify(caseDTOsTransformer).fromDto(eq(addCaseToSuitDTO));
         verify(caseDAO).save(eq(caze));
         verify(caseVersionDAO).save(eq(caze));
         verify(caseDTOsTransformer).toDto(eq(caze));
@@ -234,7 +238,7 @@ public class CaseServiceTest {
     public void add_CaseToSuit_NotFoundExceptionFromSuit() {
         doThrow(NotFoundException.class).when(suitService).getSuit(anyLong(), anyLong());
         when(suitTransformer.fromDto(any(SuitDTO.class))).thenReturn(null);
-        caseService.addCaseToSuit(SIMPLE_PROJECT_ID , SIMPLE_SUIT_ID, new CaseDTO());
+        caseService.addCaseToSuit(SIMPLE_PROJECT_ID , SIMPLE_SUIT_ID, new AddCaseToSuitDTO());
     }
 
     @Test

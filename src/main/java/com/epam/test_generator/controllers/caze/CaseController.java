@@ -1,5 +1,6 @@
 package com.epam.test_generator.controllers.caze;
 
+import com.epam.test_generator.controllers.caze.request.AddCaseToSuitDTO;
 import com.epam.test_generator.controllers.caze.response.CaseUpdatedDTO;
 import com.epam.test_generator.controllers.caze.request.UpdateCaseDTO;
 import com.epam.test_generator.controllers.caze.response.CaseDTO;
@@ -111,10 +112,10 @@ public class CaseController {
     @RequestMapping(value = "/projects/{projectId}/suits/{suitId}/cases", method = RequestMethod.POST,
         consumes = "application/json", produces = "application/json")
     public ResponseEntity<CaseDTO> addCaseToSuit(@PathVariable("projectId") long projectId,
-                                              @PathVariable("suitId") long suitId,
-                                              @RequestBody @Valid CaseDTO caseDTO) {
+                                                 @PathVariable("suitId") long suitId,
+                                                 @RequestBody @Valid AddCaseToSuitDTO addCaseToSuitDTO) {
 
-        return new ResponseEntity<>(caseService.addCaseToSuit(projectId, suitId, caseDTO),
+        return new ResponseEntity<>(caseService.addCaseToSuit(projectId, suitId, addCaseToSuitDTO),
             HttpStatus.CREATED);
     }
 
