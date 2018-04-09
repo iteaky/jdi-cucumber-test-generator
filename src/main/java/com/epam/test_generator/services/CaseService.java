@@ -131,15 +131,15 @@ public class CaseService {
      * Adds case to existing suit using EditCaseDTO
      * @param projectId id of project where to add case
      * @param suitId id of suit where to add case
-     * @param updateCaseDTO case to add
+     * @param editCaseDTO case to add
      * @return {@link CaseDTO} of added case to suit
      */
     @Deprecated
-    public CaseDTO addCaseToSuit(Long projectId, Long suitId, EditCaseDTO updateCaseDTO)
+    public CaseDTO addCaseToSuit(Long projectId, Long suitId, EditCaseDTO editCaseDTO)
         throws MethodArgumentNotValidException {
-        CreateCaseDTO caseDTO = new CreateCaseDTO(updateCaseDTO.getName(),
-            updateCaseDTO.getDescription(), updateCaseDTO.getPriority(),
-                updateCaseDTO.getComment(),  new HashSet<>());
+        CreateCaseDTO caseDTO = new CreateCaseDTO(editCaseDTO.getName(),
+            editCaseDTO.getDescription(), editCaseDTO.getPriority(),
+                editCaseDTO.getComment(), new HashSet<>());
 
         BeanPropertyBindingResult beanPropertyBindingResult =
             new BeanPropertyBindingResult(caseDTO, CaseDTO.class.getSimpleName());
@@ -152,7 +152,7 @@ public class CaseService {
     }
 
     /**
-     * Updates case info to info specified in EditCaseDTO
+     * Updates case info to info specified in UpdateCaseDTO
      * @param projectId id of project where to update case
      * @param suitId id of suit where to update case
      * @param caseId id of case which to update
@@ -168,7 +168,7 @@ public class CaseService {
 
         caseBelongsToSuit(caze, suit);
 
-//        TODO: remove this list from CaseUpdateDTO
+//        TODO: remove this list from CaseWithFailedStepsDTO
         final List<Long> failedStepIds = Collections.emptyList();
         caze.setUpdateDate(Calendar.getInstance().getTime());
         if (updateCaseDTO.getTags() != null) {

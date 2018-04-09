@@ -503,10 +503,10 @@ public class CaseServiceTest {
         CaseService mock = mock(CaseService.class);
         when(mock.updateCase(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID, SIMPLE_CASE_ID, updateCaseDTO)).thenReturn(expectedDto);
         Mockito.doCallRealMethod().when(mock).updateCases(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID,
-            Collections.singletonList(editCaseDTO));
+                Collections.singletonList(editCaseDTO));
         List<CaseDTO> actualUpdatedCaseDTOs = mock.updateCases(SIMPLE_PROJECT_ID , SIMPLE_SUIT_ID, Collections.singletonList(editCaseDTO));
 
-        assertEquals(expectedCaseDTOs, actualUpdatedCaseDTOs);
+        //assertEquals(expectedCaseDTOs, actualUpdatedCaseDTOs);
         verify(mock).updateCase(eq(SIMPLE_PROJECT_ID), eq(SIMPLE_SUIT_ID), eq(SIMPLE_CASE_ID), eq(updateCaseDTO));
     }*/
 
@@ -524,6 +524,7 @@ public class CaseServiceTest {
         when(mock.addCaseToSuit(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID, editCaseDTO)).thenReturn(expectedCaseDTO);
         Mockito.doCallRealMethod().when(mock).updateCases(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID,
             Collections.singletonList(editCaseDTO));
+
         List<CaseDTO> actualUpdatedCaseDTOs = mock.updateCases(SIMPLE_PROJECT_ID , SIMPLE_SUIT_ID, Collections.singletonList(editCaseDTO));
 
         assertEquals(expectedCaseDTOs, actualUpdatedCaseDTOs);
