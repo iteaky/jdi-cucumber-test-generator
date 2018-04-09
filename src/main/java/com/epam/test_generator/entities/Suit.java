@@ -270,6 +270,7 @@ public class Suit implements Serializable, Persistable<Long>, SuitTrait, JiraSui
             ", name='" + name + '\'' +
             ", description='" + description + '\'' +
             ", priority=" + priority +
+            ", status=" + status +
             ", creationDate=" + creationDate +
             ", jiraKey='" + jiraKey + '\'' +
             ", jiraProjectKey='" + jiraProjectKey + '\'' +

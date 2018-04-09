@@ -11,14 +11,11 @@ public interface SuitTrait {
     List<Case> getCases();
 
 
-    default Case hasCase(Case aCase) {
-        if (getCases() == null || !getCases().contains(aCase)) {
-            throw new BadRequestException();
-        }
-        return aCase;
+    default boolean hasCase(Case aCase) {
+         return getCases().contains(aCase);
     }
 
     default boolean removeCase(Case aCase){
-        return getCases().remove(hasCase(aCase));
+        return getCases().remove(aCase);
     }
 }

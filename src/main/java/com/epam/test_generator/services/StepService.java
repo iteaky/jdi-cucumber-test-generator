@@ -10,6 +10,7 @@ import com.epam.test_generator.entities.Action;
 import com.epam.test_generator.entities.Case;
 import com.epam.test_generator.entities.Step;
 import com.epam.test_generator.entities.Suit;
+import com.epam.test_generator.services.exceptions.BadRequestException;
 import com.epam.test_generator.transformers.StepTransformer;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,8 +50,12 @@ public class StepService {
 
         final Suit suit = checkNotNull(suitService.getSuit(projectId, suitId));
         final Case caze = checkNotNull(caseService.getCase(projectId, suitId, caseId));
-
-        return stepTransformer.toDtoList(suit.hasCase(caze).getSteps());
+        if (suit.hasCase(caze)){
+            return stepTransformer.toDtoList(caze.getSteps());
+        }
+        else {
+            throw new BadRequestException();
+        }
     }
 
     /**

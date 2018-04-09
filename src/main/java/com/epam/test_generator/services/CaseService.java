@@ -84,8 +84,11 @@ public class CaseService {
     public Case getCase(Long projectId, Long suitId, Long caseId) {
         final Suit suit = suitService.getSuit(projectId, suitId);
         final Case caze = checkNotNull(caseDAO.findOne(caseId));
-
-        return suit.hasCase(caze);
+        if (suit.hasCase(caze)) {
+            return caze;
+        } else {
+            throw new BadRequestException();
+        }
     }
 
     public CaseDTO getCaseDTO(Long projectId, Long suitId, Long caseId) {
@@ -160,30 +163,31 @@ public class CaseService {
         final Suit suit = suitService.getSuit(projectId, suitId);
 
         Case caze = checkNotNull(caseDAO.findOne(caseId));
-        suit.hasCase(caze);
+        if (suit.hasCase(caze)) {
+            final List<Long> failedStepIds = cascadeUpdateService
+                .cascadeCaseStepsUpdate(projectId, suitId, caseId, editCaseDTO);
+            caze.setUpdateDate(Calendar.getInstance().getTime());
+            if (editCaseDTO.getTags() != null) {
+                caze.setTags(new HashSet<>(tagTransformer.fromDtoList(editCaseDTO.getTags())));
+            }
+            caze.setDescription(editCaseDTO.getDescription());
+            caze.setPriority(editCaseDTO.getPriority());
+            caze.setStatus(editCaseDTO.getStatus());
+            caze.setName(editCaseDTO.getName());
+            caze.setLastModifiedDate(LocalDateTime.now());
 
-        final List<Long> failedStepIds = cascadeUpdateService
-            .cascadeCaseStepsUpdate(projectId, suitId, caseId, editCaseDTO);
-        caze.setUpdateDate(Calendar.getInstance().getTime());
-        if (editCaseDTO.getTags() != null) {
-            caze.setTags(new HashSet<>(tagTransformer.fromDtoList(editCaseDTO.getTags())));
+            caze = caseDAO.save(caze);
+
+            CaseDTO updatedCaseDTO = caseTransformer.toDto(caze);
+            CaseUpdateDTO updatedCaseDTOwithFailedStepIds =
+                new CaseUpdateDTO(updatedCaseDTO, failedStepIds);
+
+            caseVersionDAO.save(caze);
+            suitVersionDAO.save(suit);
+            return updatedCaseDTOwithFailedStepIds;
+        } else {
+            throw new BadRequestException();
         }
-        caze.setDescription(editCaseDTO.getDescription());
-        caze.setPriority(editCaseDTO.getPriority());
-        caze.setStatus(editCaseDTO.getStatus());
-        caze.setName(editCaseDTO.getName());
-        caze.setLastModifiedDate(LocalDateTime.now());
-
-
-        caze = caseDAO.save(caze);
-
-        CaseDTO updatedCaseDTO = caseTransformer.toDto(caze);
-        CaseUpdateDTO updatedCaseDTOwithFailedStepIds =
-            new CaseUpdateDTO(updatedCaseDTO, failedStepIds);
-
-        caseVersionDAO.save(caze);
-        suitVersionDAO.save(suit);
-        return updatedCaseDTOwithFailedStepIds;
     }
 
     /**
@@ -198,16 +202,21 @@ public class CaseService {
 
         final Case caze = checkNotNull(caseDAO.findOne(caseId));
 
-        suit.removeCase(caze);
+        if (suit.hasCase(caze)) {
 
-        saveIssueToDeleteInJira(caze);
+            suit.removeCase(caze);
 
-        caseDAO.delete(caseId);
+            saveIssueToDeleteInJira(caze);
 
-        caseVersionDAO.delete(caze);
-        suitVersionDAO.save(suit);
+            caseDAO.delete(caseId);
 
-        return caseTransformer.toDto(caze);
+            caseVersionDAO.delete(caze);
+            suitVersionDAO.save(suit);
+
+            return caseTransformer.toDto(caze);
+        } else {
+            throw new BadRequestException();
+        }
     }
 
     /**
@@ -252,11 +261,15 @@ public class CaseService {
 
         final Case caze = checkNotNull(caseDAO.findOne(caseId));
 
-        suit.hasCase(caze);
+        if (suit.hasCase(caze)){
 
-        List<CaseVersion> caseVersions = caseVersionDAO.findAll(caseId);
+            List<CaseVersion> caseVersions = caseVersionDAO.findAll(caseId);
 
-        return caseVersionTransformer.toDtoList(caseVersions);
+            return caseVersionTransformer.toDtoList(caseVersions);
+        }
+        else {
+            throw new BadRequestException();
+        }
     }
 
     /**
@@ -271,15 +284,18 @@ public class CaseService {
         final Suit suit = suitService.getSuit(projectId, suitId);
         final Case caze = checkNotNull(caseDAO.findOne(caseId));
 
-        suit.hasCase(caze);
+        if (suit.hasCase(caze)) {
+            final Case caseToRestore = checkNotNull(
+                caseVersionDAO.findByCommitId(caseId, commitId));
 
-        final Case caseToRestore = checkNotNull(caseVersionDAO.findByCommitId(caseId, commitId));
+            final Case restoredCase = caseDAO.save(caseToRestore);
+            caseVersionDAO.save(caseToRestore);
+            suitVersionDAO.save(suit);
 
-        final Case restoredCase = caseDAO.save(caseToRestore);
-        caseVersionDAO.save(caseToRestore);
-        suitVersionDAO.save(suit);
-
-        return caseTransformer.toDto(restoredCase);
+            return caseTransformer.toDto(restoredCase);
+        } else {
+            throw new BadRequestException();
+        }
     }
 
     /**

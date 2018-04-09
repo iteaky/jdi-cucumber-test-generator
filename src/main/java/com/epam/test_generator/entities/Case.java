@@ -276,7 +276,7 @@ public class Case implements Serializable, Persistable<Long>, CaseTrait, JiraSui
     public String toString() {
         return String.format(
                 "Case{ id= %s ,name= %s, description= %s, steps= %s, creationDate= %s, priority= %s, tags= %s, status= %s, comment= %s};",
-                id, name, description, steps, creationDate, priority, tags, steps, comment);
+                id, name, description, steps, creationDate, priority, tags, status, comment);
     }
 
     @Override
