@@ -1,7 +1,6 @@
 package com.epam.test_generator.entities.api;
 
 import com.epam.test_generator.entities.Suit;
-import com.epam.test_generator.services.exceptions.BadRequestException;
 import java.util.List;
 
 public interface SuitProjectTrait {
@@ -15,17 +14,12 @@ public interface SuitProjectTrait {
         getSuits().add(suit);
     }
 
-    default Suit hasSuit(Suit suit) {
-        if (getSuits() == null || !getSuits().contains(suit)) {
-            throw new BadRequestException(
-                "Error: project " + getName() + " does not have suit " + suit
-                    .getName());
-        }
-        return suit;
+    default boolean hasSuit(Suit suit) {
+        return getSuits().contains(suit);
     }
 
     default boolean removeSuit(Suit suit){
-        return getSuits().remove(hasSuit(suit));
+        return getSuits().remove(suit);
     }
 
 }

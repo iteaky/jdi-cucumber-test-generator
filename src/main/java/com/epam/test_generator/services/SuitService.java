@@ -70,7 +70,14 @@ public class SuitService {
     public Suit getSuit(long projectId, long suitId) {
         final Project project = projectService.getProjectByProjectId(projectId);
         final Suit suit = checkNotNull(suitDAO.findOne(suitId));
-        return project.hasSuit(suit);
+        if (project.hasSuit(suit)){
+            return suit;
+        }
+        else {
+            throw new BadRequestException(
+                "Error: project " + suit.getName() + " does not have suit " + suit
+                    .getName());
+        }
     }
 
     public SuitDTO getSuitDTO(long projectId, long suitId) {
@@ -223,13 +230,9 @@ public class SuitService {
     }
 
     public List<SuitVersionDTO> getSuitVersions(Long projectId, Long suitId) {
-        final Project project = projectService.getProjectByProjectId(projectId);
+        final Suit suit = getSuit(projectId, suitId);
 
-        final Suit suit = checkNotNull(suitDAO.findOne(suitId));
-
-        project.hasSuit(suit);
-
-        List<SuitVersion> suitVersions = suitVersionDAO.findAll(suitId);
+        List<SuitVersion> suitVersions = suitVersionDAO.findAll(suit.getId());
         return suitVersionTransformer.toDtoList(suitVersions);
     }
 
@@ -241,12 +244,8 @@ public class SuitService {
      * @return {@link SuitDTO} of restored by the commitId case
      */
     public SuitDTO restoreSuit(Long projectId, Long suitId, String commitId) {
-        Project  project= projectService.getProjectByProjectId(projectId);
-
-        Suit suit = checkNotNull(suitDAO.findOne(suitId));
-        project.hasSuit(suit);
-
-        Suit suitToRestore = checkNotNull(suitVersionDAO.findByCommitId(suitId, commitId));
+        Suit suit = getSuit(projectId, suitId);
+        Suit suitToRestore = checkNotNull(suitVersionDAO.findByCommitId(suit.getId(), commitId));
 
         Suit restoredSuit = suitDAO.save(suitToRestore);
         suitVersionDAO.save(suitToRestore);
