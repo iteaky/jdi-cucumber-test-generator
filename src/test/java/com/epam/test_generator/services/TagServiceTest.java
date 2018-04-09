@@ -14,7 +14,6 @@ import com.epam.test_generator.dao.interfaces.CaseVersionDAO;
 import com.epam.test_generator.dao.interfaces.SuitVersionDAO;
 import com.epam.test_generator.dao.interfaces.TagDAO;
 import com.epam.test_generator.dto.CaseDTO;
-import com.epam.test_generator.dto.SuitDTO;
 import com.epam.test_generator.dto.TagDTO;
 import com.epam.test_generator.entities.Case;
 import com.epam.test_generator.entities.Project;

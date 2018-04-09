@@ -22,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.epam.test_generator.dto.CaseDTO;
 import com.epam.test_generator.dto.CaseUpdateDTO;
 import com.epam.test_generator.dto.EditCaseDTO;
-import com.epam.test_generator.dto.SuitDTO;
+import com.epam.test_generator.controllers.suit.response.SuitDTO;
 import com.epam.test_generator.entities.Action;
 import com.epam.test_generator.entities.Event;
 import com.epam.test_generator.entities.Status;

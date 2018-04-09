@@ -15,7 +15,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.epam.test_generator.dto.CaseDTO;
-import com.epam.test_generator.dto.SuitDTO;
+import com.epam.test_generator.controllers.suit.response.SuitDTO;
 import com.epam.test_generator.dto.TagDTO;
 import com.epam.test_generator.services.CaseService;
 import com.epam.test_generator.services.SuitService;

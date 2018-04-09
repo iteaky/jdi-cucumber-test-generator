@@ -1,16 +1,18 @@
 package com.epam.test_generator.transformers;
 
-import com.epam.test_generator.dto.SuitCreateDTO;
-import com.epam.test_generator.dto.SuitDTO;
-import com.epam.test_generator.dto.SuitUpdateDTO;
+import com.epam.test_generator.controllers.suit.request.SuitCreateDTO;
+import com.epam.test_generator.controllers.suit.response.SuitDTO;
+import com.epam.test_generator.controllers.suit.request.SuitUpdateDTO;
 import com.epam.test_generator.dto.TagDTO;
 import com.epam.test_generator.entities.Suit;
+import com.epam.test_generator.entities.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
@@ -21,11 +23,14 @@ public class SuitTransformer {
 
     public Suit fromDto(SuitCreateDTO suitCreateDTO) {
         Suit suit = new Suit();
-        suit.setId(suitCreateDTO.getId());
         suit.setName(suitCreateDTO.getName());
         suit.setDescription(suitCreateDTO.getDescription());
         suit.setPriority(suitCreateDTO.getPriority());
-        suit.setJiraProjectKey(suitCreateDTO.getJiraProjectKey());
+        suit.setCreationDate(suitCreateDTO.getCreationDate());
+        if (suitCreateDTO.getTags() != null) {
+            List<TagDTO> tagDTOs = new ArrayList<>(suitCreateDTO.getTags());
+            suit.setTags(getSetOfTagsFromListOfTagDTOs(tagDTOs));
+        }
         return suit;
     }
 
@@ -35,6 +40,11 @@ public class SuitTransformer {
         suitDTO.setName(suit.getName());
         suitDTO.setDescription(suit.getDescription());
         suitDTO.setPriority(suit.getPriority());
+        suitDTO.setCreationDate(suit.getCreationDate());
+        if (suit.getTags() != null) {
+            List<Tag> tags = new ArrayList<>(suit.getTags());
+            suitDTO.setTags(getSetOfTagDTOsFromListOfTags(tags));
+        }
         return suitDTO;
     }
 
@@ -54,7 +64,15 @@ public class SuitTransformer {
         }
         if (suitUpdateDTO.getTags().size() != 0) {
             List<TagDTO> tagDTOs = new ArrayList<>(suitUpdateDTO.getTags());
-            suit.setTags(new HashSet<>(tagTransformer.fromDtoList(tagDTOs)));
+            suit.setTags(getSetOfTagsFromListOfTagDTOs(tagDTOs));
         }
+    }
+
+    private Set<Tag> getSetOfTagsFromListOfTagDTOs(List<TagDTO> tagDTOList) {
+        return new HashSet<>(tagTransformer.fromDtoList(tagDTOList));
+    }
+
+    private Set<TagDTO> getSetOfTagDTOsFromListOfTags(List<Tag> tagList) {
+        return new HashSet<>(tagTransformer.toDtoList(tagList));
     }
 }

@@ -13,7 +13,7 @@
     </mapping>
     <mapping map-null="false">
         <class-a>com.epam.test_generator.entities.Suit</class-a>
-        <class-b>com.epam.test_generator.dto.SuitDTO</class-b>
+        <class-b>com.epam.test_generator.controllers.suit.response.SuitDTO</class-b>
     </mapping>
     <mapping map-null="false">
         <class-a>com.epam.test_generator.entities.Tag</class-a>

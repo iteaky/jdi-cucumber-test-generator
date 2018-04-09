@@ -1,10 +1,10 @@
-package com.epam.test_generator.controllers;
+package com.epam.test_generator.controllers.suit;
 
 import com.epam.test_generator.dto.CaseDTO;
-import com.epam.test_generator.dto.SuitCreateDTO;
-import com.epam.test_generator.dto.SuitUpdateDTO;
-import com.epam.test_generator.dto.SuitDTO;
+import com.epam.test_generator.controllers.suit.request.SuitCreateDTO;
+import com.epam.test_generator.controllers.suit.response.SuitDTO;
 import com.epam.test_generator.dto.SuitRowNumberUpdateDTO;
+import com.epam.test_generator.controllers.suit.request.SuitUpdateDTO;
 import com.epam.test_generator.dto.ValidationErrorsDTO;
 import com.epam.test_generator.services.IOService;
 import com.epam.test_generator.services.SuitService;
@@ -13,10 +13,6 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
-import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +24,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
+import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Allow work with suits of specified project.
@@ -87,8 +88,8 @@ public class SuitController {
     @ApiImplicitParams({
         @ApiImplicitParam(name = "projectId", value = "ID of project",
             required = true, dataType = "long", paramType = "path"),
-        @ApiImplicitParam(name = "suitDTO", value = "Added suit object",
-            required = true, dataType = "SuitDTO", paramType = "body"),
+        @ApiImplicitParam(name = "suitCreateDTO", value = "Added suit object",
+            required = true, dataType = "SuitCreateDTO", paramType = "body"),
         @ApiImplicitParam(name = "Authorization", value = "add here your token", paramType = "header", dataType = "string", required = true)
     })
     @ResponseStatus(HttpStatus.CREATED)

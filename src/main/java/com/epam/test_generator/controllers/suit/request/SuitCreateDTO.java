@@ -1,24 +1,22 @@
-package com.epam.test_generator.dto;
+package com.epam.test_generator.controllers.suit.request;
 
-import com.epam.test_generator.entities.Status;
+import com.epam.test_generator.dto.TagDTO;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.List;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Set;
 
-/**
- *  This class is needed as the return value in updateSuit method.
- *  It contains two field. The first is {@link SuitDTO} and the second is
- *  {@link List<Long>} (in fact id of {@link StepDTO} with FAILED {@link Status} which belong this
- *  suit or case)
- */
-public class SuitUpdateDTO {
+public class SuitCreateDTO {
 
+    @NotNull
     @Size(min = 1, max = 255)
     private String name;
 
+    @NotNull
     @Min(value = 1)
     @Max(value = 5)
     private Integer priority;
@@ -28,8 +26,15 @@ public class SuitUpdateDTO {
 
     private Set<TagDTO> tags;
 
-    public SuitUpdateDTO() {
+    private Date creationDate;
 
+    public SuitCreateDTO() {
+        creationDate = Calendar.getInstance().getTime();
+    }
+
+    public SuitCreateDTO(String name, String description) {
+        this.name = name;
+        this.description = description;
     }
 
     public Integer getPriority() {
@@ -62,5 +67,22 @@ public class SuitUpdateDTO {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    @Override
+    public String toString() {
+        return "Suit{name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", priority=" + priority +
+                ", tags=" + tags +
+                '}';
     }
 }

@@ -1,7 +1,8 @@
-package com.epam.test_generator.dto;
+package com.epam.test_generator.controllers.suit.response;
 
+import com.epam.test_generator.dto.CaseDTO;
+import com.epam.test_generator.dto.TagDTO;
 import com.epam.test_generator.entities.Status;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -39,14 +40,14 @@ public class SuitDTO {
     @Min(value = 1)
     private Integer rowNumber;
 
-    public SuitDTO() {
-        creationDate = Calendar.getInstance().getTime();
-    }
-
     public SuitDTO(Long id, String name, String description) {
         this.id = id;
         this.name = name;
         this.description = description;
+    }
+
+    public SuitDTO() {
+
     }
 
     public Long getId() {

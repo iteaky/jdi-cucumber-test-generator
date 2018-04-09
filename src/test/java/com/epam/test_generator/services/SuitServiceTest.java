@@ -21,10 +21,10 @@ import com.epam.test_generator.dao.interfaces.SuitDAO;
 import com.epam.test_generator.dao.interfaces.SuitVersionDAO;
 import com.epam.test_generator.dto.CaseDTO;
 import com.epam.test_generator.dto.PropertyDifferenceDTO;
-import com.epam.test_generator.dto.SuitCreateDTO;
-import com.epam.test_generator.dto.SuitDTO;
+import com.epam.test_generator.controllers.suit.request.SuitCreateDTO;
+import com.epam.test_generator.controllers.suit.response.SuitDTO;
 import com.epam.test_generator.dto.SuitRowNumberUpdateDTO;
-import com.epam.test_generator.dto.SuitUpdateDTO;
+import com.epam.test_generator.controllers.suit.request.SuitUpdateDTO;
 import com.epam.test_generator.dto.SuitVersionDTO;
 import com.epam.test_generator.entities.Project;
 import com.epam.test_generator.entities.Suit;
@@ -107,7 +107,7 @@ public class SuitServiceTest {
         expectedSuitDTO = new SuitDTO(SIMPLE_SUIT_ID, "suit1", "desc1");
         expectedSuitDTOList.add(expectedSuitDTO);
 
-        suitCreateDTO = new SuitCreateDTO(SIMPLE_SUIT_ID, "suit1", "desc1");
+        suitCreateDTO = new SuitCreateDTO("suit1", "desc1");
 
         suitUpdateDTO = new SuitUpdateDTO();
         suitUpdateDTO.setName("new suit 1");

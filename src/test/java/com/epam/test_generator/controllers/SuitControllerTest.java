@@ -4,6 +4,7 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -18,9 +19,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.epam.test_generator.dto.SuitCreateDTO;
-import com.epam.test_generator.dto.SuitDTO;
-import com.epam.test_generator.dto.SuitUpdateDTO;
+import com.epam.test_generator.controllers.suit.SuitController;
+import com.epam.test_generator.controllers.suit.request.SuitCreateDTO;
+import com.epam.test_generator.controllers.suit.response.SuitDTO;
+import com.epam.test_generator.controllers.suit.request.SuitUpdateDTO;
 import com.epam.test_generator.entities.Status;
 import com.epam.test_generator.services.SuitService;
 import com.epam.test_generator.services.exceptions.NotFoundException;
@@ -68,13 +70,11 @@ public class SuitControllerTest {
         suitDTO.setStatus(Status.NOT_RUN);
 
         suitCreateDTO = new SuitCreateDTO();
-        suitCreateDTO.setId(TEST_SUIT_ID);
         suitCreateDTO.setName("Suit name");
         suitCreateDTO.setPriority(1);
 
         suitUpdateDTO = new SuitUpdateDTO();
-        suitUpdateDTO.setName("Suit name new");
-        suitUpdateDTO.setPriority(1);
+        suitUpdateDTO.setPriority(5);
     }
 
     @Test
@@ -128,23 +128,23 @@ public class SuitControllerTest {
         verify(suitService).getSuitDTO(eq(SIMPLE_PROJECT_ID), eq(TEST_SUIT_ID));
     }
 
-//    @Test
-//    public void updateSuit_StatusOk() throws Exception {
-//        when(suitService.updateSuit(0L, 1L, suitUpdateDTO))
-//            .thenReturn(suitDTO);
-//
-//        mockMvc.perform(put("/projects/" + SIMPLE_PROJECT_ID + "/suits/" + TEST_SUIT_ID)
-//                .contentType(MediaType.APPLICATION_JSON_UTF8)
-//                .content(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(suitUpdateDTO)))
-//                .andExpect(status().isOk())
-//                .andDo(print())
-//                //.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-//                .andExpect(jsonPath("$.name", is(suitDTO.getName())))
-//                .andExpect(jsonPath("$.priority", is(suitDTO.getPriority())));
-//
-//        verify(suitService).updateSuit(anyLong(), anyLong(), any(SuitUpdateDTO.class));
-//        verifyNoMoreInteractions(suitService);
-//    }
+    @Test
+    public void updateSuit_StatusOk() throws Exception {
+        doReturn(suitDTO).when(suitService)
+                .updateSuit(anyLong(), anyLong(), any(SuitUpdateDTO.class));
+
+        mockMvc.perform(put("/projects/" + SIMPLE_PROJECT_ID + "/suits/" + TEST_SUIT_ID)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(suitUpdateDTO)))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.name", is(suitDTO.getName())))
+                .andExpect(jsonPath("$.priority", is(suitDTO.getPriority())));
+
+        verify(suitService).updateSuit(anyLong(), anyLong(), any(SuitUpdateDTO.class));
+        verifyNoMoreInteractions(suitService);
+    }
 
     @Test
     public void update_SuitWithMoreThanTheRequiredPriority_StatusBadRequest() throws Exception {

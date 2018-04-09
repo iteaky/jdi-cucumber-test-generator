@@ -4,6 +4,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
+import com.epam.test_generator.controllers.suit.response.SuitDTO;
 import com.epam.test_generator.entities.Case;
 import com.epam.test_generator.entities.Step;
 import com.epam.test_generator.entities.StepSuggestion;

@@ -1,6 +1,6 @@
 package com.epam.test_generator.controllers;
 
-import com.epam.test_generator.dto.SuitDTO;
+import com.epam.test_generator.controllers.suit.response.SuitDTO;
 import com.epam.test_generator.dto.SuitVersionDTO;
 import com.epam.test_generator.services.SuitService;
 import io.swagger.annotations.ApiImplicitParam;

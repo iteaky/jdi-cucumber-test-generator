@@ -8,10 +8,10 @@ import com.epam.test_generator.dao.interfaces.RemovedIssueDAO;
 import com.epam.test_generator.dao.interfaces.SuitDAO;
 import com.epam.test_generator.dao.interfaces.SuitVersionDAO;
 import com.epam.test_generator.dto.StepDTO;
-import com.epam.test_generator.dto.SuitCreateDTO;
-import com.epam.test_generator.dto.SuitDTO;
+import com.epam.test_generator.controllers.suit.request.SuitCreateDTO;
+import com.epam.test_generator.controllers.suit.response.SuitDTO;
 import com.epam.test_generator.dto.SuitRowNumberUpdateDTO;
-import com.epam.test_generator.dto.SuitUpdateDTO;
+import com.epam.test_generator.controllers.suit.request.SuitUpdateDTO;
 import com.epam.test_generator.dto.SuitVersionDTO;
 import com.epam.test_generator.entities.Project;
 import com.epam.test_generator.entities.RemovedIssue;
@@ -90,7 +90,6 @@ public class SuitService {
     public SuitDTO addSuit(Long projectId, SuitCreateDTO suitCreateDTO) {
         Project project = projectService.getProjectByProjectId(projectId);
         checkNotNull(project);
-        suitCreateDTO.setJiraProjectKey(project.getJiraKey());
         Suit suit = suitDAO.save(suitTransformer.fromDto(suitCreateDTO));
         suit.setLastModifiedDate(LocalDateTime.now());
 

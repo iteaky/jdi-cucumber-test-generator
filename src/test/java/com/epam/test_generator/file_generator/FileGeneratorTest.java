@@ -3,7 +3,7 @@ package com.epam.test_generator.file_generator;
 
 import com.epam.test_generator.dto.CaseDTO;
 import com.epam.test_generator.dto.StepDTO;
-import com.epam.test_generator.dto.SuitDTO;
+import com.epam.test_generator.controllers.suit.response.SuitDTO;
 import com.epam.test_generator.dto.TagDTO;
 import com.epam.test_generator.entities.StepType;
 import java.io.File;
