@@ -269,7 +269,7 @@ public class CaseService {
 
         return caseVersions
                 .stream()
-                .map(CaseVersionTransformer::toDTO)
+                .map(CaseVersionTransformer::toDto)
                 .collect(Collectors.toList());
     }
 

@@ -4,7 +4,7 @@ import com.epam.test_generator.controllers.case_version.response.PropertyDiffere
 import com.epam.test_generator.pojo.PropertyDifference;
 
 public class PropertyDifferenceTransformer {
-    public static PropertyDifferenceDTO toDTO(PropertyDifference prop) {
+    public static PropertyDifferenceDTO toDto(PropertyDifference prop) {
         return new PropertyDifferenceDTO(
                 prop.getPropertyName(),
                 prop.getOldValue(),
