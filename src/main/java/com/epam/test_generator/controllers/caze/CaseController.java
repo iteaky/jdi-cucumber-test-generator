@@ -133,8 +133,8 @@ public class CaseController {
             required = true, dataType = "long", paramType = "path"),
         @ApiImplicitParam(name = "caseId", value = "ID of case to update",
             required = true, dataType = "long", paramType = "path"),
-        @ApiImplicitParam(name = "EditCaseDTO", value = "Updated case object",
-            required = true, dataType = "EditCaseDTO", paramType = "body"),
+        @ApiImplicitParam(name = "updateCaseDTO", value = "Updated case object",
+            required = true, dataType = "updateCaseDTO", paramType = "body"),
         @ApiImplicitParam(name = "Authorization", value = "add here your token",
             paramType = "header", dataType = "string", required = true)
     })

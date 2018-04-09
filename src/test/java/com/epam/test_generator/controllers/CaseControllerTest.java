@@ -24,6 +24,7 @@ import com.epam.test_generator.controllers.caze.request.CreateCaseDTO;
 import com.epam.test_generator.controllers.caze.request.EditCaseDTO;
 import com.epam.test_generator.controllers.caze.request.UpdateCaseDTO;
 import com.epam.test_generator.controllers.caze.response.CaseDTO;
+import com.epam.test_generator.controllers.caze.response.CaseWithFailedStepsDTO;
 import com.epam.test_generator.dto.SuitDTO;
 import com.epam.test_generator.entities.Action;
 import com.epam.test_generator.entities.Event;
@@ -340,10 +341,12 @@ public class CaseControllerTest {
         verify(casesService).addCaseToSuit(anyLong(), anyLong(), any(CreateCaseDTO.class));
     }
 
-    /*@Test
+    @Test
     public void updateCase_UpdateCase_StatusOk() throws Exception {
         CaseWithFailedStepsDTO expectedDto = new CaseWithFailedStepsDTO(caseDTO, Arrays.asList(1L, 3L, 5L));
-        when(casesService.updateCase(SIMPLE_PROJECT_ID,SIMPLE_SUIT_ID, SIMPLE_CASE_ID, updateCaseDTO)).thenReturn(expectedDto);
+        when(casesService.updateCase(anyLong(), anyLong(), anyLong(), any(UpdateCaseDTO.class))).thenReturn(expectedDto);
+
+//        when(casesService.updateCase(SIMPLE_PROJECT_ID,SIMPLE_SUIT_ID, SIMPLE_CASE_ID, updateCaseDTO)).thenReturn(expectedDto);
         mockMvc.perform(
             put("/projects/" + SIMPLE_PROJECT_ID + "/suits/" + SIMPLE_SUIT_ID + "/cases/"
                 + SIMPLE_CASE_ID)
@@ -356,12 +359,11 @@ public class CaseControllerTest {
             .andExpect(jsonPath("$.updatedCaseDto.status", is(caseDTO.getStatus().toString())))
             .andExpect(jsonPath("$.failedStepIds", is(Arrays.asList(1, 3, 5))));
 
-
         verify(casesService, times(1))
             .updateCase(eq(SIMPLE_PROJECT_ID), eq(SIMPLE_SUIT_ID), eq(SIMPLE_CASE_ID),
                 any(UpdateCaseDTO.class));
         verifyNoMoreInteractions(casesService);
-    }*/
+    }
 
     @Test
     public void updateCase_SuitOrCaseNotExist_NotFound() throws Exception {
