@@ -10,8 +10,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.epam.test_generator.controllers.test_result.TestResultController;
+import com.epam.test_generator.controllers.test_result.response.TestResultDTO;
 import com.epam.test_generator.dto.RawSuitResultDTO;
-import com.epam.test_generator.dto.TestResultDTO;
 import com.epam.test_generator.entities.Status;
 import com.epam.test_generator.services.TestResultService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -199,7 +200,7 @@ public class TestResultControllerTest {
         testResultDTO.setAmountOfPassed(1);
         testResultDTO.setAmountOfSkipped(0);
         testResultDTO.setDate(date);
-        testResultDTO.setDuration(0);
+        testResultDTO.setDuration(0L);
         testResultDTO.setExecutedBy("User Userovich");
         testResultDTO.setStatus(Status.PASSED);
         testResultDTO.setSuits(Collections.emptyList());

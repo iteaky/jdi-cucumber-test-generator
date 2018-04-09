@@ -1,14 +1,14 @@
 package com.epam.test_generator.services;
 
 import com.epam.test_generator.config.security.AuthenticatedUser;
+import com.epam.test_generator.controllers.test_result.TestResultTransformer;
 import com.epam.test_generator.dao.interfaces.TestResultDAO;
 import com.epam.test_generator.dto.RawSuitResultDTO;
-import com.epam.test_generator.dto.TestResultDTO;
+import com.epam.test_generator.controllers.test_result.response.TestResultDTO;
 import com.epam.test_generator.entities.Project;
 import com.epam.test_generator.entities.TestResult;
 import com.epam.test_generator.entities.factory.TestResultFactory;
 import com.epam.test_generator.services.exceptions.BadRequestException;
-import com.epam.test_generator.transformers.TestResultTransformer;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,9 +27,6 @@ public class TestResultService {
     @Autowired
     private TestResultDAO testResultDAO;
 
-    @Autowired
-    private TestResultTransformer testResultTransformer;
-
     /**
      * Get all test results by projectId.
      *
@@ -38,7 +35,7 @@ public class TestResultService {
      */
     public List<TestResultDTO> getTestResults(long projectId) {
         return testResultDAO.findAllByProjectIdOrderByDateDesc(projectId).stream()
-            .map(testResultTransformer::toDto)
+            .map(TestResultTransformer::toDto)
             .collect(Collectors.toList());
     }
 
@@ -55,7 +52,7 @@ public class TestResultService {
         return testResultDAO.findAllByProjectIdOrderByDateDesc(projectId).stream()
             .skip(offset)
             .limit(limit)
-            .map(testResultTransformer::toDto)
+            .map(TestResultTransformer::toDto)
             .collect(Collectors.toList());
     }
 
@@ -73,7 +70,7 @@ public class TestResultService {
         }
         return testResultDAO.findAllByProjectIdAndDateAfterAndDateBefore(projectId, from, to)
             .stream()
-            .map(testResultTransformer::toDto)
+            .map(TestResultTransformer::toDto)
             .collect(Collectors.toList());
     }
 

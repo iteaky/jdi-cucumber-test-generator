@@ -51,7 +51,7 @@ public class TestResult {
         this.date = date;
     }
 
-    public long getDuration() {
+    public Long getDuration() {
         return duration;
     }
 

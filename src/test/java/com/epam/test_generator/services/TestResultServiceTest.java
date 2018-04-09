@@ -9,12 +9,12 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.epam.test_generator.config.security.AuthenticatedUser;
+import com.epam.test_generator.controllers.test_result.response.TestResultDTO;
 import com.epam.test_generator.dao.interfaces.TestResultDAO;
 import com.epam.test_generator.dto.RawCaseResultDTO;
 import com.epam.test_generator.dto.RawStepResultDTO;
 import com.epam.test_generator.dto.RawSuitResultDTO;
 import com.epam.test_generator.dto.StepDTO;
-import com.epam.test_generator.dto.TestResultDTO;
 import com.epam.test_generator.entities.Case;
 import com.epam.test_generator.entities.Project;
 import com.epam.test_generator.entities.Status;
@@ -22,7 +22,6 @@ import com.epam.test_generator.entities.Suit;
 import com.epam.test_generator.entities.TestResult;
 import com.epam.test_generator.entities.factory.TestResultFactory;
 import com.epam.test_generator.services.exceptions.BadRequestException;
-import com.epam.test_generator.transformers.TestResultTransformer;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -51,9 +50,6 @@ public class TestResultServiceTest {
 
     @Mock
     private TestResultDAO testResultDAO;
-
-    @Mock
-    private TestResultTransformer testResultTransformer;
 
     @Mock
     private Authentication authentication;
@@ -115,7 +111,7 @@ public class TestResultServiceTest {
         testResultDTO.setAmountOfPassed(1);
         testResultDTO.setStatus(Status.PASSED);
         testResultDTO.setExecutedBy(EXECUTED_BY);
-        testResultDTO.setDuration(0);
+        testResultDTO.setDuration(0L);
         testResultDTO.setSuits(Collections.emptyList());
 
     }

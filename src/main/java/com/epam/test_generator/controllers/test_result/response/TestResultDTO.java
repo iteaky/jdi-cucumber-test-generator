@@ -1,5 +1,6 @@
-package com.epam.test_generator.dto;
+package com.epam.test_generator.controllers.test_result.response;
 
+import com.epam.test_generator.dto.SuitResultDTO;
 import com.epam.test_generator.entities.Status;
 import java.util.Date;
 import java.util.List;
@@ -8,7 +9,7 @@ public class TestResultDTO {
 
     private Date date;
 
-    private long duration;
+    private Long duration;
 
     private Status status;
 
@@ -33,11 +34,11 @@ public class TestResultDTO {
         this.date = date;
     }
 
-    public long getDuration() {
+    public Long getDuration() {
         return duration;
     }
 
-    public void setDuration(long duration) {
+    public void setDuration(Long duration) {
         this.duration = duration;
     }
 
