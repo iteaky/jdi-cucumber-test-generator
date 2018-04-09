@@ -193,7 +193,9 @@ public class CaseService {
     }
 
     /**
-     * Updates all cases to specified in list of updateCaseDTOs
+     * Updates all cases to specified in list of updateCaseDTOs.
+     * Method is deprecated and better use separate methods (updateCase, removeCases and addCaseToSuit) for creating
+     * updating and deleting a case.
      * @param projectId id of project where to update cases
      * @param suitId id of suit where to update cases
      * @param editCaseDTOS list of cases to update
