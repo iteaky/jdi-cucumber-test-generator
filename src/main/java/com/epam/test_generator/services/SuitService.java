@@ -148,7 +148,7 @@ public class SuitService {
     public SuitDTO removeSuit(long projectId, long suitId) {
         final Suit suit = getSuit(projectId, suitId);
 
-        if (suit.isNotRemoved()) {
+        if (suit.isFromJira()) {
             removedIssueDAO.save(new RemovedIssue(suit.getJiraKey()));
         }
 

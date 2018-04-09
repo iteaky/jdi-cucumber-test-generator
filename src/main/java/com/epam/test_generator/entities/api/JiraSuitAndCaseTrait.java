@@ -6,8 +6,8 @@ public interface JiraSuitAndCaseTrait {
 
     String getJiraKey();
 
-    default boolean isNotRemoved() {
-        return !Objects.isNull(getJiraKey());
+    default boolean isFromJira() {
+        return Objects.nonNull(getJiraKey());
     }
 
 }

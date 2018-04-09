@@ -244,7 +244,7 @@ public class CaseService {
     }
 
     private void saveIssueToDeleteInJira(Case caze) {
-        if (caze.isNotRemoved()) {
+        if (caze.isFromJira()) {
             removedIssueDAO.save(new RemovedIssue(caze.getJiraKey()));
         }
     }
