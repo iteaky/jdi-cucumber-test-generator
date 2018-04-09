@@ -118,15 +118,11 @@ public class ProjectTransformerTest {
     public void updateFromDto_ProjectUpdateDTO_Project_Success() {
         when(suitTransformer.fromDto(any(SuitDTO.class))).thenReturn(suit);
 
-        Project expectedProject = new Project();
-        expectedProject.setName(NAME);
-        expectedProject.setDescription(DESCRIPTION);
-        expectedProject.setJiraKey(JIRA_KEY);
-        expectedProject.setActive(true);
-        expectedProject.setUsers(Collections.emptySet());
-        expectedProject.setSuits(Collections.singletonList(suit));
+        Project expectedProject = project;
+        project.setSuits(Collections.singletonList(suit));
 
         Project updateProject = new Project();
+        updateProject.setId(ID);
 
         ProjectUpdateDTO projectDTO = new ProjectUpdateDTO();
         projectDTO.setName(NAME);
