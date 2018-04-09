@@ -142,7 +142,6 @@ public class StepServiceTest {
         StepDTO actualStep = stepService.getStep(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID, SIMPLE_CASE_ID, SIMPLE_STEP_ID);
         assertEquals(expectedStep, actualStep);
 
-        verify(suitService).getSuit(eq(SIMPLE_PROJECT_ID), eq(SIMPLE_SUIT_ID));
         verify(caseService).getCase(eq(SIMPLE_PROJECT_ID), eq(SIMPLE_SUIT_ID),eq(SIMPLE_CASE_ID));
         verify(stepDAO).findOne(eq(SIMPLE_STEP_ID));
         verify(stepTransformer).toDto(any(Step.class));

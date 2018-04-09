@@ -67,14 +67,13 @@ public class StepService {
      * @return StepDTO of specified step
      */
     public StepDTO getStep(Long projectId, Long suitId, Long caseId, Long stepId) {
-        final Suit suit = checkNotNull(suitService.getSuit(projectId, suitId));
-        final Case caze = checkNotNull(caseService.getCase(projectId, suitId, caseId));
-
-        suit.hasCase(caze);
-
+        final Case caze = caseService.getCase(projectId, suitId, caseId);
         final Step step = checkNotNull(stepDAO.findOne(stepId));
-
-        return stepTransformer.toDto(caze.hasStep(step));
+        if (caze.hasStep(step)) {
+            return stepTransformer.toDto(step);
+        } else {
+            throw new BadRequestException();
+        }
     }
 
     /**
@@ -88,8 +87,6 @@ public class StepService {
     public Long addStepToCase(Long projectId, Long suitId, Long caseId, StepDTO stepDTO) {
         final Suit suit = suitService.getSuit(projectId, suitId);
         final Case caze = caseService.getCase(projectId, suitId, caseId);
-
-        suit.hasCase(caze);
 
         Step step = stepTransformer.fromDto(stepDTO);
 
@@ -114,17 +111,18 @@ public class StepService {
         final Suit suit = suitService.getSuit(projectId, suitId);
         final Case caze = caseService.getCase(projectId, suitId, caseId);
 
-        suit.hasCase(caze);
-
         final Step step = checkNotNull(stepDAO.findOne(stepId));
 
-        caze.hasStep(step);
+        if (caze.hasStep(step)) {
+            stepTransformer.mapDTOToEntity(stepDTO, step);
+            stepDAO.save(step);
 
-        stepTransformer.mapDTOToEntity(stepDTO, step);
-        stepDAO.save(step);
+            caseVersionDAO.save(caze);
+            suitVersionDAO.save(suit);
+        } else {
+            throw new BadRequestException();
+        }
 
-        caseVersionDAO.save(caze);
-        suitVersionDAO.save(suit);
     }
 
     /**
@@ -135,20 +133,22 @@ public class StepService {
      * @param stepId id of step to delete
      */
     public void removeStep(Long projectId, Long suitId, Long caseId, Long stepId) {
-        final Suit suit = checkNotNull(suitService.getSuit(projectId, suitId));
-        final Case caze = checkNotNull(caseService.getCase(projectId, suitId, caseId));
-
-        suit.hasCase(caze);
+        final Suit suit = suitService.getSuit(projectId, suitId);
+        final Case caze = caseService.getCase(projectId, suitId, caseId);
 
         final Step step = checkNotNull(stepDAO.findOne(stepId));
 
-        caze.hasStep(step);
+        if (caze.hasStep(step)) {
+            caze.removeStep(step);
+            stepDAO.delete(stepId);
 
-        caze.removeStep(step);
-        stepDAO.delete(stepId);
+            caseVersionDAO.save(caze);
+            suitVersionDAO.save(suit);
+        }
+        else {
+            throw new BadRequestException();
+        }
 
-        caseVersionDAO.save(caze);
-        suitVersionDAO.save(suit);
     }
 
     /**
