@@ -134,4 +134,11 @@ public class UpdateCaseDTO {
         return result;
     }
 
+    @Override
+    public String toString() {
+        return String.format(
+                "EditCaseDTO{ name= %s, description= %s, priority= %s, tags= %s, status= %s, comment= %s};",
+                name, description, priority, tags, status, comment);
+    }
+
 }

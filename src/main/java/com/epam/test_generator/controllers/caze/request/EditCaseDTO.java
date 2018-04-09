@@ -117,6 +117,22 @@ public class EditCaseDTO {
         this.tags = tags;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public List<StepDTO> getSteps() {
+        return steps;
+    }
+
+    public void setSteps(List<StepDTO> steps) {
+        this.steps = steps;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -153,19 +169,11 @@ public class EditCaseDTO {
         return result;
     }
 
-    public String getName() {
-        return name;
+    @Override
+    public String toString() {
+        return String.format(
+                "EditCaseDTO{ id= %s, name= %s, description= %s, priority= %s, tags= %s, status= %s, comment= %s, action =%s};",
+                id, name, description, priority, tags, status, comment, action);
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public List<StepDTO> getSteps() {
-        return steps;
-    }
-
-    public void setSteps(List<StepDTO> steps) {
-        this.steps = steps;
-    }
 }
