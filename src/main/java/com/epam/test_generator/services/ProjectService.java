@@ -8,6 +8,7 @@ import com.epam.test_generator.dto.ProjectDTO;
 import com.epam.test_generator.dto.ProjectFullDTO;
 import com.epam.test_generator.entities.Project;
 import com.epam.test_generator.entities.User;
+import com.epam.test_generator.services.exceptions.BadRequestException;
 import com.epam.test_generator.transformers.ProjectFullTransformer;
 import com.epam.test_generator.transformers.ProjectTransformer;
 import java.util.List;
@@ -64,8 +65,13 @@ public class ProjectService {
         final AuthenticatedUser userDetails = (AuthenticatedUser) authentication.getPrincipal();
         final User user = userService.getUserByEmail(userDetails.getEmail());
         final Project project = getProjectByProjectId(projectId);
-        project.hasUser(user);
-        return projectFullTransformer.toDto(project);
+        if (project.hasUser(user)){
+            return projectFullTransformer.toDto(project);
+        }
+        else {
+            throw new BadRequestException(
+                "Error: user does not access to project " + project.getName());
+        }
     }
 
     /**
@@ -141,9 +147,15 @@ public class ProjectService {
         final Project project = checkNotNull(projectDAO.findOne(projectId));
         project.checkIsActive();
         final User user = userService.getUserById(userId);
+        if (project.hasUser(user)){
+            project.unsubscribeUser(user);
+            projectDAO.save(project);
+        }
+        else {
+            throw new BadRequestException(
+                "Error: user does not access to project " + project.getName());
+        }
 
-        project.unsubscribeUser(user);
-        projectDAO.save(project);
     }
 
     /**
