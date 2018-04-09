@@ -4,13 +4,11 @@ import com.epam.test_generator.controllers.project.request.ProjectCreateDTO;
 import com.epam.test_generator.controllers.project.request.ProjectUpdateDTO;
 import com.epam.test_generator.controllers.project.response.ProjectDTO;
 import com.epam.test_generator.controllers.project.response.ProjectFullDTO;
+import com.epam.test_generator.controllers.user.UserDTOsTransformer;
+import com.epam.test_generator.controllers.user.response.UserDTO;
 import com.epam.test_generator.dto.SuitDTO;
-import com.epam.test_generator.dto.UserDTO;
 import com.epam.test_generator.entities.Project;
-import com.epam.test_generator.entities.Suit;
-import com.epam.test_generator.entities.User;
 import com.epam.test_generator.transformers.SuitTransformer;
-import com.epam.test_generator.transformers.UserTransformer;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -20,9 +18,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class ProjectTransformer {
 
-    // should be deleted after merging!
     @Autowired
-    private UserTransformer userTransformer;
+    private UserDTOsTransformer userTransformer;
 
     @Autowired
     private SuitTransformer suitTransformer;
@@ -41,10 +38,9 @@ public class ProjectTransformer {
         projectDTO.setDescription(project.getDescription());
         projectDTO.setJiraKey(project.getJiraKey());
         projectDTO.setActive(project.isActive());
-        // should be changed on our user
         if (project.getUsers() != null) {
             Set<UserDTO> outputUsers = project.getUsers().stream()
-                .map(userTransformer::toDto).collect(Collectors.toSet());
+                .map(userTransformer::toUserDTO).collect(Collectors.toSet());
             projectDTO.setUsers(outputUsers);
         }
         return projectDTO;
@@ -57,12 +53,12 @@ public class ProjectTransformer {
         projectFullDTO.setDescription(project.getDescription());
         projectFullDTO.setJiraKey(project.getJiraKey());
 
-        // should be changed on our userTransformer and suitTransformer
         if (project.getUsers() != null) {
             Set<UserDTO> outputUsers = project.getUsers().stream()
-                .map(userTransformer::toDto).collect(Collectors.toSet());
+                .map(userTransformer::toUserDTO).collect(Collectors.toSet());
             projectFullDTO.setUsers(outputUsers);
         }
+        // should be changed on our suitTransformer
         if (project.getSuits() != null) {
             List<SuitDTO> outputSuits = project.getSuits().stream()
                 .map(suitTransformer::toDto).collect(Collectors.toList());
@@ -84,17 +80,6 @@ public class ProjectTransformer {
         }
         if (projectUpdateDTO.isActive() != null) {
             project.setActive(projectUpdateDTO.isActive());
-        }
-        // change on our transformers
-        if (projectUpdateDTO.getUsers() != null) {
-            Set<User> inputUsers = projectUpdateDTO.getUsers().stream()
-                .map(userTransformer::fromDto).collect(Collectors.toSet());
-            project.setUsers(inputUsers);
-        }
-        if (projectUpdateDTO.getSuits() != null) {
-            List<Suit> outputSuits = projectUpdateDTO.getSuits().stream()
-                .map(suitTransformer::fromDto).collect(Collectors.toList());
-            project.setSuits(outputSuits);
         }
         return project;
     }

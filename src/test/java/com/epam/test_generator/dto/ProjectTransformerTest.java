@@ -8,11 +8,11 @@ import com.epam.test_generator.controllers.project.request.ProjectCreateDTO;
 import com.epam.test_generator.controllers.project.request.ProjectUpdateDTO;
 import com.epam.test_generator.controllers.project.response.ProjectDTO;
 import com.epam.test_generator.controllers.project.response.ProjectFullDTO;
+import com.epam.test_generator.controllers.user.UserDTOsTransformer;
 import com.epam.test_generator.entities.Project;
 import com.epam.test_generator.entities.Status;
 import com.epam.test_generator.entities.Suit;
 import com.epam.test_generator.transformers.SuitTransformer;
-import com.epam.test_generator.transformers.UserTransformer;
 import java.util.Collections;
 import org.junit.Assert;
 import org.junit.Before;
@@ -26,7 +26,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 public class ProjectTransformerTest {
 
     @Mock
-    private UserTransformer userTransformer;
+    private UserDTOsTransformer userTransformer;
 
     @Mock
     private SuitTransformer suitTransformer;
@@ -119,7 +119,6 @@ public class ProjectTransformerTest {
         when(suitTransformer.fromDto(any(SuitDTO.class))).thenReturn(suit);
 
         Project expectedProject = project;
-        project.setSuits(Collections.singletonList(suit));
 
         Project updateProject = new Project();
         updateProject.setId(ID);
@@ -129,8 +128,6 @@ public class ProjectTransformerTest {
         projectDTO.setDescription(DESCRIPTION);
         projectDTO.setJiraKey(JIRA_KEY);
         projectDTO.setActive(true);
-        projectDTO.setUsers(Collections.emptySet());
-        projectDTO.setSuits(Collections.singletonList(suitDTO));
 
         Project resultProject = projectTransformer.updateFromDto(projectDTO, updateProject);
         Assert.assertEquals(expectedProject, resultProject);
