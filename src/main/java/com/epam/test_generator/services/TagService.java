@@ -126,7 +126,7 @@ public class TagService {
 
         tagBelongsToCase(tag, caze);
 
-        tagTransformer.updateFromDto(tagDTO, tag);
+        tag = tagTransformer.updateFromDto(tagDTO, tag);
 
         tagDAO.save(tag);
 

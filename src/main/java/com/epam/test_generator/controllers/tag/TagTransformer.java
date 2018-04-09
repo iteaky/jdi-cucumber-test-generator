@@ -38,8 +38,8 @@ public class TagTransformer {
         return tags.stream().map(this::toDto).collect(Collectors.toList());
     }
 
-    public List<Tag> fromListDto(List<TagDTO> tagUpdateDTOS) {
-        return tagUpdateDTOS.stream().map(this::fromDto).collect(Collectors.toList());
+    public List<Tag> fromListDto(List<TagDTO> tagDTOS) {
+        return tagDTOS.stream().map(this::fromDto).collect(Collectors.toList());
     }
 
     public Tag updateFromDto(TagUpdateDTO updateDTO, Tag tag) {
