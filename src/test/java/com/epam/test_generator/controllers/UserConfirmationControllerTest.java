@@ -1,5 +1,6 @@
 package com.epam.test_generator.controllers;
 
+import com.epam.test_generator.controllers.user.UserConfirmationController;
 import com.epam.test_generator.services.UserService;
 import org.junit.Before;
 import org.junit.Test;

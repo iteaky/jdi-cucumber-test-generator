@@ -1,9 +1,9 @@
 package com.epam.test_generator.controllers;
 
+import com.epam.test_generator.controllers.user.response.UserDTO;
 import com.epam.test_generator.dto.ChangeUserRoleDTO;
 import com.epam.test_generator.dto.JiraSettingsDTO;
 import com.epam.test_generator.controllers.project.response.ProjectDTO;
-import com.epam.test_generator.dto.UserDTO;
 import com.epam.test_generator.entities.JiraSettings;
 import com.epam.test_generator.services.AdminService;
 import com.epam.test_generator.services.JiraSettingsService;

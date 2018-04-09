@@ -1,6 +1,6 @@
-package com.epam.test_generator.controllers;
+package com.epam.test_generator.controllers.user;
 
-import com.epam.test_generator.dto.PasswordResetDTO;
+import com.epam.test_generator.controllers.user.request.PasswordResetDTO;
 import com.epam.test_generator.services.PasswordService;
 import com.epam.test_generator.services.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;

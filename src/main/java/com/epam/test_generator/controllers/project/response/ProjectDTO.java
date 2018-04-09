@@ -1,6 +1,6 @@
 package com.epam.test_generator.controllers.project.response;
 
-import com.epam.test_generator.dto.UserDTO;
+import com.epam.test_generator.controllers.user.response.UserDTO;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Objects;
