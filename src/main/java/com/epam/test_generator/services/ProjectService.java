@@ -9,6 +9,7 @@ import com.epam.test_generator.dto.ProjectFullDTO;
 import com.epam.test_generator.entities.Project;
 import com.epam.test_generator.entities.User;
 import com.epam.test_generator.services.exceptions.BadRequestException;
+import com.epam.test_generator.services.exceptions.ProjectClosedException;
 import com.epam.test_generator.transformers.ProjectFullTransformer;
 import com.epam.test_generator.transformers.ProjectTransformer;
 import java.util.List;
@@ -65,13 +66,11 @@ public class ProjectService {
         final AuthenticatedUser userDetails = (AuthenticatedUser) authentication.getPrincipal();
         final User user = userService.getUserByEmail(userDetails.getEmail());
         final Project project = getProjectByProjectId(projectId);
-        if (project.hasUser(user)){
-            return projectFullTransformer.toDto(project);
-        }
-        else {
-            throw new BadRequestException(
-                "Error: user does not access to project " + project.getName());
-        }
+
+        throwExceptionIfUserIsNotOnProject(project, user);
+
+        return projectFullTransformer.toDto(project);
+
     }
 
     /**
@@ -109,7 +108,8 @@ public class ProjectService {
      */
     public void updateProject(Long projectId, ProjectDTO projectDTO) {
         final Project project = checkNotNull(projectDAO.findOne(projectId));
-        project.checkIsActive();
+
+        throwExceptionIfProjectIsNotActive(project);
 
         projectTransformer.mapDTOToEntity(projectDTO, project);
         project.setId(projectId);
@@ -131,9 +131,10 @@ public class ProjectService {
      */
     public void addUserToProject(long projectId, long userId) {
         final Project project = checkNotNull(projectDAO.findOne(projectId));
-        project.checkIsActive();
-        final User user = userService.getUserById(userId);
 
+        throwExceptionIfProjectIsNotActive(project);
+
+        final User user = userService.getUserById(userId);
         project.addUser(user);
         projectDAO.save(project);
     }
@@ -145,17 +146,15 @@ public class ProjectService {
      */
     public void removeUserFromProject(long projectId, long userId) {
         final Project project = checkNotNull(projectDAO.findOne(projectId));
-        project.checkIsActive();
-        final User user = userService.getUserById(userId);
-        if (project.hasUser(user)){
-            project.unsubscribeUser(user);
-            projectDAO.save(project);
-        }
-        else {
-            throw new BadRequestException(
-                "Error: user does not access to project " + project.getName());
-        }
 
+        throwExceptionIfProjectIsNotActive(project);
+
+        final User user = userService.getUserById(userId);
+
+        throwExceptionIfUserIsNotOnProject(project, user);
+
+        project.removeUser(user);
+        projectDAO.save(project);
     }
 
     /**
@@ -164,8 +163,26 @@ public class ProjectService {
      */
     public void closeProject(long projectId) {
         final Project project = checkNotNull(projectDAO.findOne(projectId));
-        project.checkIsActive();
+
+        throwExceptionIfProjectIsNotActive(project);
+
         project.close();
         projectDAO.save(project);
+    }
+
+
+    private void throwExceptionIfProjectIsNotActive(Project project) {
+        if (!project.isActive()) {
+            throw new ProjectClosedException(
+                "project with id=" + project.getId() + " is closed (readonly)",
+                project.getId());
+        }
+    }
+
+    private void throwExceptionIfUserIsNotOnProject(Project project, User user) {
+        if (!project.hasUser(user)) {
+            throw new BadRequestException(
+                "Error: user does not access to project " + project.getName());
+        }
     }
 }

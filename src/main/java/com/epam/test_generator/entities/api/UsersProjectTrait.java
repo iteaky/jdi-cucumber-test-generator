@@ -14,7 +14,7 @@ public interface UsersProjectTrait {
         return getUsers().contains(user);
     }
 
-    default boolean unsubscribeUser(User user) {
+    default boolean removeUser(User user) {
         return getUsers().remove(user);
     }
 
