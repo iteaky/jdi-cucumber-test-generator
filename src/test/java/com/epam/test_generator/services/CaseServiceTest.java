@@ -114,9 +114,6 @@ public class CaseServiceTest {
     private StateMachineAdapter stateMachineAdapter;
 
     @Mock
-    private CascadeUpdateService cascadeUpdateService;
-
-    @Mock
     private StateMachine<Status, Event> stateMachine;
 
     @Before
@@ -244,7 +241,6 @@ public class CaseServiceTest {
     public void update_Case_Success(){
         when(suitService.getSuit(anyLong(), anyLong())).thenReturn(suit);
         when(caseDAO.findOne(anyLong())).thenReturn(caze);
-        when(cascadeUpdateService.cascadeCaseStepsUpdate(SIMPLE_PROJECT_ID , SIMPLE_SUIT_ID, SIMPLE_CASE_ID, updateCaseDTO)).thenReturn(anyList());
         when(caseDAO.save(caze)).thenReturn(caze);
         when(caseDTOsTransformer.toDto(caze)).thenReturn(expectedCaseDTO);
 
@@ -259,7 +255,6 @@ public class CaseServiceTest {
         assertEquals(actualUpdatedCaseDTOwithFailedStepIds, expectedUpdatedCaseDTOwithFailedStepIds);
         verify(suitService).getSuit(eq(SIMPLE_PROJECT_ID) , eq(SIMPLE_SUIT_ID));
         verify(caseDAO).findOne(eq(SIMPLE_CASE_ID));
-        verify(cascadeUpdateService).cascadeCaseStepsUpdate(SIMPLE_PROJECT_ID,SIMPLE_SUIT_ID,SIMPLE_CASE_ID, updateCaseDTO);
         verify(caseDAO).save(eq(caze));
         verify(caseDTOsTransformer).toDto(eq(caze));
         verify(caseVersionDAO).save(eq(caze));
