@@ -1,6 +1,6 @@
-package com.epam.test_generator.controllers;
+package com.epam.test_generator.controllers.user;
 
-import com.epam.test_generator.dto.EmailDTO;
+import com.epam.test_generator.controllers.user.request.RegistrationUserDTO;
 import com.epam.test_generator.entities.User;
 import com.epam.test_generator.services.EmailService;
 import com.epam.test_generator.services.UserService;
@@ -13,12 +13,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 /**
- * Sends reset password message to user email.
+ * Controls user registration process.
  */
 @RestController
-public class PasswordForgotController {
+public class UserController {
 
     @Autowired
     private UserService userService;
@@ -26,14 +27,12 @@ public class PasswordForgotController {
     @Autowired
     private EmailService emailService;
 
-    @RequestMapping(value = "/passwordForgot", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
-    public ResponseEntity passwordForgot(@RequestBody EmailDTO email,
-                                         HttpServletRequest request) throws Exception {
+    @RequestMapping(value = "/registration", method = RequestMethod.POST)
+    public ResponseEntity registerUserAccount(@RequestBody @Valid RegistrationUserDTO userDTO, HttpServletRequest request) {
 
-        User user = userService.getUserByEmail(email.getEmail());
-        userService.checkUserExist(user);
-        emailService.sendResetPasswordMessage(user, request);
-
+        User user = userService.createUser(userDTO);
+        emailService.sendRegistrationMessage(user, request);
         return new ResponseEntity(HttpStatus.OK);
     }
+
 }

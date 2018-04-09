@@ -1,6 +1,7 @@
 package com.epam.test_generator.controllers;
 
-import com.epam.test_generator.dto.EmailDTO;
+import com.epam.test_generator.controllers.user.PasswordForgotController;
+import com.epam.test_generator.controllers.user.request.EmailDTO;
 import com.epam.test_generator.entities.User;
 import com.epam.test_generator.services.EmailService;
 import com.epam.test_generator.services.UserService;

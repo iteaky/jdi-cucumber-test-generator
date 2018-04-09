@@ -1,7 +1,8 @@
 package com.epam.test_generator.controllers;
 
+import com.epam.test_generator.controllers.user.PasswordResetController;
 import com.epam.test_generator.dao.interfaces.TokenDAO;
-import com.epam.test_generator.dto.PasswordResetDTO;
+import com.epam.test_generator.controllers.user.request.PasswordResetDTO;
 import com.epam.test_generator.services.PasswordService;
 import com.epam.test_generator.services.TokenService;
 import org.codehaus.jackson.map.ObjectMapper;
