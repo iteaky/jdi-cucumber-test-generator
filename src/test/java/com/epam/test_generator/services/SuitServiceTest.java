@@ -70,9 +70,6 @@ public class SuitServiceTest {
     private ProjectService projectService;
 
     @Mock
-    private CascadeUpdateService cascadeUpdateService;
-
-    @Mock
     private SuitVersionTransformer suitVersionTransformer;
 
     @Mock
@@ -198,9 +195,6 @@ public class SuitServiceTest {
 
     @Test
     public void update_Suit_Success() throws MethodArgumentNotValidException {
-        when(cascadeUpdateService
-            .cascadeSuitCasesUpdate(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID, expectedSuitDTO))
-            .thenReturn(anyList());
         when(projectService.getProjectByProjectId(SIMPLE_PROJECT_ID)).thenReturn(expectedProject);
         when(suitDAO.findOne(anyLong())).thenReturn(expectedSuit);
         when(suitDAO.save(expectedSuit)).thenReturn(expectedSuit);
@@ -213,8 +207,6 @@ public class SuitServiceTest {
 
         assertEquals(expectedUpdatedSuitDTOwithFailedStepIds,
             actualUpdatedSuitDTOwithFailedStepIds);
-        verify(cascadeUpdateService)
-            .cascadeSuitCasesUpdate(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID, expectedSuitDTO);
         verify(projectService).getProjectByProjectId(eq(SIMPLE_PROJECT_ID));
         verify(suitDAO).findOne(eq(SIMPLE_SUIT_ID));
         verify(suitDAO).save(eq(expectedSuit));
@@ -224,9 +216,6 @@ public class SuitServiceTest {
 
     @Test(expected = NotFoundException.class)
     public void update_Suit_NotFoundException() throws MethodArgumentNotValidException {
-        when(cascadeUpdateService
-            .cascadeSuitCasesUpdate(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID, expectedSuitDTO))
-            .thenReturn(null);
         when(suitDAO.findOne(anyLong())).thenReturn(null);
 
         suitService.updateSuit(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID, new SuitDTO());
@@ -235,9 +224,6 @@ public class SuitServiceTest {
     @Test(expected = NotFoundException.class)
     public void updateSuitInProject_InvalidProjectId_NotFound()
         throws MethodArgumentNotValidException {
-        when(cascadeUpdateService
-            .cascadeSuitCasesUpdate(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID, expectedSuitDTO))
-            .thenReturn(null);
         when(projectService.getProjectByProjectId(SIMPLE_PROJECT_ID)).thenReturn(expectedProject);
         when(suitTransformer.fromDto(any())).thenReturn(expectedSuit);
         when(suitDAO.findOne(anyLong())).thenReturn(expectedSuit);

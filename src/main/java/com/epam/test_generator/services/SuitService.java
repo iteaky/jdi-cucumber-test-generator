@@ -21,6 +21,7 @@ import com.epam.test_generator.services.exceptions.BadRequestException;
 import com.epam.test_generator.transformers.SuitTransformer;
 import com.epam.test_generator.transformers.SuitVersionTransformer;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -46,9 +47,6 @@ public class SuitService {
 
     @Autowired
     private CaseVersionDAO caseVersionDAO;
-
-    @Autowired
-    private CascadeUpdateService cascadeUpdateService;
 
     @Autowired
     private RemovedIssueDAO removedIssueDAO;
@@ -128,8 +126,8 @@ public class SuitService {
      */
     public SuitUpdateDTO updateSuit(long projectId, long suitId, SuitDTO suitDTO)
         throws MethodArgumentNotValidException {
-        final List<Long> failedStepIds = cascadeUpdateService
-            .cascadeSuitCasesUpdate(projectId, suitId, suitDTO);
+//        TODO: remove this list SuitUpdateDTO
+        final List<Long> failedStepIds = Collections.emptyList();
         Suit suit = getSuit(projectId, suitId);
         final SuitDTO simpleSuitDTO = getSimpleSuitDTO(suitDTO);
 

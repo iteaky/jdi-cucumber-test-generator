@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Represents specific version of a {@link Case}. Note, that case_version object has list of {@link
+ * Represents specific version of a {@link Case}. Note, that CaseVersion object has list of {@link
  * PropertyDifference} objects, which stores information only about properties that have been
  * updated.
  */

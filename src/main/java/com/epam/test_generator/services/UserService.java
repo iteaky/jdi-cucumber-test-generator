@@ -1,13 +1,14 @@
 package com.epam.test_generator.services;
 
+import com.epam.test_generator.controllers.user.UserDTOsTransformer;
+import com.epam.test_generator.controllers.user.request.RegistrationUserDTO;
+import com.epam.test_generator.controllers.user.response.UserDTO;
 import com.epam.test_generator.dao.interfaces.TokenDAO;
 import com.epam.test_generator.dao.interfaces.UserDAO;
-import com.epam.test_generator.dto.RegistrationUserDTO;
-import com.epam.test_generator.dto.UserDTO;
 import com.epam.test_generator.entities.Token;
 import com.epam.test_generator.entities.User;
 import com.epam.test_generator.services.exceptions.UnauthorizedException;
-import com.epam.test_generator.transformers.UserTransformer;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -31,13 +32,14 @@ public class UserService {
     private PasswordEncoder encoder;
 
     @Autowired
+    private UserDTOsTransformer userDTOsTransformer;
+
+    @Autowired
     private UserDAO userDAO;
 
     @Autowired
     private TokenService tokenService;
 
-    @Autowired
-    private UserTransformer userTransformer;
 
     @Autowired
     private PasswordService passwordService;
@@ -57,7 +59,6 @@ public class UserService {
 
     /**
      * Saves user to database
-     * @param user
      */
     public void saveUser(User user) {
         userDAO.save(user);
@@ -74,37 +75,34 @@ public class UserService {
         if (admin.isEmpty()) {
 
             final User user = new User(
-                    "adminName",
-                    "adminSurname",
-                    "admin@mail.com",
-                    encoder.encode("admin"),
-                    roleService.getRoleByName("ADMIN"));
+                "adminName",
+                "adminSurname",
+                "admin@mail.com",
+                encoder.encode("admin"),
+                roleService.getRoleByName("ADMIN"));
 
             userDAO.save(user);
         }
     }
 
     public List<UserDTO> getUsers() {
-        return userTransformer.toDtoList(userDAO.findAll());
+        return userDTOsTransformer.toListUserDto(userDAO.findAll());
     }
 
     /**
      * Creates user with info specified in RegistrationUserDTO
+     *
      * @param registrationUserDTO user info
      * @return created user instance
      */
     public User createUser(RegistrationUserDTO registrationUserDTO) {
         if (this.getUserByEmail(registrationUserDTO.getEmail()) != null) {
             throw new UnauthorizedException(
-                    "user with email:" + registrationUserDTO.getEmail() + " already exist!");
+                "user with email:" + registrationUserDTO.getEmail() + " already exist!");
         } else {
 
-            final User user = new User(
-                    registrationUserDTO.getName(),
-                    registrationUserDTO.getSurname(),
-                    registrationUserDTO.getEmail(),
-                    encoder.encode(registrationUserDTO.getPassword()),
-                    roleService.getRoleByName(DEFAULT_ROLE));
+            User user = userDTOsTransformer.fromDTO(registrationUserDTO);
+            user.setRole(roleService.getRoleByName(DEFAULT_ROLE));
             user.setLocked(true);
             userDAO.save(user);
             return user;
@@ -154,6 +152,7 @@ public class UserService {
 
     /**
      * Updates user password by Email
+     *
      * @param password new password
      * @param email user's Email
      */
@@ -168,11 +167,11 @@ public class UserService {
     public void checkUserExist(User user) {
         if (user == null) {
             throw new UnauthorizedException(
-                    "User not found.");
+                "User not found.");
         }
     }
 
-    public void confirmUser(String token){
+    public void confirmUser(String token) {
         tokenService.checkToken(token);
         Token tokenByName = passwordService.getTokenByName(token);
         User user = tokenByName.getUser();

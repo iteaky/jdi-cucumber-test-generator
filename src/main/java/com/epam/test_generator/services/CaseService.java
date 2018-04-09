@@ -27,6 +27,7 @@ import com.epam.test_generator.transformers.TagTransformer;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -55,9 +56,6 @@ public class CaseService {
 
     @Autowired
     private SuitService suitService;
-
-    @Autowired
-    private CascadeUpdateService cascadeUpdateService;
 
     @Autowired
     private CaseVersionDAO caseVersionDAO;
@@ -169,8 +167,8 @@ public class CaseService {
 
         caseBelongsToSuit(caze, suit);
 
-        final List<Long> failedStepIds = cascadeUpdateService
-            .cascadeCaseStepsUpdate(projectId, suitId, caseId, editCaseDTO);
+//        TODO: remove this list from CaseUpdateDTO
+        final List<Long> failedStepIds = Collections.emptyList();
         caze.setUpdateDate(Calendar.getInstance().getTime());
         if (editCaseDTO.getTags() != null) {
             caze.setTags(new HashSet<>(tagTransformer.fromDtoList(editCaseDTO.getTags())));
