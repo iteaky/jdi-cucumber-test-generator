@@ -21,7 +21,8 @@
         </jacoco.it.execution.data.file>
         <jacoco.ut.execution.data.file>${project.build.directory}/coverage-reports/jacoco-ut.exec
         </jacoco.ut.execution.data.file>
-        <skip.tests>false</skip.tests>
+        <skip.unit.tests>false</skip.unit.tests>
+        <skip.integration.tests>true</skip.integration.tests>
         <spring-security.version>4.2.3.RELEASE</spring-security.version>
         <jira.version>6.3.11</jira.version>
         <jira.data.version>6.3</jira.data.version>
@@ -92,6 +93,30 @@
                             </outputDirectory>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>pre-integration-test</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                        <configuration>
+                            <destFile>${jacoco.it.execution.data.file}</destFile>
+                            <propertyName>failsafeArgLine</propertyName>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>post-integration-test</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                        <configuration>
+                            <dataFile>${jacoco.it.execution.data.file}</dataFile>
+                            <outputDirectory>
+                                ${project.reporting.outputDirectory}/jacoco-ut
+                            </outputDirectory>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>
@@ -100,14 +125,45 @@
                 <version>2.20.1</version>
                 <configuration>
                     <argLine>${surefireArgLine}</argLine>
-                    <skipTests>${skip.tests}</skipTests>
-                    <excludes>
-                        <exclude>${surefire.excludedtests}</exclude>
-                    </excludes>
-                    <includes>
-                        <include>${surefire.includedtests}</include>
-                    </includes>
+                    <skipTests>${skip.unit.tests}</skipTests>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>2.20.1</version>
+                <executions>
+                    <execution>
+                        <id>failsafe-integration-tests</id>
+                        <phase>integration-test</phase>
+                        <goals>
+                            <goal>integration-test</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <argLine>${failsafeArgLine}</argLine>
+                    <skipTests>${skip.integration.tests}</skipTests>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <id>add-test-source</id>
+                        <phase>generate-test-sources</phase>
+                        <goals>
+                            <goal>add-test-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>src/it/java</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
@@ -385,30 +441,4 @@
 
     </dependencies>
 
-    <profiles>
-        <profile>
-            <id>allTests</id>
-            <properties>
-                <surefire.excludedtests>-</surefire.excludedtests>
-                <surefire.includedtests>**</surefire.includedtests>
-            </properties>
-        </profile>
-        <profile>
-            <id>integrationTestsOnly</id>
-            <properties>
-                <surefire.excludedtests>-</surefire.excludedtests>
-                <surefire.includedtests>**/com/epam/test_generator/api/**</surefire.includedtests>
-            </properties>
-        </profile>
-        <profile>
-            <id>unitTestsOnly</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <properties>
-                <surefire.excludedtests>**/com/epam/test_generator/api/**</surefire.excludedtests>
-                <surefire.includedtests>**</surefire.includedtests>
-            </properties>
-        </profile>
-    </profiles>
 </project>
