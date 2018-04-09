@@ -1,9 +1,7 @@
-package com.epam.test_generator.dto;
+package com.epam.test_generator.controllers.user.response;
 
-import java.util.List;
 import org.hibernate.validator.constraints.Email;
 
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 public class UserDTO {
@@ -11,24 +9,16 @@ public class UserDTO {
 
     private Long id;
 
-    @NotNull
     @Size(min = 1, max = 255)
     private String name;
 
-    @NotNull
     @Size(min = 1, max = 255)
     private String surname;
-    
-    @NotNull
+
     @Email
     @Size(min = 1, max = 255)
     private String email;
 
-    @NotNull
-    @Size(min = 1, max = 255)
-    private String password;
-
-    @NotNull
     private String role;
 
     private Integer attempts;
@@ -51,10 +41,9 @@ public class UserDTO {
         this.locked = locked;
     }
 
-    public UserDTO(String name, String surname, String password, String role, String email) {
+    public UserDTO(String name, String surname, String role, String email) {
         this.name = name;
         this.surname = surname;
-        this.password = password;
         this.role = role;
         this.email = email;
     }
@@ -94,15 +83,6 @@ public class UserDTO {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-
-        this.password = password;
-    }
-
     public String getRole() {
         return role;
     }
@@ -113,8 +93,8 @@ public class UserDTO {
 
     @Override
     public String toString() {
-        return String.format("User {id= %s, name= %s, surname= %s, email= %s, password= %s, role= %s, attempts =%s, locked = %s}",
-                id, name, surname, email, password, role, attempts, locked);
+        return String.format("User {id= %s, name= %s, surname= %s, email= %s, role= %s, attempts =%s, locked = %s}",
+                id, name, surname, email, role, attempts, locked);
     }
     @Override
     public boolean equals(Object o) {
@@ -131,7 +111,6 @@ public class UserDTO {
                 && (name != null ? name.equals(userDTO.name) : userDTO.name == null)
                 && (surname != null ? surname.equals(userDTO.surname) : userDTO.surname == null)
                 && (email != null ? email.equals(userDTO.email) : userDTO.email == null)
-                && (password != null ? password.equals(userDTO.password) : userDTO.password == null)
                 && (role != null ? role.equals(userDTO.role) : userDTO.role == null)
                 && (attempts != null ? attempts.equals(userDTO.attempts) : userDTO.attempts == null)
                 && (locked != null ? locked.equals(userDTO.locked) : userDTO.locked == null);
@@ -145,7 +124,6 @@ public class UserDTO {
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (surname != null ? surname.hashCode() : 0);
         result = 31 * result + (email != null ? email.hashCode() : 0);
-        result = 31 * result + (password != null ? password.hashCode() : 0);
         result = 31 * result + (role != null ? role.hashCode() : 0);
         result = 31 * result + (locked != null ? locked.hashCode() : 0);
         result = 31 * result + (attempts != null ? attempts.hashCode() : 0);

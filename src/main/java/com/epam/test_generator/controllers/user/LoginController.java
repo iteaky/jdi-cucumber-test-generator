@@ -1,6 +1,6 @@
-package com.epam.test_generator.controllers;
+package com.epam.test_generator.controllers.user;
 
-import com.epam.test_generator.dto.LoginUserDTO;
+import com.epam.test_generator.controllers.user.request.LoginUserDTO;
 import com.epam.test_generator.dto.TokenDTO;
 import com.epam.test_generator.services.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
