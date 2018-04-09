@@ -16,9 +16,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.epam.test_generator.controllers.CaseVersion.CaseVersionTransformer;
-import com.epam.test_generator.controllers.CaseVersion.response.CaseVersionGetDTO;
-import com.epam.test_generator.controllers.CaseVersion.response.PropertyDifferenceGetDTO;
+import com.epam.test_generator.controllers.case_version.CaseVersionTransformer;
+import com.epam.test_generator.controllers.case_version.response.CaseVersionDTO;
+import com.epam.test_generator.controllers.case_version.response.PropertyDifferenceDTO;
 import com.epam.test_generator.dao.interfaces.CaseDAO;
 import com.epam.test_generator.dao.interfaces.CaseVersionDAO;
 import com.epam.test_generator.dao.interfaces.SuitVersionDAO;
@@ -83,7 +83,7 @@ public class CaseServiceTest {
     private EditCaseDTO editCaseDTO;
 
     private List<CaseVersion> caseVersions;
-    private List<CaseVersionGetDTO> expectedCaseVersions;
+    private List<CaseVersionDTO> expectedCaseVersions;
     private List<Step> listSteps = new ArrayList<>();
     private List<StepDTO> expectedListSteps = new ArrayList<>();
     private Set<Tag> setTags = new HashSet<>();
@@ -147,14 +147,14 @@ public class CaseServiceTest {
         PropertyDifference propertyDifference3 = new PropertyDifference("3", null, stepDTO);
         PropertyDifference propertyDifference4 = new PropertyDifference("4", stepDTO, stepDTO);
 
-        PropertyDifferenceGetDTO propertyDifferenceGetDTO1 =
-                new PropertyDifferenceGetDTO("1", null, "3");
-        PropertyDifferenceGetDTO propertyDifferenceGetDTO2 =
-                new PropertyDifferenceGetDTO("2", "1", "2");
-        PropertyDifferenceGetDTO propertyDifferenceGetDTO3 =
-                new PropertyDifferenceGetDTO("1", null, stepDTO);
-        PropertyDifferenceGetDTO propertyDifferenceGetDTO4 =
-                new PropertyDifferenceGetDTO("2", stepDTO, stepDTO);
+        PropertyDifferenceDTO propertyDifferenceDTO1 =
+                new PropertyDifferenceDTO("1", null, "3");
+        PropertyDifferenceDTO propertyDifferenceDTO2 =
+                new PropertyDifferenceDTO("2", "1", "2");
+        PropertyDifferenceDTO propertyDifferenceDTO3 =
+                new PropertyDifferenceDTO("1", null, stepDTO);
+        PropertyDifferenceDTO propertyDifferenceDTO4 =
+                new PropertyDifferenceDTO("2", stepDTO, stepDTO);
 
         caseVersions.add(new CaseVersion("1.3", new Date(), "author",
                 Lists.newArrayList(propertyDifference1, propertyDifference2)));
@@ -352,10 +352,10 @@ public class CaseServiceTest {
         when(caseDAO.findOne(anyLong())).thenReturn(caze);
         when(caseVersionDAO.findAll(anyLong())).thenReturn(caseVersions);
 
-        List<CaseVersionGetDTO> caseVersionGetDTOS = caseService
+        List<CaseVersionDTO> caseVersionDTOS = caseService
                 .getCaseVersions(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID, SIMPLE_CASE_ID);
 
-        assertEquals(expectedCaseVersions, caseVersionGetDTOS);
+        assertEquals(expectedCaseVersions, caseVersionDTOS);
 
         verify(suitService).getSuit(eq(SIMPLE_PROJECT_ID), eq(SIMPLE_SUIT_ID));
         verify(caseDAO).findOne(SIMPLE_CASE_ID);

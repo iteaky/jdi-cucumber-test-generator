@@ -16,7 +16,7 @@ import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.epam.test_generator.controllers.CaseVersion.response.PropertyDifferenceGetDTO;
+import com.epam.test_generator.controllers.case_version.response.PropertyDifferenceDTO;
 import com.epam.test_generator.dao.interfaces.CaseVersionDAO;
 import com.epam.test_generator.dao.interfaces.SuitDAO;
 import com.epam.test_generator.dao.interfaces.SuitVersionDAO;
@@ -115,14 +115,14 @@ public class SuitServiceTest {
         PropertyDifference propertyDifference3 = new PropertyDifference("3", null, caseDTO);
         PropertyDifference propertyDifference4 = new PropertyDifference("4", caseDTO, caseDTO);
 
-        PropertyDifferenceGetDTO propertyDifferenceGetDTO1 =
-            new PropertyDifferenceGetDTO("1", null, "3");
-        PropertyDifferenceGetDTO propertyDifferenceGetDTO2 =
-            new PropertyDifferenceGetDTO("2", "1", "2");
-        PropertyDifferenceGetDTO propertyDifferenceGetDTO3 =
-            new PropertyDifferenceGetDTO("1", null, caseDTO);
-        PropertyDifferenceGetDTO propertyDifferenceGetDTO4 =
-            new PropertyDifferenceGetDTO("2", caseDTO, caseDTO);
+        PropertyDifferenceDTO propertyDifferenceDTO1 =
+            new PropertyDifferenceDTO("1", null, "3");
+        PropertyDifferenceDTO propertyDifferenceDTO2 =
+            new PropertyDifferenceDTO("2", "1", "2");
+        PropertyDifferenceDTO propertyDifferenceDTO3 =
+            new PropertyDifferenceDTO("1", null, caseDTO);
+        PropertyDifferenceDTO propertyDifferenceDTO4 =
+            new PropertyDifferenceDTO("2", caseDTO, caseDTO);
 
         suitVersions.add(new SuitVersion("1.3", new Date(), "author",
             Lists.newArrayList(propertyDifference1, propertyDifference2)));
@@ -134,11 +134,11 @@ public class SuitServiceTest {
             Lists.newArrayList()));
 
         expectedSuitVersions.add(new SuitVersionDTO("1.3", "", "author",
-            Lists.newArrayList(propertyDifferenceGetDTO1, propertyDifferenceGetDTO2)));
+            Lists.newArrayList(propertyDifferenceDTO1, propertyDifferenceDTO2)));
         expectedSuitVersions.add(new SuitVersionDTO("2.4", "", "autho2",
             Lists.newArrayList()));
         expectedSuitVersions.add(new SuitVersionDTO("3.5", "", "author3",
-            Lists.newArrayList(propertyDifferenceGetDTO3, propertyDifferenceGetDTO4)));
+            Lists.newArrayList(propertyDifferenceDTO3, propertyDifferenceDTO4)));
         expectedSuitVersions.add(new SuitVersionDTO("4.6", "", "autho4",
             Lists.newArrayList()));
     }

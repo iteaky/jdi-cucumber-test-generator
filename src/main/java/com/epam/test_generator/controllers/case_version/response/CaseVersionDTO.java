@@ -1,13 +1,13 @@
-package com.epam.test_generator.controllers.CaseVersion.response;
+package com.epam.test_generator.controllers.case_version.response;
 
 import java.util.List;
 
 /**
  * This DTO is used for organise history of test cases. Case version has information about all changes of the current
- * case. It includes list of {@Link PropertyDifferenceGetDTO} objects, which contains information about properties that have
+ * case. It includes list of {@Link PropertyDifferenceDTO} objects, which contains information about properties that have
  * been changed.
  */
-public class CaseVersionGetDTO {
+public class CaseVersionDTO {
 
     private String commitId;
 
@@ -15,14 +15,14 @@ public class CaseVersionGetDTO {
 
     private String author;
 
-    private List<PropertyDifferenceGetDTO> propertyDifferences;
+    private List<PropertyDifferenceDTO> propertyDifferences;
 
-    public CaseVersionGetDTO() {
+    public CaseVersionDTO() {
 
     }
 
-    public CaseVersionGetDTO(String commitId, String updatedDate, String author,
-                             List<PropertyDifferenceGetDTO> propertyDifferences) {
+    public CaseVersionDTO(String commitId, String updatedDate, String author,
+                          List<PropertyDifferenceDTO> propertyDifferences) {
         this.commitId = commitId;
         this.updatedDate = updatedDate;
         this.author = author;
@@ -53,12 +53,12 @@ public class CaseVersionGetDTO {
         this.author = author;
     }
 
-    public List<PropertyDifferenceGetDTO> getPropertyDifferences() {
+    public List<PropertyDifferenceDTO> getPropertyDifferences() {
         return propertyDifferences;
     }
 
     public void setPropertyDifferences(
-        List<PropertyDifferenceGetDTO> propertyDifferences) {
+        List<PropertyDifferenceDTO> propertyDifferences) {
         this.propertyDifferences = propertyDifferences;
     }
 
@@ -71,7 +71,7 @@ public class CaseVersionGetDTO {
             return false;
         }
 
-        CaseVersionGetDTO that = (CaseVersionGetDTO) o;
+        CaseVersionDTO that = (CaseVersionDTO) o;
 
         return (commitId != null ? commitId.equals(that.commitId) : that.commitId == null)
             && (updatedDate != null ? updatedDate.equals(that.updatedDate)

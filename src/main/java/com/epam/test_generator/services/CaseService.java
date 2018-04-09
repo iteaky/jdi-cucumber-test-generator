@@ -3,8 +3,8 @@ package com.epam.test_generator.services;
 import static com.epam.test_generator.services.utils.UtilsService.caseBelongsToSuit;
 import static com.epam.test_generator.services.utils.UtilsService.checkNotNull;
 
-import com.epam.test_generator.controllers.CaseVersion.CaseVersionTransformer;
-import com.epam.test_generator.controllers.CaseVersion.response.CaseVersionGetDTO;
+import com.epam.test_generator.controllers.case_version.CaseVersionTransformer;
+import com.epam.test_generator.controllers.case_version.response.CaseVersionDTO;
 import com.epam.test_generator.dao.interfaces.CaseDAO;
 import com.epam.test_generator.dao.interfaces.CaseVersionDAO;
 import com.epam.test_generator.dao.interfaces.RemovedIssueDAO;
@@ -259,7 +259,7 @@ public class CaseService {
         }
     }
 
-    public List<CaseVersionGetDTO> getCaseVersions(Long projectId, Long suitId, Long caseId) {
+    public List<CaseVersionDTO> getCaseVersions(Long projectId, Long suitId, Long caseId) {
         Suit suit = suitService.getSuit(projectId, suitId);
 
         Case caze = caseDAO.findOne(caseId);

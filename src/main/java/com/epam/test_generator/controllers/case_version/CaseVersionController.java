@@ -1,6 +1,6 @@
-package com.epam.test_generator.controllers.CaseVersion;
+package com.epam.test_generator.controllers.case_version;
 
-import com.epam.test_generator.controllers.CaseVersion.response.CaseVersionGetDTO;
+import com.epam.test_generator.controllers.case_version.response.CaseVersionDTO;
 import com.epam.test_generator.dto.CaseDTO;
 import com.epam.test_generator.services.CaseService;
 import io.swagger.annotations.ApiImplicitParam;
@@ -30,8 +30,7 @@ public class CaseVersionController {
 
     @ApiOperation(value = "Get case versions by id", nickname = "getCaseVersions")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "OK",
-                    response = CaseVersionGetDTO.class, responseContainer = "List"),
+            @ApiResponse(code = 200, message = "OK", response = CaseVersionDTO.class, responseContainer = "List"),
             @ApiResponse(code = 400, message = "Suit doesn't contain the case"),
             @ApiResponse(code = 404, message = "Suit/Case not found")
     })
@@ -43,13 +42,13 @@ public class CaseVersionController {
             @ApiImplicitParam(name = "caseId", value = "ID of case",
                     required = true, dataType = "long", paramType = "path"),
             @ApiImplicitParam(name = "Authorization", value = "add here your token",
-                    paramType = "header", dataType = "string", required = true)
+                    required = true, dataType = "string", paramType = "header")
     })
     @RequestMapping(value = "/projects/{projectId}/suits/{suitId}/cases/{caseId}/versions",
             method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<List<CaseVersionGetDTO>> getCaseVersions(@PathVariable("projectId") long projectId,
-                                                                   @PathVariable("suitId") long suitId,
-                                                                   @PathVariable("caseId") long caseId) {
+    public ResponseEntity<List<CaseVersionDTO>> getCaseVersions(@PathVariable("projectId") long projectId,
+                                                                @PathVariable("suitId") long suitId,
+                                                                @PathVariable("caseId") long caseId) {
         return new ResponseEntity<>(caseService.getCaseVersions(projectId, suitId, caseId), HttpStatus.OK);
     }
 
@@ -68,8 +67,8 @@ public class CaseVersionController {
                     required = true, dataType = "long", paramType = "path"),
             @ApiImplicitParam(name = "commitId", value = "ID of commit to which state you want restore",
                     required = true, dataType = "String", paramType = "path"),
-            @ApiImplicitParam(name = "Authorization", value = "add here your token", paramType = "header",
-                    dataType = "string", required = true)
+            @ApiImplicitParam(name = "Authorization", value = "add here your token",
+                    required = true, dataType = "string", paramType = "header")
     })
     @RequestMapping(value = "/projects/{projectId}/suits/{suitId}/cases/{caseId}/versions/{commitId:.+}",
             method = RequestMethod.PUT)

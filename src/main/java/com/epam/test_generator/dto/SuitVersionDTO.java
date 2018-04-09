@@ -1,6 +1,6 @@
 package com.epam.test_generator.dto;
 
-import com.epam.test_generator.controllers.CaseVersion.response.PropertyDifferenceGetDTO;
+import com.epam.test_generator.controllers.case_version.response.PropertyDifferenceDTO;
 
 import java.util.List;
 
@@ -12,13 +12,13 @@ public class SuitVersionDTO {
 
     private String author;
 
-    private List<PropertyDifferenceGetDTO> propertyDifferences;
+    private List<PropertyDifferenceDTO> propertyDifferences;
 
     public SuitVersionDTO() {
     }
 
     public SuitVersionDTO(String commitId, String updatedDate, String author,
-                          List<PropertyDifferenceGetDTO> propertyDifferences) {
+                          List<PropertyDifferenceDTO> propertyDifferences) {
         this.commitId = commitId;
         this.updatedDate = updatedDate;
         this.author = author;
@@ -49,12 +49,12 @@ public class SuitVersionDTO {
         this.author = author;
     }
 
-    public List<PropertyDifferenceGetDTO> getPropertyDifferences() {
+    public List<PropertyDifferenceDTO> getPropertyDifferences() {
         return propertyDifferences;
     }
 
     public void setPropertyDifferences(
-        List<PropertyDifferenceGetDTO> propertyDifferences) {
+        List<PropertyDifferenceDTO> propertyDifferences) {
         this.propertyDifferences = propertyDifferences;
     }
 

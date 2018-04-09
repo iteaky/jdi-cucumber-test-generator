@@ -1,4 +1,4 @@
-package com.epam.test_generator.controllers.CaseVersion.response;
+package com.epam.test_generator.controllers.case_version.response;
 
 import com.epam.test_generator.dto.CaseDTO;
 import com.epam.test_generator.dto.StepDTO;
@@ -8,24 +8,24 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The PropertyDifferenceGetDTO uses only in one-way transformation from {@link
+ * The PropertyDifferenceDTO uses only in one-way transformation from {@link
  * com.epam.test_generator.pojo.PropertyDifference} to ResponseEntity controller output. This DTO is
  * used for organisation history of cases' versions. It contains property that have been changed
- * (old and new value of the property). It is basically used in {@Link CaseVersionGetDTO} and {@Link
+ * (old and new value of the property). It is basically used in {@Link CaseVersionDTO} and {@Link
  * SuitVersionDTO}
  */
-public class PropertyDifferenceGetDTO {
+public class PropertyDifferenceDTO {
 
-    private static final Logger logger = LoggerFactory.getLogger(PropertyDifferenceGetDTO.class);
+    private static final Logger logger = LoggerFactory.getLogger(PropertyDifferenceDTO.class);
 
     private String propertyName;
     private Object oldValue;        // By default can be String or StepDTO, TagDTO objects
     private Object newValue;        // By default can be String or StepDTO, TagDTO objects
 
-    public PropertyDifferenceGetDTO() {
+    public PropertyDifferenceDTO() {
     }
 
-    public PropertyDifferenceGetDTO(String propertyName, Object oldValue, Object newValue) {
+    public PropertyDifferenceDTO(String propertyName, Object oldValue, Object newValue) {
         this.propertyName = propertyName;
         if (oldValue == null || oldValue instanceof String || oldValue instanceof StepDTO
                 || oldValue instanceof TagDTO || oldValue instanceof CaseDTO) {
@@ -89,7 +89,7 @@ public class PropertyDifferenceGetDTO {
             return false;
         }
 
-        PropertyDifferenceGetDTO that = (PropertyDifferenceGetDTO) o;
+        PropertyDifferenceDTO that = (PropertyDifferenceDTO) o;
 
         return (propertyName != null ? propertyName.equals(that.propertyName)
                 : that.propertyName == null)
