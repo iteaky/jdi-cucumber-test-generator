@@ -47,16 +47,10 @@ public class StepService {
      * @return List of all StepDTOs for specified case
      */
     public List<StepDTO> getStepsByCaseId(Long projectId, Long suitId, Long caseId) {
-
-        final Suit suit = checkNotNull(suitService.getSuit(projectId, suitId));
-        final Case caze = checkNotNull(caseService.getCase(projectId, suitId, caseId));
-        if (suit.hasCase(caze)){
-            return stepTransformer.toDtoList(caze.getSteps());
-        }
-        else {
-            throw new BadRequestException();
-        }
+        final Case caze = caseService.getCase(projectId, suitId, caseId);
+        return stepTransformer.toDtoList(caze.getSteps());
     }
+
 
     /**
      *
@@ -69,11 +63,10 @@ public class StepService {
     public StepDTO getStep(Long projectId, Long suitId, Long caseId, Long stepId) {
         final Case caze = caseService.getCase(projectId, suitId, caseId);
         final Step step = checkNotNull(stepDAO.findOne(stepId));
-        if (caze.hasStep(step)) {
-            return stepTransformer.toDto(step);
-        } else {
-            throw new BadRequestException();
-        }
+
+        throwExceptionIfStepIsNotInCase(caze, step);
+
+        return stepTransformer.toDto(step);
     }
 
     /**
@@ -112,17 +105,13 @@ public class StepService {
         final Case caze = caseService.getCase(projectId, suitId, caseId);
 
         final Step step = checkNotNull(stepDAO.findOne(stepId));
+        throwExceptionIfStepIsNotInCase(caze, step);
 
-        if (caze.hasStep(step)) {
-            stepTransformer.mapDTOToEntity(stepDTO, step);
-            stepDAO.save(step);
+        stepTransformer.mapDTOToEntity(stepDTO, step);
+        stepDAO.save(step);
 
-            caseVersionDAO.save(caze);
-            suitVersionDAO.save(suit);
-        } else {
-            throw new BadRequestException();
-        }
-
+        caseVersionDAO.save(caze);
+        suitVersionDAO.save(suit);
     }
 
     /**
@@ -137,18 +126,12 @@ public class StepService {
         final Case caze = caseService.getCase(projectId, suitId, caseId);
 
         final Step step = checkNotNull(stepDAO.findOne(stepId));
+        throwExceptionIfStepIsNotInCase(caze, step);
+        caze.removeStep(step);
+        stepDAO.delete(stepId);
 
-        if (caze.hasStep(step)) {
-            caze.removeStep(step);
-            stepDAO.delete(stepId);
-
-            caseVersionDAO.save(caze);
-            suitVersionDAO.save(suit);
-        }
-        else {
-            throw new BadRequestException();
-        }
-
+        caseVersionDAO.save(caze);
+        suitVersionDAO.save(suit);
     }
 
     /**
@@ -179,4 +162,13 @@ public class StepService {
             }
         }
     }
+
+    private void throwExceptionIfStepIsNotInCase(Case aCase, Step step) {
+        if (!aCase.hasStep(step)) {
+            throw new BadRequestException("Error: suit " + aCase.getName() +
+                " does not have step " +
+                step.getId());
+        }
+    }
+
 }

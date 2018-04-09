@@ -75,7 +75,7 @@ public class SuitService {
         }
         else {
             throw new BadRequestException(
-                "Error: project " + suit.getName() + " does not have suit " + suit
+                "Error: project " + project.getName() + " does not have suit " + suit
                     .getName());
         }
     }

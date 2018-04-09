@@ -260,7 +260,6 @@ public class CaseServiceTest {
                 caseService.updateCase(SIMPLE_PROJECT_ID , SIMPLE_SUIT_ID, SIMPLE_CASE_ID, editCaseDTO);
 
         assertEquals(actualUpdatedCaseDTOwithFailedStepIds, expectedUpdatedCaseDTOwithFailedStepIds);
-        verify(suitService).getSuit(eq(SIMPLE_PROJECT_ID) , eq(SIMPLE_SUIT_ID));
         verify(caseDAO).findOne(eq(SIMPLE_CASE_ID));
         verify(cascadeUpdateService).cascadeCaseStepsUpdate(SIMPLE_PROJECT_ID,SIMPLE_SUIT_ID,SIMPLE_CASE_ID,editCaseDTO);
         verify(caseDAO).save(eq(caze));
@@ -294,7 +293,6 @@ public class CaseServiceTest {
         CaseDTO actualRemovedCaseDTO = caseService.removeCase(SIMPLE_PROJECT_ID , SIMPLE_SUIT_ID, SIMPLE_CASE_ID);
         assertEquals(expectedCaseDTO, actualRemovedCaseDTO);
 
-        verify(suitService).getSuit(eq(SIMPLE_PROJECT_ID) , eq(SIMPLE_SUIT_ID));
         verify(caseDAO).findOne(eq(SIMPLE_CASE_ID));
         verify(caseDAO).delete(eq(SIMPLE_CASE_ID));
         verify(caseVersionDAO).delete(eq(caze));
@@ -404,7 +402,6 @@ public class CaseServiceTest {
         CaseDTO actualRestoreCaseDTO = caseService.restoreCase(SIMPLE_PROJECT_ID , SIMPLE_SUIT_ID, SIMPLE_CASE_ID, SIMPLE_COMMIT_ID);
         assertEquals(expectedCaseDTO, actualRestoreCaseDTO);
 
-        verify(suitService).getSuit(eq(SIMPLE_PROJECT_ID) , eq(SIMPLE_SUIT_ID));
         verify(caseDAO).findOne(SIMPLE_CASE_ID);
         verify(caseVersionDAO).findByCommitId(SIMPLE_CASE_ID, SIMPLE_COMMIT_ID);
         verify(caseDAO).save(eq(caze));
