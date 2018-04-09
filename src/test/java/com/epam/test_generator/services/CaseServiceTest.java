@@ -14,13 +14,13 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.epam.test_generator.controllers.caze.request.updateCaseDTO;
+import com.epam.test_generator.controllers.caze.response.CaseUpdatedDTO;
 import com.epam.test_generator.dao.interfaces.CaseDAO;
 import com.epam.test_generator.dao.interfaces.CaseVersionDAO;
 import com.epam.test_generator.dao.interfaces.SuitVersionDAO;
 import com.epam.test_generator.controllers.caze.response.CaseDTO;
-import com.epam.test_generator.controllers.caze.request.CaseUpdateDTO;
 import com.epam.test_generator.dto.CaseVersionDTO;
-import com.epam.test_generator.controllers.caze.request.EditCaseDTO;
 import com.epam.test_generator.dto.PropertyDifferenceDTO;
 import com.epam.test_generator.dto.StepDTO;
 import com.epam.test_generator.dto.SuitDTO;
@@ -37,7 +37,7 @@ import com.epam.test_generator.pojo.PropertyDifference;
 import com.epam.test_generator.services.exceptions.BadRequestException;
 import com.epam.test_generator.services.exceptions.NotFoundException;
 import com.epam.test_generator.state.machine.StateMachineAdapter;
-import com.epam.test_generator.controllers.caze.CaseTransformer;
+import com.epam.test_generator.controllers.caze.CaseDTOsTransformer;
 import com.epam.test_generator.transformers.CaseVersionTransformer;
 import com.epam.test_generator.transformers.SuitTransformer;
 import com.google.common.collect.Lists;
@@ -75,7 +75,7 @@ public class CaseServiceTest {
     private Case caseToRestore;
 
     private List<StepDTO> listStepDtos = new ArrayList<>();
-    private EditCaseDTO editCaseDTO;
+    private updateCaseDTO updateCaseDTO;
 
     private List<CaseVersion> caseVersions;
     private List<CaseVersionDTO> expectedCaseVersions;
@@ -99,7 +99,7 @@ public class CaseServiceTest {
     private SuitService suitService;
 
     @Mock
-    private CaseTransformer caseTransformer;
+    private CaseDTOsTransformer caseDTOsTransformer;
 
     @Mock
     private SuitTransformer suitTransformer;
@@ -189,7 +189,7 @@ public class CaseServiceTest {
 
     @Test
     public void get_CaseDTO_Success(){
-        when(caseTransformer.toDto(any())).thenReturn(expectedCaseDTO);
+        when(caseDTOsTransformer.toDto(any())).thenReturn(expectedCaseDTO);
         when(suitService.getSuit(anyLong(), anyLong())).thenReturn(suit);
         when(caseDAO.findOne(anyLong())).thenReturn(caze);
         when(suitService.getSuit(anyLong(), anyLong())).thenReturn(suit);
@@ -219,18 +219,18 @@ public class CaseServiceTest {
     @Test
     public void add_CaseToSuit_Success()  {
         when(suitService.getSuit(anyLong(), anyLong())).thenReturn(suit);
-        when(caseTransformer.fromDto(any(CaseDTO.class))).thenReturn(caze);
+        when(caseDTOsTransformer.fromDto(any(CaseDTO.class))).thenReturn(caze);
         when(caseDAO.save(any(Case.class))).thenReturn(caze);
-        when(caseTransformer.toDto(any(Case.class))).thenReturn(expectedCaseDTO);
+        when(caseDTOsTransformer.toDto(any(Case.class))).thenReturn(expectedCaseDTO);
 
         final CaseDTO actualCaseDTO = caseService.addCaseToSuit(SIMPLE_PROJECT_ID , SIMPLE_SUIT_ID, expectedCaseDTO);
         assertEquals(expectedCaseDTO, actualCaseDTO);
 
         verify(suitService).getSuit(eq(SIMPLE_PROJECT_ID) , eq(SIMPLE_SUIT_ID));
-        verify(caseTransformer).fromDto(eq(expectedCaseDTO));
+        verify(caseDTOsTransformer).fromDto(eq(expectedCaseDTO));
         verify(caseDAO).save(eq(caze));
         verify(caseVersionDAO).save(eq(caze));
-        verify(caseTransformer).toDto(eq(caze));
+        verify(caseDTOsTransformer).toDto(eq(caze));
     }
 
     @Test(expected = NotFoundException.class)
@@ -244,24 +244,24 @@ public class CaseServiceTest {
     public void update_Case_Success(){
         when(suitService.getSuit(anyLong(), anyLong())).thenReturn(suit);
         when(caseDAO.findOne(anyLong())).thenReturn(caze);
-        when(cascadeUpdateService.cascadeCaseStepsUpdate(SIMPLE_PROJECT_ID , SIMPLE_SUIT_ID, SIMPLE_CASE_ID, editCaseDTO)).thenReturn(anyList());
+        when(cascadeUpdateService.cascadeCaseStepsUpdate(SIMPLE_PROJECT_ID , SIMPLE_SUIT_ID, SIMPLE_CASE_ID, updateCaseDTO)).thenReturn(anyList());
         when(caseDAO.save(caze)).thenReturn(caze);
-        when(caseTransformer.toDto(caze)).thenReturn(expectedCaseDTO);
+        when(caseDTOsTransformer.toDto(caze)).thenReturn(expectedCaseDTO);
 
-        editCaseDTO = new EditCaseDTO(1L, caze.getDescription(), caze.getName(), caze.getPriority(),
+        updateCaseDTO = new updateCaseDTO(1L, caze.getDescription(), caze.getName(), caze.getPriority(),
                 caze.getStatus(), Collections.emptyList(), Action.UPDATE, caze.getComment());
 
-        CaseUpdateDTO expectedUpdatedCaseDTOwithFailedStepIds =
-            new CaseUpdateDTO(expectedCaseDTO, Collections.emptyList());
-        CaseUpdateDTO actualUpdatedCaseDTOwithFailedStepIds =
-                caseService.updateCase(SIMPLE_PROJECT_ID , SIMPLE_SUIT_ID, SIMPLE_CASE_ID, editCaseDTO);
+        CaseUpdatedDTO expectedUpdatedCaseDTOwithFailedStepIds =
+            new CaseUpdatedDTO(expectedCaseDTO, Collections.emptyList());
+        CaseUpdatedDTO actualUpdatedCaseDTOwithFailedStepIds =
+                caseService.updateCase(SIMPLE_PROJECT_ID , SIMPLE_SUIT_ID, SIMPLE_CASE_ID, updateCaseDTO);
 
         assertEquals(actualUpdatedCaseDTOwithFailedStepIds, expectedUpdatedCaseDTOwithFailedStepIds);
         verify(suitService).getSuit(eq(SIMPLE_PROJECT_ID) , eq(SIMPLE_SUIT_ID));
         verify(caseDAO).findOne(eq(SIMPLE_CASE_ID));
-        verify(cascadeUpdateService).cascadeCaseStepsUpdate(SIMPLE_PROJECT_ID,SIMPLE_SUIT_ID,SIMPLE_CASE_ID,editCaseDTO);
+        verify(cascadeUpdateService).cascadeCaseStepsUpdate(SIMPLE_PROJECT_ID,SIMPLE_SUIT_ID,SIMPLE_CASE_ID, updateCaseDTO);
         verify(caseDAO).save(eq(caze));
-        verify(caseTransformer).toDto(eq(caze));
+        verify(caseDTOsTransformer).toDto(eq(caze));
         verify(caseVersionDAO).save(eq(caze));
     }
 
@@ -269,7 +269,7 @@ public class CaseServiceTest {
     public void update_Case_NotFoundExceptionFromSuit() {
         when(suitService.getSuit(anyLong(), anyLong())).thenReturn(null);
 
-        caseService.updateCase(SIMPLE_PROJECT_ID , SIMPLE_SUIT_ID, SIMPLE_CASE_ID, new EditCaseDTO());
+        caseService.updateCase(SIMPLE_PROJECT_ID , SIMPLE_SUIT_ID, SIMPLE_CASE_ID, new updateCaseDTO());
     }
 
     @Test(expected = NotFoundException.class)
@@ -277,7 +277,7 @@ public class CaseServiceTest {
         when(suitService.getSuit(anyLong(), anyLong())).thenReturn(suit);
         when(caseDAO.findOne(anyLong())).thenReturn(null);
 
-        caseService.updateCase(SIMPLE_PROJECT_ID , SIMPLE_SUIT_ID, SIMPLE_CASE_ID, new EditCaseDTO());
+        caseService.updateCase(SIMPLE_PROJECT_ID , SIMPLE_SUIT_ID, SIMPLE_CASE_ID, new updateCaseDTO());
     }
 
     @Test
@@ -286,7 +286,7 @@ public class CaseServiceTest {
         when(caseDAO.findOne(anyLong())).thenReturn(caze);
         doNothing().when(caseDAO).delete(caze);
         doNothing().when(caseVersionDAO).delete(caze);
-        when(caseTransformer.toDto(any(Case.class))).thenReturn(expectedCaseDTO);
+        when(caseDTOsTransformer.toDto(any(Case.class))).thenReturn(expectedCaseDTO);
 
         CaseDTO actualRemovedCaseDTO = caseService.removeCase(SIMPLE_PROJECT_ID , SIMPLE_SUIT_ID, SIMPLE_CASE_ID);
         assertEquals(expectedCaseDTO, actualRemovedCaseDTO);
@@ -295,7 +295,7 @@ public class CaseServiceTest {
         verify(caseDAO).findOne(eq(SIMPLE_CASE_ID));
         verify(caseDAO).delete(eq(SIMPLE_CASE_ID));
         verify(caseVersionDAO).delete(eq(caze));
-        verify(caseTransformer).toDto(eq(caze));
+        verify(caseDTOsTransformer).toDto(eq(caze));
     }
 
     @Test(expected = NotFoundException.class)
@@ -326,7 +326,7 @@ public class CaseServiceTest {
         List<Long> deleteCaseIds = Arrays.asList(1L, 2L);
 
         when(suitService.getSuit(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID)).thenReturn(suit);
-        when(caseTransformer.toDtoList(anyListOf(Case.class))).thenReturn(expectedRemovedCasesDTO);
+        when(caseDTOsTransformer.toDtoList(anyListOf(Case.class))).thenReturn(expectedRemovedCasesDTO);
 
         List<CaseDTO> actualRemovedCasesDTO = caseService.removeCases(SIMPLE_PROJECT_ID , SIMPLE_SUIT_ID, deleteCaseIds);
 
@@ -336,7 +336,7 @@ public class CaseServiceTest {
         verify(caseDAO).delete(eq(1L));
         verify(caseDAO).delete(eq(2L));
         verify(caseVersionDAO, times(2)).delete(any(Case.class));
-        verify(caseTransformer).toDtoList(anyListOf(Case.class));
+        verify(caseDTOsTransformer).toDtoList(anyListOf(Case.class));
     }
 
     @Test(expected = NotFoundException.class)
@@ -396,7 +396,7 @@ public class CaseServiceTest {
         when(caseDAO.findOne(anyLong())).thenReturn(caze);
         when(caseVersionDAO.findByCommitId(anyLong(), anyString())).thenReturn(caze);
         when(caseDAO.save(caze)).thenReturn(caze);
-        when(caseTransformer.toDto(caze)).thenReturn(expectedCaseDTO);
+        when(caseDTOsTransformer.toDto(caze)).thenReturn(expectedCaseDTO);
 
         CaseDTO actualRestoreCaseDTO = caseService.restoreCase(SIMPLE_PROJECT_ID , SIMPLE_SUIT_ID, SIMPLE_CASE_ID, SIMPLE_COMMIT_ID);
         assertEquals(expectedCaseDTO, actualRestoreCaseDTO);
@@ -406,7 +406,7 @@ public class CaseServiceTest {
         verify(caseVersionDAO).findByCommitId(SIMPLE_CASE_ID, SIMPLE_COMMIT_ID);
         verify(caseDAO).save(eq(caze));
         verify(caseVersionDAO).save(eq(caze));
-        verify(caseTransformer).toDto(eq(caze));
+        verify(caseDTOsTransformer).toDto(eq(caze));
     }
 
     @Test(expected = NotFoundException.class)
@@ -470,60 +470,60 @@ public class CaseServiceTest {
     @Test
     public void updateCases_ActionIsDelete_VerifyRemoveCaseInvoked()
         throws MethodArgumentNotValidException {
-        editCaseDTO = new EditCaseDTO(1l,"desc", "name", 1, Status.NOT_RUN, Collections.emptyList(), Action.DELETE,  "comment");
-        editCaseDTO.setId(SIMPLE_CASE_ID);
+        updateCaseDTO = new updateCaseDTO(1l,"desc", "name", 1, Status.NOT_RUN, Collections.emptyList(), Action.DELETE,  "comment");
+        updateCaseDTO.setId(SIMPLE_CASE_ID);
         CaseDTO expectedCaseDTO = new CaseDTO(1l,"name", "desc", Collections.emptyList(),
                 1, Collections.emptySet(), Status.NOT_RUN, "comment");
         List<CaseDTO> expectedCaseDTOs = Arrays.asList(expectedCaseDTO);
 
         CaseService mock = mock(CaseService.class);
-        when(mock.removeCase(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID, editCaseDTO.getId())).thenReturn(expectedCaseDTO);
+        when(mock.removeCase(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID, updateCaseDTO.getId())).thenReturn(expectedCaseDTO);
         Mockito.doCallRealMethod().when(mock).updateCases(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID,
-            Collections.singletonList(editCaseDTO));
-        List<CaseDTO> actualUpdatedCaseDTOs = mock.updateCases(SIMPLE_PROJECT_ID , SIMPLE_SUIT_ID, Collections.singletonList(editCaseDTO));
+            Collections.singletonList(updateCaseDTO));
+        List<CaseDTO> actualUpdatedCaseDTOs = mock.updateCases(SIMPLE_PROJECT_ID , SIMPLE_SUIT_ID, Collections.singletonList(updateCaseDTO));
 
         assertEquals(expectedCaseDTOs, actualUpdatedCaseDTOs);
-        verify(mock).removeCase(eq(SIMPLE_PROJECT_ID) , eq(SIMPLE_SUIT_ID), eq(editCaseDTO.getId()));
+        verify(mock).removeCase(eq(SIMPLE_PROJECT_ID) , eq(SIMPLE_SUIT_ID), eq(updateCaseDTO.getId()));
     }
 
     @Test
     public void updateCases_ActionIsUpdate_VerifyUpdateCaseInvoked()
         throws MethodArgumentNotValidException {
-        editCaseDTO = new EditCaseDTO(1l,"desc", "name", 1,
+        updateCaseDTO = new updateCaseDTO(1l,"desc", "name", 1,
                 Status.NOT_RUN, Collections.emptyList(), Action.UPDATE,  "comment");
-        editCaseDTO.setId(SIMPLE_CASE_ID);
+        updateCaseDTO.setId(SIMPLE_CASE_ID);
         CaseDTO expectedCaseDTO = new CaseDTO(1l,"name", "desc", Collections.emptyList(),
             1, Collections.emptySet(), Status.NOT_RUN, "comment");
-        CaseUpdateDTO expectedDto = new CaseUpdateDTO(expectedCaseDTO, Collections.emptyList());
+        CaseUpdatedDTO expectedDto = new CaseUpdatedDTO(expectedCaseDTO, Collections.emptyList());
         List<CaseDTO> expectedCaseDTOs = Arrays.asList(expectedCaseDTO);
 
         CaseService mock = mock(CaseService.class);
-        when(mock.updateCase(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID, editCaseDTO.getId(), editCaseDTO)).thenReturn(expectedDto);
+        when(mock.updateCase(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID, updateCaseDTO.getId(), updateCaseDTO)).thenReturn(expectedDto);
         Mockito.doCallRealMethod().when(mock).updateCases(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID,
-            Collections.singletonList(editCaseDTO));
-        List<CaseDTO> actualUpdatedCaseDTOs = mock.updateCases(SIMPLE_PROJECT_ID , SIMPLE_SUIT_ID, Collections.singletonList(editCaseDTO));
+            Collections.singletonList(updateCaseDTO));
+        List<CaseDTO> actualUpdatedCaseDTOs = mock.updateCases(SIMPLE_PROJECT_ID , SIMPLE_SUIT_ID, Collections.singletonList(updateCaseDTO));
 
         assertEquals(expectedCaseDTOs, actualUpdatedCaseDTOs);
-        verify(mock).updateCase(eq(SIMPLE_PROJECT_ID) , eq(SIMPLE_SUIT_ID), eq(SIMPLE_CASE_ID), eq(editCaseDTO));
+        verify(mock).updateCase(eq(SIMPLE_PROJECT_ID) , eq(SIMPLE_SUIT_ID), eq(SIMPLE_CASE_ID), eq(updateCaseDTO));
     }
 
     @Test
     public void updateCases_ActionIsCreate_VerifyAddCaseInvoked()
         throws MethodArgumentNotValidException {
-        editCaseDTO = new EditCaseDTO(1l, "desc", "name", 1,
+        updateCaseDTO = new updateCaseDTO(1l, "desc", "name", 1,
                 Status.NOT_RUN, Collections.emptyList(), Action.CREATE,  "comment");
-        editCaseDTO.setId(SIMPLE_CASE_ID);
+        updateCaseDTO.setId(SIMPLE_CASE_ID);
         CaseDTO expectedCaseDTO = new CaseDTO(1l,"name", "desc", Collections.emptyList(),
             1, Collections.emptySet(), Status.NOT_RUN, "comment");
         List<CaseDTO> expectedCaseDTOs = Arrays.asList(expectedCaseDTO);
 
         CaseService mock = mock(CaseService.class);
-        when(mock.addCaseToSuit(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID, editCaseDTO)).thenReturn(expectedCaseDTO);
+        when(mock.addCaseToSuit(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID, updateCaseDTO)).thenReturn(expectedCaseDTO);
         Mockito.doCallRealMethod().when(mock).updateCases(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID,
-            Collections.singletonList(editCaseDTO));
-        List<CaseDTO> actualUpdatedCaseDTOs = mock.updateCases(SIMPLE_PROJECT_ID , SIMPLE_SUIT_ID, Collections.singletonList(editCaseDTO));
+            Collections.singletonList(updateCaseDTO));
+        List<CaseDTO> actualUpdatedCaseDTOs = mock.updateCases(SIMPLE_PROJECT_ID , SIMPLE_SUIT_ID, Collections.singletonList(updateCaseDTO));
 
         assertEquals(expectedCaseDTOs, actualUpdatedCaseDTOs);
-        verify(mock).addCaseToSuit(eq(SIMPLE_PROJECT_ID) , eq(SIMPLE_SUIT_ID), eq(editCaseDTO));
+        verify(mock).addCaseToSuit(eq(SIMPLE_PROJECT_ID) , eq(SIMPLE_SUIT_ID), eq(updateCaseDTO));
     }
 }

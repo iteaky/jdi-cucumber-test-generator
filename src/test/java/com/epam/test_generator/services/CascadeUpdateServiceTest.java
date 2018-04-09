@@ -2,8 +2,8 @@ package com.epam.test_generator.services;
 
 import static org.mockito.Mockito.verify;
 
+import com.epam.test_generator.controllers.caze.request.updateCaseDTO;
 import com.epam.test_generator.controllers.caze.response.CaseDTO;
-import com.epam.test_generator.controllers.caze.request.EditCaseDTO;
 import com.epam.test_generator.dto.StepDTO;
 import com.epam.test_generator.dto.SuitDTO;
 import com.epam.test_generator.entities.Action;
@@ -32,7 +32,7 @@ public class CascadeUpdateServiceTest {
 
     private final SuitDTO suitDTO = new SuitDTO();
     private final CaseDTO caseDTO = new CaseDTO();
-    private final EditCaseDTO editCaseDTO = new EditCaseDTO();
+    private final updateCaseDTO updateCaseDTO = new updateCaseDTO();
     private final StepDTO stepDTO = new StepDTO();
 
     @Mock
@@ -60,13 +60,13 @@ public class CascadeUpdateServiceTest {
         throws MethodArgumentNotValidException {
         caseDTO.setId(CASE_ID_FOR_UPDATE);
 
-        editCaseDTO.setId(CASE_ID_FOR_UPDATE);
-        editCaseDTO.setAction(Action.UPDATE);
+        updateCaseDTO.setId(CASE_ID_FOR_UPDATE);
+        updateCaseDTO.setAction(Action.UPDATE);
 
         suitDTO.setCases(Lists.newArrayList(caseDTO));
 
         cascadeUpdateService.cascadeSuitCasesUpdate(PROJECT_ID, SUIT_ID, suitDTO);
-        verify(caseService).updateCases(PROJECT_ID, SUIT_ID, Lists.newArrayList(editCaseDTO));
+        verify(caseService).updateCases(PROJECT_ID, SUIT_ID, Lists.newArrayList(updateCaseDTO));
     }
 
     @Test
@@ -100,22 +100,22 @@ public class CascadeUpdateServiceTest {
         throws MethodArgumentNotValidException {
         caseDTO.setId(CASE_ID_FOR_UPDATE);
 
-        editCaseDTO.setId(CASE_ID_FOR_UPDATE);
-        editCaseDTO.setAction(Action.UPDATE);
+        updateCaseDTO.setId(CASE_ID_FOR_UPDATE);
+        updateCaseDTO.setAction(Action.UPDATE);
 
         stepDTO.setId(STEP_ID_FOR_CREATE);
         stepDTO.setStatus(Status.PASSED);
         stepDTO.setAction(Action.CREATE);
 
         caseDTO.setSteps(Lists.newArrayList(stepDTO));
-        editCaseDTO.setSteps(Lists.newArrayList(stepDTO));
+        updateCaseDTO.setSteps(Lists.newArrayList(stepDTO));
         suitDTO.setCases(Lists.newArrayList(caseDTO));
 
         Assert.assertEquals(Collections.emptyList(),
             cascadeUpdateService.cascadeSuitCasesUpdate(PROJECT_ID, SUIT_ID, suitDTO));
         verify(stepService).cascadeUpdateSteps(PROJECT_ID, SUIT_ID, CASE_ID_FOR_UPDATE,
             Lists.newArrayList(stepDTO));
-        verify(caseService).updateCases(PROJECT_ID, SUIT_ID, Lists.newArrayList(editCaseDTO));
+        verify(caseService).updateCases(PROJECT_ID, SUIT_ID, Lists.newArrayList(updateCaseDTO));
     }
 
     @Test
@@ -123,22 +123,22 @@ public class CascadeUpdateServiceTest {
         throws MethodArgumentNotValidException {
         caseDTO.setId(CASE_ID_FOR_UPDATE);
 
-        editCaseDTO.setId(CASE_ID_FOR_UPDATE);
-        editCaseDTO.setAction(Action.UPDATE);
+        updateCaseDTO.setId(CASE_ID_FOR_UPDATE);
+        updateCaseDTO.setAction(Action.UPDATE);
 
         stepDTO.setId(STEP_ID_FOR_UPDATE);
         stepDTO.setStatus(Status.FAILED);
         stepDTO.setAction(Action.UPDATE);
 
         caseDTO.setSteps(Lists.newArrayList(stepDTO));
-        editCaseDTO.setSteps(Lists.newArrayList(stepDTO));
+        updateCaseDTO.setSteps(Lists.newArrayList(stepDTO));
         suitDTO.setCases(Lists.newArrayList(caseDTO));
 
         Assert.assertEquals(Lists.newArrayList(STEP_ID_FOR_UPDATE),
             cascadeUpdateService.cascadeSuitCasesUpdate(PROJECT_ID, SUIT_ID, suitDTO));
         verify(stepService).cascadeUpdateSteps(PROJECT_ID, SUIT_ID, CASE_ID_FOR_UPDATE,
             Lists.newArrayList(stepDTO));
-        verify(caseService).updateCases(PROJECT_ID, SUIT_ID, Lists.newArrayList(editCaseDTO));
+        verify(caseService).updateCases(PROJECT_ID, SUIT_ID, Lists.newArrayList(updateCaseDTO));
     }
 
     @Test
@@ -164,11 +164,11 @@ public class CascadeUpdateServiceTest {
 
         caseDTOForUpdate.setSteps(Lists.newArrayList(stepDTOForUpdate, stepDTOForCreate));
 
-        final EditCaseDTO editCaseDTOForUpdate = new EditCaseDTO();
-        editCaseDTOForUpdate.setId(CASE_ID_FOR_UPDATE);
-        editCaseDTOForUpdate.setAction(Action.UPDATE);
+        final updateCaseDTO updateCaseDTOForUpdate = new updateCaseDTO();
+        updateCaseDTOForUpdate.setId(CASE_ID_FOR_UPDATE);
+        updateCaseDTOForUpdate.setAction(Action.UPDATE);
 
-        editCaseDTOForUpdate.setSteps(Lists.newArrayList(stepDTOForUpdate, stepDTOForCreate));
+        updateCaseDTOForUpdate.setSteps(Lists.newArrayList(stepDTOForUpdate, stepDTOForCreate));
         suitDTO.setCases(Lists.newArrayList(caseDTOForCreate, caseDTOForUpdate));
 
         cascadeUpdateService.cascadeSuitCasesUpdate(PROJECT_ID, SUIT_ID, suitDTO);
@@ -176,7 +176,7 @@ public class CascadeUpdateServiceTest {
         verify(stepService).cascadeUpdateSteps(PROJECT_ID, SUIT_ID, CASE_ID_FOR_UPDATE,
             caseDTOForUpdate.getSteps());
         verify(caseService)
-            .updateCases(PROJECT_ID, SUIT_ID, Lists.newArrayList(editCaseDTOForUpdate));
+            .updateCases(PROJECT_ID, SUIT_ID, Lists.newArrayList(updateCaseDTOForUpdate));
         verify(caseService).addCaseToSuit(PROJECT_ID, SUIT_ID, caseDTOForCreate);
     }
 
@@ -185,21 +185,21 @@ public class CascadeUpdateServiceTest {
         throws MethodArgumentNotValidException {
         caseDTO.setId(CASE_ID_FOR_CREATE);
 
-        editCaseDTO.setId(CASE_ID_FOR_CREATE);
-        editCaseDTO.setAction(Action.CREATE);
+        updateCaseDTO.setId(CASE_ID_FOR_CREATE);
+        updateCaseDTO.setAction(Action.CREATE);
 
         stepDTO.setId(STEP_ID_FOR_UPDATE);
         stepDTO.setStatus(Status.NOT_RUN);
         stepDTO.setAction(Action.UPDATE);
 
         caseDTO.setSteps(Lists.newArrayList(stepDTO));
-        editCaseDTO.setSteps(Lists.newArrayList(stepDTO));
+        updateCaseDTO.setSteps(Lists.newArrayList(stepDTO));
         suitDTO.setCases(Lists.newArrayList(caseDTO));
 
         cascadeUpdateService.cascadeSuitCasesUpdate(PROJECT_ID, SUIT_ID, suitDTO);
         verify(stepService)
-            .cascadeUpdateSteps(PROJECT_ID, SUIT_ID, CASE_ID_FOR_CREATE, editCaseDTO.getSteps());
-        verify(caseService).updateCases(PROJECT_ID, SUIT_ID, Lists.newArrayList(editCaseDTO));
+            .cascadeUpdateSteps(PROJECT_ID, SUIT_ID, CASE_ID_FOR_CREATE, updateCaseDTO.getSteps());
+        verify(caseService).updateCases(PROJECT_ID, SUIT_ID, Lists.newArrayList(updateCaseDTO));
     }
 
     @Test(expected = BadRequestException.class)
@@ -207,37 +207,37 @@ public class CascadeUpdateServiceTest {
         throws MethodArgumentNotValidException {
         caseDTO.setId(CASE_ID_FOR_UPDATE);
 
-        editCaseDTO.setId(CASE_ID_FOR_UPDATE);
-        editCaseDTO.setAction(Action.CREATE);
+        updateCaseDTO.setId(CASE_ID_FOR_UPDATE);
+        updateCaseDTO.setAction(Action.CREATE);
 
         suitDTO.setCases(Lists.newArrayList(caseDTO, caseDTO));
 
         cascadeUpdateService.cascadeSuitCasesUpdate(PROJECT_ID, SUIT_ID, suitDTO);
-        verify(caseService).updateCases(PROJECT_ID, SUIT_ID, Lists.newArrayList(editCaseDTO));
+        verify(caseService).updateCases(PROJECT_ID, SUIT_ID, Lists.newArrayList(updateCaseDTO));
     }
 
     @Test(expected = BadRequestException.class)
     public void cascadeCaseStepsUpdate_methodThrowsExceptionIfActionNotUpdate() {
-        editCaseDTO.setId(CASE_ID_FOR_UPDATE);
-        editCaseDTO.setAction(Action.CREATE);
+        updateCaseDTO.setId(CASE_ID_FOR_UPDATE);
+        updateCaseDTO.setAction(Action.CREATE);
 
         cascadeUpdateService
-            .cascadeCaseStepsUpdate(PROJECT_ID, SUIT_ID, CASE_ID_FOR_UPDATE, editCaseDTO);
+            .cascadeCaseStepsUpdate(PROJECT_ID, SUIT_ID, CASE_ID_FOR_UPDATE, updateCaseDTO);
     }
 
     @Test
     public void cascadeCaseStepsUpdate_CaseWithoutStepsWillUpdateSuccessfully() {
-        editCaseDTO.setId(CASE_ID_FOR_UPDATE);
-        editCaseDTO.setAction(Action.UPDATE);
+        updateCaseDTO.setId(CASE_ID_FOR_UPDATE);
+        updateCaseDTO.setAction(Action.UPDATE);
 
         cascadeUpdateService
-            .cascadeCaseStepsUpdate(PROJECT_ID, SUIT_ID, CASE_ID_FOR_UPDATE, editCaseDTO);
+            .cascadeCaseStepsUpdate(PROJECT_ID, SUIT_ID, CASE_ID_FOR_UPDATE, updateCaseDTO);
     }
 
     @Test
     public void cascadeCaseStepsUpdate_CaseWithStepsWillUpdateSuccessfully() {
-        editCaseDTO.setId(CASE_ID_FOR_UPDATE);
-        editCaseDTO.setAction(Action.UPDATE);
+        updateCaseDTO.setId(CASE_ID_FOR_UPDATE);
+        updateCaseDTO.setAction(Action.UPDATE);
 
         final StepDTO stepDTOForCreate = new StepDTO();
         stepDTOForCreate.setId(STEP_ID_FOR_CREATE);
@@ -248,12 +248,12 @@ public class CascadeUpdateServiceTest {
         stepDTOForUpdate.setStatus(Status.NOT_RUN);
         stepDTOForUpdate.setAction(Action.UPDATE);
 
-        editCaseDTO.setSteps(Lists.newArrayList(stepDTOForCreate, stepDTOForUpdate));
+        updateCaseDTO.setSteps(Lists.newArrayList(stepDTOForCreate, stepDTOForUpdate));
 
         cascadeUpdateService
-            .cascadeCaseStepsUpdate(PROJECT_ID, SUIT_ID, CASE_ID_FOR_UPDATE, editCaseDTO);
+            .cascadeCaseStepsUpdate(PROJECT_ID, SUIT_ID, CASE_ID_FOR_UPDATE, updateCaseDTO);
         verify(stepService)
-            .cascadeUpdateSteps(PROJECT_ID, SUIT_ID, CASE_ID_FOR_UPDATE, editCaseDTO.getSteps());
+            .cascadeUpdateSteps(PROJECT_ID, SUIT_ID, CASE_ID_FOR_UPDATE, updateCaseDTO.getSteps());
     }
 
 }

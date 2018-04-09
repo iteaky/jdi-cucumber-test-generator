@@ -1,7 +1,7 @@
 package com.epam.test_generator.services;
 
+import com.epam.test_generator.controllers.caze.request.updateCaseDTO;
 import com.epam.test_generator.controllers.caze.response.CaseDTO;
-import com.epam.test_generator.controllers.caze.request.EditCaseDTO;
 import com.epam.test_generator.dto.StepDTO;
 import com.epam.test_generator.dto.SuitDTO;
 import com.epam.test_generator.entities.Action;
@@ -31,9 +31,9 @@ public class CascadeUpdateService {
         if (suitDTO.getCases() == null) {
             return Collections.emptyList();
         }
-        final List<EditCaseDTO> casesForUpdate = getCasesForUpdate(suitDTO);
+        final List<updateCaseDTO> casesForUpdate = getCasesForUpdate(suitDTO);
 
-        final List<Long> distinctedListOfCasesIds = casesForUpdate.stream().map(EditCaseDTO::getId)
+        final List<Long> distinctedListOfCasesIds = casesForUpdate.stream().map(updateCaseDTO::getId)
             .distinct().collect(Collectors.toList());
 
         if (distinctedListOfCasesIds.size() != casesForUpdate.size()) {
@@ -57,12 +57,12 @@ public class CascadeUpdateService {
     }
 
     public List<Long> cascadeCaseStepsUpdate(Long projectId, Long suitId, Long caseId,
-                                             EditCaseDTO editCaseDTO) {
-        if (editCaseDTO.getAction().equals(Action.UPDATE)) {
-            if (editCaseDTO.getSteps() == null) {
+                                             updateCaseDTO updateCaseDTO) {
+        if (updateCaseDTO.getAction().equals(Action.UPDATE)) {
+            if (updateCaseDTO.getSteps() == null) {
                 return Collections.emptyList();
             }
-            stepService.cascadeUpdateSteps(projectId, suitId, caseId, editCaseDTO.getSteps());
+            stepService.cascadeUpdateSteps(projectId, suitId, caseId, updateCaseDTO.getSteps());
             return stepService.getStepsByCaseId(projectId, suitId, caseId).stream()
                 .filter(s -> s.getStatus().equals(Status.FAILED))
                 .map(StepDTO::getId).collect(Collectors.toList());
@@ -87,11 +87,11 @@ public class CascadeUpdateService {
             }
     }
 
-    private List<EditCaseDTO> getCasesForUpdate(SuitDTO suitDTO) {
+    private List<updateCaseDTO> getCasesForUpdate(SuitDTO suitDTO) {
 
         return suitDTO.getCases().stream()
             .filter(c -> c.getId() != 0)
-            .map(c -> new EditCaseDTO(
+            .map(c -> new updateCaseDTO(
                 c.getId(), c.getDescription(), c.getName(), c.getPriority(), c.getStatus(),
                 c.getSteps(), Action.UPDATE, c.getComment()))
             .collect(Collectors.toList());
@@ -104,11 +104,11 @@ public class CascadeUpdateService {
             .collect(Collectors.toList());
     }
 
-    private Map<Long, List<StepDTO>> getMapOfCaseIdAndItsListOfSteps(List<EditCaseDTO> cases) {
+    private Map<Long, List<StepDTO>> getMapOfCaseIdAndItsListOfSteps(List<updateCaseDTO> cases) {
 
         final Map<Long, List<StepDTO>> stepsOfCase = new HashMap<>();
 
-        for (EditCaseDTO aCase : cases) {
+        for (updateCaseDTO aCase : cases) {
             if (aCase.getSteps() == null) {
                 aCase.setSteps(Collections.emptyList());
             }
@@ -126,9 +126,9 @@ public class CascadeUpdateService {
     }
 
 
-    private void extractStepsFromCaseToMap(List<EditCaseDTO> cases,
+    private void extractStepsFromCaseToMap(List<updateCaseDTO> cases,
                                            Map<Long, List<StepDTO>> stepsOfCase) {
-        for (EditCaseDTO caseDTO : cases) {
+        for (updateCaseDTO caseDTO : cases) {
             stepsOfCase.put(caseDTO.getId(), caseDTO.getSteps());
             caseDTO.setSteps(Collections.emptyList());
         }
