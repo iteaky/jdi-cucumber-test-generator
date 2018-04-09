@@ -487,29 +487,6 @@ public class CaseServiceTest {
         verify(mock).removeCase(eq(SIMPLE_PROJECT_ID) , eq(SIMPLE_SUIT_ID), eq(editCaseDTO.getId()));
     }
 
-    /*@Test
-    public void updateCases_ActionIsUpdate_VerifyUpdateCaseInvoked()
-        throws MethodArgumentNotValidException {
-        editCaseDTO = new EditCaseDTO(1l,"desc", "name", 1,
-                Status.NOT_RUN, Collections.emptyList(), Action.UPDATE,  "comment");
-        updateCaseDTO = new UpdateCaseDTO("desc", "name", 1,
-                Status.NOT_RUN, Collections.emptyList(), "comment");
-        editCaseDTO.setId(SIMPLE_CASE_ID);
-        CaseDTO expectedCaseDTO = new CaseDTO(1l,"name", "desc", Collections.emptyList(),
-            1, Collections.emptySet(), Status.NOT_RUN, "comment");
-        CaseWithFailedStepsDTO expectedDto = new CaseWithFailedStepsDTO(expectedCaseDTO, Collections.emptyList());
-        List<CaseDTO> expectedCaseDTOs = Arrays.asList(expectedCaseDTO);
-
-        CaseService mock = mock(CaseService.class);
-        when(mock.updateCase(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID, SIMPLE_CASE_ID, updateCaseDTO)).thenReturn(expectedDto);
-        Mockito.doCallRealMethod().when(mock).updateCases(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID,
-                Collections.singletonList(editCaseDTO));
-        List<CaseDTO> actualUpdatedCaseDTOs = mock.updateCases(SIMPLE_PROJECT_ID , SIMPLE_SUIT_ID, Collections.singletonList(editCaseDTO));
-
-        //assertEquals(expectedCaseDTOs, actualUpdatedCaseDTOs);
-        verify(mock).updateCase(eq(SIMPLE_PROJECT_ID), eq(SIMPLE_SUIT_ID), eq(SIMPLE_CASE_ID), eq(updateCaseDTO));
-    }*/
-
     @Test
     public void updateCases_ActionIsCreate_VerifyAddCaseInvoked()
         throws MethodArgumentNotValidException {
