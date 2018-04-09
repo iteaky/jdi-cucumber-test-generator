@@ -4,6 +4,7 @@ import static com.epam.test_generator.services.utils.UtilsService.caseBelongsToS
 import static com.epam.test_generator.services.utils.UtilsService.checkNotNull;
 import static com.epam.test_generator.services.utils.UtilsService.tagBelongsToCase;
 
+import com.epam.test_generator.controllers.tag.request.TagCreateDTO;
 import com.epam.test_generator.controllers.tag.request.TagUpdateDTO;
 import com.epam.test_generator.dao.interfaces.CaseVersionDAO;
 import com.epam.test_generator.dao.interfaces.SuitVersionDAO;
@@ -87,7 +88,7 @@ public class TagService {
      * @param tagDTO    info to add
      * @return id of tag
      */
-    public Long addTagToCase(Long projectId, Long suitId, Long caseId, TagUpdateDTO tagDTO) {
+    public Long addTagToCase(Long projectId, Long suitId, Long caseId, TagCreateDTO tagDTO) {
         Suit suit = suitService.getSuit(projectId, suitId);
 
         Case caze = caseService.getCase(projectId, suitId, caseId);
@@ -113,7 +114,7 @@ public class TagService {
      * @param tagId     id of tag to update
      * @param tagDTO    info to update
      */
-    public void updateTag(Long projectId, Long suitId, Long caseId, Long tagId, TagDTO tagDTO) {
+    public void updateTag(Long projectId, Long suitId, Long caseId, Long tagId, TagUpdateDTO tagDTO) {
         Suit suit = suitService.getSuit(projectId, suitId);
 
         Case caze = caseService.getCase(projectId, suitId, caseId);
@@ -125,7 +126,7 @@ public class TagService {
 
         tagBelongsToCase(tag, caze);
 
-        tagTransformer.mapDTOToEntity(tagDTO, tag);
+        tagTransformer.updateFromDto(tagDTO, tag);
 
         tagDAO.save(tag);
 

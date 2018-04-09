@@ -10,6 +10,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.epam.test_generator.controllers.tag.request.TagCreateDTO;
+import com.epam.test_generator.controllers.tag.request.TagUpdateDTO;
 import com.epam.test_generator.dao.interfaces.CaseVersionDAO;
 import com.epam.test_generator.dao.interfaces.SuitVersionDAO;
 import com.epam.test_generator.dao.interfaces.TagDAO;
@@ -86,6 +88,8 @@ public class TagServiceTest {
     private User user;
     private Tag tag1;
     private Tag tag2;
+    private TagCreateDTO tagCreateDTO;
+    private TagUpdateDTO tagUpdateDTO;
 
     @Before
     public void setUp() {
@@ -98,6 +102,12 @@ public class TagServiceTest {
         expectedTagDTO2 = new TagDTO("tag2");
         expectedTagsDTOSet = new HashSet<>();
         expectedTagsDTOSet.add(expectedTagDTO);
+
+        tagCreateDTO = new TagCreateDTO();
+        tagCreateDTO.setName("tag1");
+
+        tagUpdateDTO = new TagUpdateDTO();
+        tagUpdateDTO.setName("tag2");
 
         final List<Case> expectedCaseList = new ArrayList<>();
 
@@ -165,19 +175,17 @@ public class TagServiceTest {
         tagDTO.setName("name");
 
         when(suitService.getSuit(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID)).thenReturn(suit);
-        //when(suitTransformer.fromDto(any(SuitDTO.class))).thenReturn(suit);
         when(caseService.getCase(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID,SIMPLE_CASE_ID)).thenReturn(caze);
-        //when(caseTransformer.fromDto(any(CaseDTO.class))).thenReturn(caze);
-        when(tagTransformer.fromDto(any(TagDTO.class))).thenReturn(tag);
+        when(tagTransformer.fromDto(any(TagCreateDTO.class))).thenReturn(tag);
         when(tagDAO.save(any(Tag.class))).thenReturn(tag);
 
-        Long actualLong = tagService.addTagToCase(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID, SIMPLE_CASE_ID, tagDTO);
+        Long actualLong = tagService.addTagToCase(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID, SIMPLE_CASE_ID, tagCreateDTO);
         assertEquals(tag.getId(), actualLong);
         assertTrue(caze.getTags().contains(tag));
 
         verify(suitService).getSuit(eq(SIMPLE_PROJECT_ID),eq(SIMPLE_SUIT_ID));
         verify(caseService).getCase(eq(SIMPLE_PROJECT_ID),eq(SIMPLE_SUIT_ID),eq(SIMPLE_CASE_ID));
-        verify(tagTransformer).fromDto(any(TagDTO.class));
+        verify(tagTransformer).fromDto(any(TagCreateDTO.class));
         verify(tagDAO).save(any(Tag.class));
         verify(caseVersionDAO).save(eq(caze));
     }
@@ -186,7 +194,7 @@ public class TagServiceTest {
 	public void add_TagToCase_NotFoundExceptionFromSuit() {
         doThrow(NotFoundException.class).when(suitService).getSuit(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID);
 
-        tagService.addTagToCase(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID, SIMPLE_CASE_ID, new TagDTO());
+        tagService.addTagToCase(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID, SIMPLE_CASE_ID, new TagCreateDTO());
     }
 
 	@Test(expected = NotFoundException.class)
@@ -195,7 +203,7 @@ public class TagServiceTest {
         when(suitTransformer.fromDto(any(SuitDTO.class))).thenReturn(suit);
         doThrow(NotFoundException.class).when(caseService).getCase(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID,SIMPLE_CASE_ID);
 
-        tagService.addTagToCase(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID, SIMPLE_CASE_ID, new TagDTO());
+        tagService.addTagToCase(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID, SIMPLE_CASE_ID, new TagCreateDTO());
     }
 
     @Test
@@ -207,7 +215,7 @@ public class TagServiceTest {
         when(tagDAO.findOne(anyLong())).thenReturn(expectedTag);
         when(tagDAO.save(any(Tag.class))).thenReturn(expectedTag);
 
-        tagService.updateTag(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID, SIMPLE_CASE_ID, SIMPLE_TAG_ID, expectedTagDTO);
+        tagService.updateTag(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID, SIMPLE_CASE_ID, SIMPLE_TAG_ID, tagUpdateDTO);
         assertTrue(caze.getTags().contains(expectedTag));
 
         verify(suitService).getSuit(eq(SIMPLE_PROJECT_ID),eq(SIMPLE_SUIT_ID));
@@ -221,7 +229,7 @@ public class TagServiceTest {
 	public void update_Tag_NotFoundExceptionFromSuit() {
         doThrow(NotFoundException.class).when(suitService).getSuit(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID);
 
-        tagService.updateTag(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID, SIMPLE_CASE_ID, SIMPLE_TAG_ID, new TagDTO());
+        tagService.updateTag(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID, SIMPLE_CASE_ID, SIMPLE_TAG_ID, new TagUpdateDTO());
     }
 
 	@Test(expected = NotFoundException.class)
@@ -230,7 +238,7 @@ public class TagServiceTest {
         when(suitTransformer.fromDto(any(SuitDTO.class))).thenReturn(suit);
         doThrow(NotFoundException.class).when(caseService).getCase(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID,SIMPLE_CASE_ID);
 
-        tagService.updateTag(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID, SIMPLE_CASE_ID, SIMPLE_TAG_ID, new TagDTO());
+        tagService.updateTag(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID, SIMPLE_CASE_ID, SIMPLE_TAG_ID, new TagUpdateDTO());
     }
 
 	@Test(expected = NotFoundException.class)
@@ -241,7 +249,7 @@ public class TagServiceTest {
         when(caseTransformer.fromDto(any(CaseDTO.class))).thenReturn(caze);
 		when(tagDAO.findOne(anyLong())).thenReturn(null);
 
-        tagService.updateTag(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID, SIMPLE_CASE_ID, SIMPLE_TAG_ID, new TagDTO());
+        tagService.updateTag(SIMPLE_PROJECT_ID, SIMPLE_SUIT_ID, SIMPLE_CASE_ID, SIMPLE_TAG_ID, new TagUpdateDTO());
     }
 
     @Test

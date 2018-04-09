@@ -175,7 +175,7 @@ public class CaseService {
             .cascadeCaseStepsUpdate(projectId, suitId, caseId, editCaseDTO);
         caze.setUpdateDate(Calendar.getInstance().getTime());
         if (editCaseDTO.getTags() != null) {
-            caze.setTags(new HashSet<>(tagTransformer.fromDtoList(editCaseDTO.getTags())));
+            caze.setTags(new HashSet<>(tagTransformer.fromListDto(editCaseDTO.getTags())));
         }
         caze.setDescription(editCaseDTO.getDescription());
         caze.setPriority(editCaseDTO.getPriority());

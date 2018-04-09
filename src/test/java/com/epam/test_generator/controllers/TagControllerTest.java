@@ -15,6 +15,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.epam.test_generator.controllers.tag.TagController;
+import com.epam.test_generator.controllers.tag.request.TagCreateDTO;
+import com.epam.test_generator.controllers.tag.request.TagUpdateDTO;
 import com.epam.test_generator.dto.CaseDTO;
 import com.epam.test_generator.dto.SuitDTO;
 import com.epam.test_generator.controllers.tag.response.TagDTO;
@@ -52,6 +54,10 @@ public class TagControllerTest {
     private CaseDTO caseDTO;
     private List<CaseDTO> caseDTOList;
     private SuitDTO suitDTO;
+    private TagCreateDTO tagCreateDTO;
+    private TagUpdateDTO tagUpdateDTO;
+
+
     @Mock
     private SuitService suitService;
 
@@ -93,6 +99,12 @@ public class TagControllerTest {
 
         tagDTOSet = new HashSet<>();
         tagDTOSet.add(tagDTO);
+
+        tagCreateDTO = new TagCreateDTO();
+        tagCreateDTO.setName("Create Tag");
+
+        tagUpdateDTO = new TagUpdateDTO();
+        tagUpdateDTO.setName("Update Tag");
 
         caseDTO.setTags(tagDTOSet);
     }
@@ -161,56 +173,56 @@ public class TagControllerTest {
     @Test
     public void add_NewTag_StatusOk() throws Exception {
         tagDTO.setId(null);
-        when(tagService.addTagToCase(anyLong(), anyLong(), anyLong(), any(TagDTO.class)))
+        when(tagService.addTagToCase(anyLong(), anyLong(), anyLong(), any(TagCreateDTO.class)))
             .thenReturn(SIMPLE_TAG_ID);
 
         mockMvc.perform(post("/projects/" + SIMPLE_PROJECT_ID + "/suits/" + SIMPLE_SUIT_ID + "/cases/" + SIMPLE_CASE_ID + "/tags")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(mapper.writeValueAsString(tagDTO)))
+            .content(mapper.writeValueAsString(tagCreateDTO)))
             .andExpect(status().isCreated())
             .andExpect(content().string(String.valueOf(SIMPLE_TAG_ID)));
 
-        verify(tagService).addTagToCase(eq(SIMPLE_PROJECT_ID), eq(SIMPLE_SUIT_ID), eq(SIMPLE_CASE_ID), eq(tagDTO));
+        verify(tagService).addTagToCase(eq(SIMPLE_PROJECT_ID), eq(SIMPLE_SUIT_ID), eq(SIMPLE_CASE_ID), eq(tagCreateDTO));
     }
 
     @Test
     public void addTag_SuitOrCaseNotExist_StatusNotFound() throws Exception {
-        when(tagService.addTagToCase(anyLong(), anyLong(), anyLong(), any(TagDTO.class)))
+        when(tagService.addTagToCase(anyLong(), anyLong(), anyLong(), any(TagCreateDTO.class)))
             .thenThrow(NotFoundException.class);
 
         mockMvc.perform(post("/projects/" + SIMPLE_PROJECT_ID + "/suits/" + SIMPLE_SUIT_ID + "/cases/" + SIMPLE_CASE_ID + "/tags")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(mapper.writeValueAsString(tagDTO)))
+            .content(mapper.writeValueAsString(tagCreateDTO)))
             .andExpect(status().isNotFound());
 
-        verify(tagService).addTagToCase(eq(SIMPLE_PROJECT_ID), eq(SIMPLE_SUIT_ID), eq(SIMPLE_CASE_ID), any(TagDTO.class));
+        verify(tagService).addTagToCase(eq(SIMPLE_PROJECT_ID), eq(SIMPLE_SUIT_ID), eq(SIMPLE_CASE_ID), any(TagCreateDTO.class));
     }
 
     @Test
     public void addTag_SuitNotContainsCase_StatusBadRequest() throws Exception {
-        when(tagService.addTagToCase(anyLong(), anyLong(), anyLong(), any(TagDTO.class)))
+        when(tagService.addTagToCase(anyLong(), anyLong(), anyLong(), any(TagCreateDTO.class)))
             .thenThrow(BadRequestException.class);
 
         mockMvc.perform(post("/projects/" + SIMPLE_PROJECT_ID + "/suits/" + SIMPLE_SUIT_ID + "/cases/" + SIMPLE_CASE_ID + "/tags")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(mapper.writeValueAsString(tagDTO)))
+            .content(mapper.writeValueAsString(tagCreateDTO)))
             .andExpect(status().isBadRequest());
 
-        verify(tagService).addTagToCase(eq(SIMPLE_PROJECT_ID), eq(SIMPLE_SUIT_ID), eq(SIMPLE_CASE_ID), any(TagDTO.class));
+        verify(tagService).addTagToCase(eq(SIMPLE_PROJECT_ID), eq(SIMPLE_SUIT_ID), eq(SIMPLE_CASE_ID), any(TagCreateDTO.class));
     }
 
     @Test
     public void addTag_ThrowRuntimeException_StatusInternalServerError() throws Exception {
         tagDTO.setId(null);
-        when(tagService.addTagToCase(anyLong(), anyLong(), anyLong(), any(TagDTO.class)))
+        when(tagService.addTagToCase(anyLong(), anyLong(), anyLong(), any(TagCreateDTO.class)))
             .thenThrow(new RuntimeException());
 
         mockMvc.perform(post("/projects/" + SIMPLE_PROJECT_ID + "/suits/" + SIMPLE_SUIT_ID + "/cases/" + SIMPLE_CASE_ID + "/tags")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(mapper.writeValueAsString(tagDTO)))
+            .content(mapper.writeValueAsString(tagCreateDTO)))
             .andExpect(status().isInternalServerError());
 
-        verify(tagService).addTagToCase(eq(SIMPLE_PROJECT_ID), eq(SIMPLE_SUIT_ID), eq(SIMPLE_CASE_ID), any(TagDTO.class));
+        verify(tagService).addTagToCase(eq(SIMPLE_PROJECT_ID), eq(SIMPLE_SUIT_ID), eq(SIMPLE_CASE_ID), any(TagCreateDTO.class));
     }
 
     @Test
@@ -222,13 +234,13 @@ public class TagControllerTest {
             .andExpect(status().isOk());
 
         verify(tagService).updateTag(eq(SIMPLE_PROJECT_ID), eq(SIMPLE_SUIT_ID), eq(SIMPLE_CASE_ID), eq(SIMPLE_TAG_ID),
-            any(TagDTO.class));
+            any(TagUpdateDTO.class));
     }
 
     @Test
     public void updateTag_SuitOrCaseNotExist_StatusNotFound() throws Exception {
         doThrow(NotFoundException.class).when(tagService)
-            .updateTag(anyLong(), anyLong(), anyLong(), anyLong(), any(TagDTO.class));
+            .updateTag(anyLong(), anyLong(), anyLong(), anyLong(), any(TagUpdateDTO.class));
 
         mockMvc.perform(
             put("/projects/" + SIMPLE_PROJECT_ID + "/suits/" + SIMPLE_SUIT_ID + "/cases/" + SIMPLE_CASE_ID + "/tags/" + SIMPLE_TAG_ID)
@@ -237,7 +249,7 @@ public class TagControllerTest {
             .andExpect(status().isNotFound());
 
         verify(tagService).updateTag(eq(SIMPLE_PROJECT_ID), eq(SIMPLE_SUIT_ID), eq(SIMPLE_CASE_ID), eq(SIMPLE_TAG_ID),
-            any(TagDTO.class));
+            any(TagUpdateDTO.class));
     }
 
     @Test
@@ -245,31 +257,31 @@ public class TagControllerTest {
         throws Exception {
         suitDTO.setCases(null);
         doThrow(BadRequestException.class).when(tagService)
-            .updateTag(anyLong(), anyLong(), anyLong(), anyLong(), any(TagDTO.class));
+            .updateTag(anyLong(), anyLong(), anyLong(), anyLong(), any(TagUpdateDTO.class));
 
         mockMvc.perform(
             put("/projects/" + SIMPLE_PROJECT_ID + "/suits/" + SIMPLE_SUIT_ID + "/cases/" + SIMPLE_CASE_ID + "/tags/" + SIMPLE_TAG_ID)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(tagDTO)))
+                .content(mapper.writeValueAsString(tagUpdateDTO)))
             .andExpect(status().isBadRequest());
 
         verify(tagService).updateTag(eq(SIMPLE_PROJECT_ID), eq(SIMPLE_SUIT_ID), eq(SIMPLE_CASE_ID), eq(SIMPLE_TAG_ID),
-            any(TagDTO.class));
+            any(TagUpdateDTO.class));
     }
 
     @Test
     public void updateTag_ThrowRuntimeException_StatusInternalServerError() throws Exception {
         doThrow(RuntimeException.class).when(tagService)
-            .updateTag(anyLong(), anyLong(), anyLong(), anyLong(), any(TagDTO.class));
+            .updateTag(anyLong(), anyLong(), anyLong(), anyLong(), any(TagUpdateDTO.class));
 
         mockMvc.perform(
             put("/projects/" + SIMPLE_PROJECT_ID + "/suits/" + SIMPLE_SUIT_ID + "/cases/" + SIMPLE_CASE_ID + "/tags/" + SIMPLE_TAG_ID)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(tagDTO)))
+                .content(mapper.writeValueAsString(tagUpdateDTO)))
             .andExpect(status().isInternalServerError());
 
         verify(tagService).updateTag(eq(SIMPLE_PROJECT_ID), eq(SIMPLE_SUIT_ID), eq(SIMPLE_CASE_ID), eq(SIMPLE_TAG_ID),
-            any(TagDTO.class));
+            any(TagUpdateDTO.class));
     }
 
     @Test
