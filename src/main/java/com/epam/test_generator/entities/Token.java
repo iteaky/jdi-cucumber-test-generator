@@ -13,7 +13,10 @@ import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
 /**
- * This class represents token entity. Token is a special key that is used for user identification.
+ * This class represents token entity.
+ * Token is a special key used to confirm user identity
+ * while performing password reset or any REST API methods
+ *
  */
 @Entity
 public class Token implements TokenTrait {
