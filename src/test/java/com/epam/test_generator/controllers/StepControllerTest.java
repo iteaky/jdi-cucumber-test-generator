@@ -18,8 +18,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.epam.test_generator.controllers.step.StepController;
+import com.epam.test_generator.controllers.step.request.StepCreateDTO;
+import com.epam.test_generator.controllers.step.request.StepUpdateDTO;
 import com.epam.test_generator.dto.CaseDTO;
-import com.epam.test_generator.dto.StepDTO;
+import com.epam.test_generator.controllers.step.response.StepDTO;
 import com.epam.test_generator.dto.SuitDTO;
 import com.epam.test_generator.controllers.tag.response.TagDTO;
 import com.epam.test_generator.entities.Status;
@@ -67,6 +70,8 @@ public class StepControllerTest {
     private CaseDTO caseDTO;
     private SuitDTO suitDTO;
     private StepDTO stepDTO;
+    private StepCreateDTO stepCreateDTO;
+    private StepUpdateDTO stepUpdateDTO;
     private List<StepDTO> stepDTOS;
     private List<CaseDTO> caseDTOS;
 
@@ -83,6 +88,16 @@ public class StepControllerTest {
         stepDTO.setStatus(Status.NOT_RUN);
         stepDTOS = new ArrayList<>();
         stepDTOS.add(stepDTO);
+
+        stepCreateDTO = new StepCreateDTO();
+        stepCreateDTO.setDescription("description of step");
+        stepCreateDTO.setRowNumber(1);
+        stepCreateDTO.setType(StepType.THEN);
+        stepCreateDTO.setStatus(Status.NOT_RUN);
+
+        stepUpdateDTO = new StepUpdateDTO();
+        stepUpdateDTO.setDescription("Updated description");
+        stepUpdateDTO.setComment("new comment");
 
         SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
 
@@ -203,60 +218,60 @@ public class StepControllerTest {
 
     @Test
     public void addStepToCase_StepDTO_StatusCreated() throws Exception {
-        when(stepService.addStepToCase(anyLong(), anyLong(), anyLong(), any(StepDTO.class)))
+        when(stepService.addStepToCase(anyLong(), anyLong(), anyLong(), any(StepCreateDTO.class)))
             .thenReturn(SIMPLE_STEP_ID);
 
         mockMvc.perform(post("/projects/" + SIMPLE_PROJECT_ID + "/suits/" + SIMPLE_SUIT_ID + "/cases/" + SIMPLE_CASE_ID + "/steps")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(mapper.writeValueAsString(stepDTO)))
+            .content(mapper.writeValueAsString(stepCreateDTO)))
             .andExpect(status().isCreated())
             .andExpect(content().string(String.valueOf(SIMPLE_STEP_ID)));
 
         verify(stepService)
-            .addStepToCase(eq(SIMPLE_PROJECT_ID), eq(SIMPLE_SUIT_ID), eq(SIMPLE_CASE_ID), any(StepDTO.class));
+            .addStepToCase(eq(SIMPLE_PROJECT_ID), eq(SIMPLE_SUIT_ID), eq(SIMPLE_CASE_ID), any(StepCreateDTO.class));
 
     }
 
     @Test
     public void addStepToCase_SuitOrCaseNotExist_StatusNotFound() throws Exception {
-        when(stepService.addStepToCase(anyLong(), anyLong(), anyLong(), any(StepDTO.class)))
+        when(stepService.addStepToCase(anyLong(), anyLong(), anyLong(), any(StepCreateDTO.class)))
             .thenThrow(new NotFoundException());
 
         mockMvc.perform(post("/projects/" + SIMPLE_PROJECT_ID + "/suits/" + SIMPLE_SUIT_ID + "/cases/" + SIMPLE_CASE_ID + "/steps")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(mapper.writeValueAsString(stepDTO)))
+            .content(mapper.writeValueAsString(stepCreateDTO)))
             .andExpect(status().isNotFound());
 
         verify(stepService)
-            .addStepToCase(eq(SIMPLE_PROJECT_ID), eq(SIMPLE_SUIT_ID), eq(SIMPLE_CASE_ID), any(StepDTO.class));
+            .addStepToCase(eq(SIMPLE_PROJECT_ID), eq(SIMPLE_SUIT_ID), eq(SIMPLE_CASE_ID), any(StepCreateDTO.class));
     }
 
     @Test
     public void addStepToCase_SuitNotContainsCase_StatusBadRequest() throws Exception {
-        when(stepService.addStepToCase(anyLong(), anyLong(), anyLong(), any(StepDTO.class)))
+        when(stepService.addStepToCase(anyLong(), anyLong(), anyLong(), any(StepCreateDTO.class)))
             .thenThrow(new BadRequestException());
 
         mockMvc.perform(post("/projects/" + SIMPLE_PROJECT_ID + "/suits/" + SIMPLE_SUIT_ID + "/cases/" + SIMPLE_CASE_ID + "/steps")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(mapper.writeValueAsString(stepDTO)))
+            .content(mapper.writeValueAsString(stepCreateDTO)))
             .andExpect(status().isBadRequest());
 
         verify(stepService)
-            .addStepToCase(eq(SIMPLE_PROJECT_ID), eq(SIMPLE_SUIT_ID), eq(SIMPLE_CASE_ID), any(StepDTO.class));
+            .addStepToCase(eq(SIMPLE_PROJECT_ID), eq(SIMPLE_SUIT_ID), eq(SIMPLE_CASE_ID), any(StepCreateDTO.class));
     }
 
     @Test
     public void addStepToCase_RuntimeException_StatusInternalServerError() throws Exception {
-        when(stepService.addStepToCase(anyLong(), anyLong(), anyLong(), any(StepDTO.class)))
+        when(stepService.addStepToCase(anyLong(), anyLong(), anyLong(), any(StepCreateDTO.class)))
             .thenThrow(new RuntimeException());
 
         mockMvc.perform(post("/projects/" + SIMPLE_PROJECT_ID + "/suits/" + SIMPLE_SUIT_ID + "/cases/" + SIMPLE_CASE_ID + "/steps")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(mapper.writeValueAsString(stepDTO)))
+            .content(mapper.writeValueAsString(stepCreateDTO)))
             .andExpect(status().isInternalServerError());
 
         verify(stepService)
-            .addStepToCase(eq(SIMPLE_PROJECT_ID), eq(SIMPLE_SUIT_ID), eq(SIMPLE_CASE_ID), any(StepDTO.class));
+            .addStepToCase(eq(SIMPLE_PROJECT_ID), eq(SIMPLE_SUIT_ID), eq(SIMPLE_CASE_ID), any(StepCreateDTO.class));
     }
 
     @Test
@@ -264,58 +279,58 @@ public class StepControllerTest {
         mockMvc.perform(put("/projects/" + SIMPLE_PROJECT_ID + "/suits/" + SIMPLE_SUIT_ID + "/cases/" + SIMPLE_CASE_ID + "/steps/"
             + SIMPLE_STEP_ID)
             .contentType(MediaType.APPLICATION_JSON)
-            .content(mapper.writeValueAsString(stepDTO)))
+            .content(mapper.writeValueAsString(stepUpdateDTO)))
             .andExpect(status().isOk());
 
         verify(stepService).updateStep(eq(SIMPLE_PROJECT_ID), eq(SIMPLE_SUIT_ID), eq(SIMPLE_CASE_ID), eq(SIMPLE_STEP_ID),
-            any(StepDTO.class));
+            any(StepUpdateDTO.class));
     }
 
     @Test
     public void updateStep_SuitOrCaseOrStepNotExist_StatusNotFound()
         throws Exception {
         doThrow(NotFoundException.class).when(stepService)
-            .updateStep(anyLong(), anyLong(), anyLong(), anyLong(), any(StepDTO.class));
+            .updateStep(anyLong(), anyLong(), anyLong(), anyLong(), any(StepUpdateDTO.class));
 
         mockMvc.perform(put("/projects/" + SIMPLE_PROJECT_ID + "/suits/" + SIMPLE_SUIT_ID + "/cases/" + SIMPLE_CASE_ID + "/steps/"
             + SIMPLE_STEP_ID)
             .contentType(MediaType.APPLICATION_JSON)
-            .content(mapper.writeValueAsString(stepDTO)))
+            .content(mapper.writeValueAsString(stepUpdateDTO)))
             .andExpect(status().isNotFound());
 
         verify(stepService).updateStep(eq(SIMPLE_PROJECT_ID), eq(SIMPLE_SUIT_ID), eq(SIMPLE_CASE_ID), eq(SIMPLE_STEP_ID),
-            any(StepDTO.class));
+            any(StepUpdateDTO.class));
     }
 
     @Test
     public void updateStep_SuitNotContainsCaseOrCaseNotContainsStep_StatusBadRequest()
         throws Exception {
         doThrow(BadRequestException.class).when(stepService)
-            .updateStep(anyLong(), anyLong(), anyLong(), anyLong(), any(StepDTO.class));
+            .updateStep(anyLong(), anyLong(), anyLong(), anyLong(), any(StepUpdateDTO.class));
 
         mockMvc.perform(put("/projects/" + SIMPLE_PROJECT_ID + "/suits/" + SIMPLE_SUIT_ID + "/cases/" + SIMPLE_CASE_ID + "/steps/"
             + SIMPLE_STEP_ID)
             .contentType(MediaType.APPLICATION_JSON)
-            .content(mapper.writeValueAsString(stepDTO)))
+            .content(mapper.writeValueAsString(stepUpdateDTO)))
             .andExpect(status().isBadRequest());
 
         verify(stepService).updateStep(eq(SIMPLE_PROJECT_ID), eq(SIMPLE_SUIT_ID), eq(SIMPLE_CASE_ID), eq(SIMPLE_STEP_ID),
-            any(StepDTO.class));
+            any(StepUpdateDTO.class));
     }
 
     @Test
     public void updateStep_RuntimeException_StatusInternalServerError() throws Exception {
         doThrow(RuntimeException.class).when(stepService)
-            .updateStep(anyLong(), anyLong(), anyLong(), anyLong(), any(StepDTO.class));
+            .updateStep(anyLong(), anyLong(), anyLong(), anyLong(), any(StepUpdateDTO.class));
 
         mockMvc.perform(put("/projects/" + SIMPLE_PROJECT_ID + "/suits/" + SIMPLE_SUIT_ID + "/cases/" + SIMPLE_CASE_ID + "/steps/"
             + SIMPLE_STEP_ID)
             .contentType(MediaType.APPLICATION_JSON)
-            .content(mapper.writeValueAsString(stepDTO)))
+            .content(mapper.writeValueAsString(stepUpdateDTO)))
             .andExpect(status().isInternalServerError());
 
         verify(stepService).updateStep(eq(SIMPLE_PROJECT_ID), eq(SIMPLE_SUIT_ID), eq(SIMPLE_CASE_ID), eq(SIMPLE_STEP_ID),
-            any(StepDTO.class));
+            any(StepUpdateDTO.class));
     }
 
     @Test
@@ -362,44 +377,5 @@ public class StepControllerTest {
             .andExpect(status().isInternalServerError());
 
         verify(stepService).removeStep(eq(SIMPLE_PROJECT_ID), eq(SIMPLE_SUIT_ID), eq(SIMPLE_CASE_ID), eq(SIMPLE_STEP_ID));
-    }
-
-
-    @Test
-    public void updateSteps_StepDTO_StatusOk() throws Exception {
-        mockMvc.perform(put("/projects/" + SIMPLE_PROJECT_ID + "/suits/" + SIMPLE_SUIT_ID + "/cases/" + SIMPLE_CASE_ID + "/steps")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(mapper.writeValueAsString(stepDTOS)))
-            .andExpect(status().isOk());
-
-        verify(stepService).cascadeUpdateSteps(eq(SIMPLE_PROJECT_ID), eq(SIMPLE_SUIT_ID), eq(SIMPLE_CASE_ID), anyList());
-        verify(stepService, never())
-            .addStepToCase(eq(SIMPLE_PROJECT_ID), eq(SIMPLE_SUIT_ID), eq(SIMPLE_CASE_ID), any(StepDTO.class));
-        verify(stepService, never())
-            .removeStep(eq(SIMPLE_PROJECT_ID), eq(SIMPLE_SUIT_ID), eq(SIMPLE_CASE_ID), eq(SIMPLE_STEP_ID));
-        verify(stepService, never())
-            .updateStep(eq(SIMPLE_PROJECT_ID), eq(SIMPLE_SUIT_ID), eq(SIMPLE_CASE_ID), eq(SIMPLE_STEP_ID),
-                any(StepDTO.class));
-    }
-
-    @Test
-    public void updateSteps_SuitOrCaseOrStepNotExist_StatusNotFound()
-        throws Exception {
-        Mockito.doCallRealMethod().when(stepService)
-            .cascadeUpdateSteps(anyLong(), anyLong(), anyInt(), anyList());
-        doThrow(NotFoundException.class).when(stepService)
-            .removeStep(anyLong(), anyLong(), anyLong(), anyLong());
-
-        String request = mapper.writeValueAsString(stepDTOS);
-        // By default the action field is hidden in JSON, must added to request manually
-        request = request.replace("}]", ",\"action\":\"DELETE\"}]");
-
-        mockMvc.perform(put("/projects/" + SIMPLE_PROJECT_ID + "/suits/" + SIMPLE_SUIT_ID + "/cases/" + SIMPLE_CASE_ID + "/steps")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(request))
-            .andExpect(status().isNotFound());
-
-        verify(stepService)
-            .cascadeUpdateSteps(eq(SIMPLE_PROJECT_ID), eq(SIMPLE_SUIT_ID), eq(SIMPLE_CASE_ID), eq(stepDTOS));
     }
 }

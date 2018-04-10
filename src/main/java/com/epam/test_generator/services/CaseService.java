@@ -11,7 +11,7 @@ import com.epam.test_generator.dto.CaseDTO;
 import com.epam.test_generator.dto.CaseUpdateDTO;
 import com.epam.test_generator.dto.CaseVersionDTO;
 import com.epam.test_generator.dto.EditCaseDTO;
-import com.epam.test_generator.dto.StepDTO;
+import com.epam.test_generator.controllers.step.response.StepDTO;
 import com.epam.test_generator.dto.SuitUpdateDTO;
 import com.epam.test_generator.entities.Case;
 import com.epam.test_generator.entities.Event;

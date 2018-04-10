@@ -7,7 +7,7 @@ import com.epam.test_generator.dao.interfaces.CaseVersionDAO;
 import com.epam.test_generator.dao.interfaces.RemovedIssueDAO;
 import com.epam.test_generator.dao.interfaces.SuitDAO;
 import com.epam.test_generator.dao.interfaces.SuitVersionDAO;
-import com.epam.test_generator.dto.StepDTO;
+import com.epam.test_generator.controllers.step.response.StepDTO;
 import com.epam.test_generator.dto.SuitDTO;
 import com.epam.test_generator.dto.SuitRowNumberUpdateDTO;
 import com.epam.test_generator.dto.SuitUpdateDTO;
