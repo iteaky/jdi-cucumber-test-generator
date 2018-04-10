@@ -1,8 +1,9 @@
 package com.epam.test_generator.controllers;
 
-import com.epam.test_generator.dto.ExecuteJenkinsJobDTO;
-import com.epam.test_generator.services.jenkins.JenkinsJobService;
-import com.epam.test_generator.services.jenkins.JenkinsJobService.ExecuteJenkinsJobResponse;
+import com.epam.test_generator.controllers.jenkins.JenkinsController;
+import com.epam.test_generator.controllers.jenkins.request.ExecuteJenkinsJobDTO;
+import com.epam.test_generator.controllers.jenkins.response.CommonJenkinsJobDTO;
+import com.epam.test_generator.controllers.jenkins.response.ExecutedJenkinsJobDTO;
 import com.epam.test_generator.services.jenkins.JenkinsJobServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
@@ -10,7 +11,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -35,8 +35,8 @@ public class JenkinsControllerTest {
     private ObjectMapper mapper = new ObjectMapper();
     private MockMvc mockMvc;
     private String jobName = "jobName";
-    private ExecuteJenkinsJobResponse executeJenkinsJobResponse;
-    private List<JenkinsJobService.CommonJenkinsJobResponse> jobsList;
+    private ExecutedJenkinsJobDTO executedJenkinsJobResponse;
+    private List<CommonJenkinsJobDTO> jobsList;
 
     @Mock
     private JenkinsJobServiceImpl jenkinsJobService;
@@ -50,12 +50,12 @@ public class JenkinsControllerTest {
             .setControllerAdvice(new GlobalExceptionController())
             .build();
 
-        executeJenkinsJobResponse = new ExecuteJenkinsJobResponse();
-        executeJenkinsJobResponse.setJobName("jobName");
-        executeJenkinsJobResponse.setJobUrl("jobURL");
-        executeJenkinsJobResponse.setQueueUrl("queueUrl");
-        executeJenkinsJobResponse.setQueueExecutableId(1L);
-        executeJenkinsJobResponse.setQueueExecutableUrl("queueExecutableURL");
+        executedJenkinsJobResponse = new ExecutedJenkinsJobDTO();
+        executedJenkinsJobResponse.setJobName("jobName");
+        executedJenkinsJobResponse.setJobUrl("jobURL");
+        executedJenkinsJobResponse.setQueueUrl("queueUrl");
+        executedJenkinsJobResponse.setQueueExecutableId(1L);
+        executedJenkinsJobResponse.setQueueExecutableUrl("queueExecutableURL");
 
         jobsList = new ArrayList<>();
     }
@@ -80,12 +80,12 @@ public class JenkinsControllerTest {
         ExecuteJenkinsJobDTO jobDTO = new ExecuteJenkinsJobDTO();
         jobDTO.setJobName(jobName);
 
-        when(jenkinsJobService.runJob(jobName)).thenReturn(executeJenkinsJobResponse);
+        when(jenkinsJobService.runJob(jobName)).thenReturn(executedJenkinsJobResponse);
         String json = mapper.writeValueAsString(jobDTO);
         mockMvc.perform(
             post("/jenkins/job/execute").contentType(MediaType.APPLICATION_JSON).content(json))
             .andExpect(status().isOk())
-            .andExpect(content().string(mapper.writeValueAsString(executeJenkinsJobResponse)));
+            .andExpect(content().string(mapper.writeValueAsString(executedJenkinsJobResponse)));
 
         verify(jenkinsJobService).runJob(eq(jobName));
         verifyNoMoreInteractions(jenkinsJobService);
@@ -95,7 +95,7 @@ public class JenkinsControllerTest {
     public void executeJob_JobWithoutJobName_StatusBadRequest() throws Exception {
         ExecuteJenkinsJobDTO jobDTO = new ExecuteJenkinsJobDTO();
 
-        when(jenkinsJobService.runJob(jobName)).thenReturn(executeJenkinsJobResponse);
+        when(jenkinsJobService.runJob(jobName)).thenReturn(executedJenkinsJobResponse);
         String json = mapper.writeValueAsString(jobDTO);
         mockMvc.perform(
             post("/jenkins/job/execute").contentType(MediaType.APPLICATION_JSON).content(json))

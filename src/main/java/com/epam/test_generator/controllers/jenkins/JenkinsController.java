@@ -1,9 +1,9 @@
-package com.epam.test_generator.controllers;
+package com.epam.test_generator.controllers.jenkins;
 
-import com.epam.test_generator.dto.ExecuteJenkinsJobDTO;
+import com.epam.test_generator.controllers.jenkins.request.ExecuteJenkinsJobDTO;
+import com.epam.test_generator.controllers.jenkins.response.CommonJenkinsJobDTO;
+import com.epam.test_generator.controllers.jenkins.response.ExecutedJenkinsJobDTO;
 import com.epam.test_generator.services.jenkins.JenkinsJobService;
-import com.epam.test_generator.services.jenkins.JenkinsJobService.CommonJenkinsJobResponse;
-import com.epam.test_generator.services.jenkins.JenkinsJobService.ExecuteJenkinsJobResponse;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import java.util.List;
@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -40,7 +39,7 @@ public class JenkinsController {
     })
     @Secured({"ROLE_ADMIN", "ROLE_TEST_ENGINEER", "ROLE_TEST_LEAD", "ROLE_GUEST"})
     @RequestMapping(path = "/job", method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<List<CommonJenkinsJobResponse>> getJobs() throws Exception {
+    public ResponseEntity<List<CommonJenkinsJobDTO>> getJobs() throws Exception {
         return new ResponseEntity<>(jenkinsJobService.getJobs(), HttpStatus.OK);
     }
 
@@ -55,7 +54,7 @@ public class JenkinsController {
     })
     @Secured({"ROLE_ADMIN", "ROLE_TEST_ENGINEER", "ROLE_TEST_LEAD", "ROLE_GUEST"})
     @RequestMapping(path = "/job/execute", method = RequestMethod.POST, produces = "application/json")
-    public ResponseEntity<ExecuteJenkinsJobResponse> executeJob(
+    public ResponseEntity<ExecutedJenkinsJobDTO> executeJob(
         @RequestBody @Valid ExecuteJenkinsJobDTO jobDTO) throws Exception {
         return new ResponseEntity<>(jenkinsJobService.runJob(jobDTO.getJobName()), HttpStatus.OK);
     }
