@@ -13,7 +13,7 @@ import com.epam.test_generator.dao.interfaces.TestResultDAO;
 import com.epam.test_generator.dto.RawCaseResultDTO;
 import com.epam.test_generator.dto.RawStepResultDTO;
 import com.epam.test_generator.dto.RawSuitResultDTO;
-import com.epam.test_generator.dto.StepDTO;
+import com.epam.test_generator.controllers.step.response.StepDTO;
 import com.epam.test_generator.dto.TestResultDTO;
 import com.epam.test_generator.entities.Case;
 import com.epam.test_generator.entities.Project;

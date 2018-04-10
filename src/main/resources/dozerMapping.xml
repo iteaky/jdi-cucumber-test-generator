@@ -5,7 +5,7 @@
           http://dozer.sourceforge.net/schema/beanmapping.xsd">
     <mapping map-null="false">
         <class-a>com.epam.test_generator.entities.Step</class-a>
-        <class-b>com.epam.test_generator.dto.StepDTO</class-b>
+        <class-b>com.epam.test_generator.controllers.step.response.StepDTO</class-b>
         <field>
             <a get-method="getType" set-method="setType">type</a>
             <b get-method="getType" set-method="setType">type</b>

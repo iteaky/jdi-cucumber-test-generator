@@ -1,5 +1,6 @@
 package com.epam.test_generator.dto;
 
+import com.epam.test_generator.controllers.step.response.StepDTO;
 import com.epam.test_generator.entities.Action;
 import com.epam.test_generator.entities.Status;
 

@@ -4,11 +4,12 @@ import static com.epam.test_generator.services.utils.UtilsService.caseBelongsToS
 import static com.epam.test_generator.services.utils.UtilsService.checkNotNull;
 import static com.epam.test_generator.services.utils.UtilsService.stepBelongsToCase;
 
+import com.epam.test_generator.controllers.step.request.StepCreateDTO;
+import com.epam.test_generator.controllers.step.request.StepUpdateDTO;
 import com.epam.test_generator.dao.interfaces.CaseVersionDAO;
 import com.epam.test_generator.dao.interfaces.StepDAO;
 import com.epam.test_generator.dao.interfaces.SuitVersionDAO;
-import com.epam.test_generator.dto.StepDTO;
-import com.epam.test_generator.entities.Action;
+import com.epam.test_generator.controllers.step.response.StepDTO;
 import com.epam.test_generator.entities.Case;
 import com.epam.test_generator.entities.Step;
 import com.epam.test_generator.entities.Suit;
@@ -81,21 +82,21 @@ public class StepService {
     }
 
     /**
-     * Adds step specified in StepDTO to case by id
+     * Adds step specified in StepCreateDTO to case by id
      * @param projectId id of project
      * @param suitId id of suit
      * @param caseId id of case
-     * @param stepDTO DTO where step specified
+     * @param stepCreateDTO DTO where step specified
      * @return id of added step
      */
-    public Long addStepToCase(Long projectId, Long suitId, Long caseId, StepDTO stepDTO) {
+    public Long addStepToCase(Long projectId, Long suitId, Long caseId, StepCreateDTO stepCreateDTO) {
         Suit suit = suitService.getSuit(projectId, suitId);
 
         Case caze = caseService.getCase(projectId, suitId, caseId);
 
         caseBelongsToSuit(caze, suit);
 
-        Step step = stepTransformer.fromDto(stepDTO);
+        Step step = stepTransformer.fromDto(stepCreateDTO);
 
         step = stepDAO.save(step);
         caze.getSteps().add(step);
@@ -107,14 +108,15 @@ public class StepService {
     }
 
     /**
-     * Updates step specified in StepDTO by id
+     * Updates step specified in StepUpdateDTO by id
      * @param projectId id of project
      * @param suitId id of suit
      * @param caseId id of case
-     * @param stepDTO DTO where step specified
+     * @param stepUpdateDTO DTO where step specified
      * @param stepId id of step which to update
      */
-    public void updateStep(Long projectId, Long suitId, Long caseId, Long stepId, StepDTO stepDTO) {
+    public void updateStep(Long projectId, Long suitId, Long caseId, Long stepId,
+                           StepUpdateDTO stepUpdateDTO) {
         Suit suit = suitService.getSuit(projectId, suitId);
 
         Case caze = caseService.getCase(projectId, suitId, caseId);
@@ -126,7 +128,7 @@ public class StepService {
 
         stepBelongsToCase(step, caze);
 
-        stepTransformer.mapDTOToEntity(stepDTO, step);
+        step = stepTransformer.updateFromDto(stepUpdateDTO, step);
 
         stepDAO.save(step);
 
@@ -158,34 +160,5 @@ public class StepService {
 
         caseVersionDAO.save(caze);
         suitVersionDAO.save(suit);
-    }
-
-    /**
-     * This service method is specialized for 'adding' 'editing' and 'deleting' a list of steps
-     *
-     * For selecting required action uses "action" field from DTO object
-     *
-     * @param steps array list of steps
-     */
-    public void cascadeUpdateSteps(Long projectId, long suitId, long caseId, List<StepDTO> steps) {
-        for (StepDTO stepDTO : steps) {
-            Action action = stepDTO.getAction();
-            if (action != null) {
-                switch (action) {
-                    case UPDATE:
-                        updateStep(projectId, suitId, caseId, stepDTO.getId(), stepDTO);
-                        break;
-                    case CREATE:
-                        addStepToCase(projectId, suitId, caseId, stepDTO);
-                        break;
-                    case DELETE:
-                        removeStep(projectId, suitId, caseId, stepDTO.getId());
-                        break;
-                    default:
-                        // Do nothing
-                        break;
-                }
-            }
-        }
     }
 }

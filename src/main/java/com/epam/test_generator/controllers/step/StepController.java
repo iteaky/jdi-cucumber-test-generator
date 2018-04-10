@@ -1,7 +1,9 @@
-package com.epam.test_generator.controllers;
+package com.epam.test_generator.controllers.step;
 
 
-import com.epam.test_generator.dto.StepDTO;
+import com.epam.test_generator.controllers.step.request.StepCreateDTO;
+import com.epam.test_generator.controllers.step.request.StepUpdateDTO;
+import com.epam.test_generator.controllers.step.response.StepDTO;
 import com.epam.test_generator.dto.ValidationErrorsDTO;
 import com.epam.test_generator.services.StepService;
 import io.swagger.annotations.ApiImplicitParam;
@@ -98,8 +100,8 @@ public class StepController {
             required = true, dataType = "long", paramType = "path"),
         @ApiImplicitParam(name = "caseId", value = "ID of case which will be added a new step",
             required = true, dataType = "long", paramType = "path"),
-        @ApiImplicitParam(name = "stepDTO", value = "Added step object",
-            required = true, dataType = "StepDTO", paramType = "body"),
+        @ApiImplicitParam(name = "stepCreateDTO", value = "Added step object",
+            required = true, dataType = "StepCreateDTO", paramType = "body"),
         @ApiImplicitParam(name = "Authorization", value = "add here your token", paramType = "header", dataType = "string", required = true)
     })
     @Secured({"ROLE_ADMIN", "ROLE_TEST_ENGINEER", "ROLE_TEST_LEAD"})
@@ -109,9 +111,9 @@ public class StepController {
     public ResponseEntity<Long> addStepToCase(@PathVariable("projectId") long projectId,
                                               @PathVariable("suitId") long suitId,
                                               @PathVariable("caseId") long caseId,
-                                              @RequestBody @Valid StepDTO stepDTO) {
+                                              @RequestBody @Valid StepCreateDTO stepCreateDTO) {
 
-        return new ResponseEntity<>(stepService.addStepToCase(projectId, suitId, caseId, stepDTO),
+        return new ResponseEntity<>(stepService.addStepToCase(projectId, suitId, caseId, stepCreateDTO),
             HttpStatus.CREATED);
     }
 
@@ -130,8 +132,8 @@ public class StepController {
             required = true, dataType = "long", paramType = "path"),
         @ApiImplicitParam(name = "stepId", value = "ID of step to update",
             required = true, dataType = "long", paramType = "path"),
-        @ApiImplicitParam(name = "stepDTO", value = "Updated step object",
-            required = true, dataType = "StepDTO", paramType = "boy"),
+        @ApiImplicitParam(name = "stepUpdateDTO", value = "Updated step object",
+            required = true, dataType = "StepUpdateDTO", paramType = "boy"),
         @ApiImplicitParam(name = "Authorization", value = "add here your token", paramType = "header", dataType = "string", required = true)
     })
     @Secured({"ROLE_ADMIN", "ROLE_TEST_ENGINEER", "ROLE_TEST_LEAD"})
@@ -140,45 +142,8 @@ public class StepController {
                                            @PathVariable("suitId") long suitId,
                                            @PathVariable("caseId") long caseId,
                                            @PathVariable("stepId") long stepId,
-                                           @RequestBody @Valid StepDTO stepDTO) {
-        stepService.updateStep(projectId, suitId, caseId, stepId, stepDTO);
-
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-
-    /**
-     * This method is specialized for cascading adding editing and deleting a list of steps
-     *
-     * @param steps array list of steps from JSON object
-     * @return HTTP status of operation
-     */
-    @ApiOperation(value = "Cascade update of the list with steps", nickname = "updateSteps")
-    @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "OK"),
-        @ApiResponse(code = 400, message = "Invalid input", response = ValidationErrorsDTO.class),
-        @ApiResponse(code = 404, message = "Suit/Case/Step not found")
-    })
-    @ApiImplicitParams({
-        @ApiImplicitParam(name = "projectId", value = "ID of project",
-            required = true, dataType = "long", paramType = "path"),
-        @ApiImplicitParam(name = "suitId", value = "ID of suit which contains the case",
-            required = true, dataType = "long", paramType = "path"),
-        @ApiImplicitParam(name = "caseId", value = "ID of case which contains the list of steps",
-            required = true, dataType = "long", paramType = "path"),
-        @ApiImplicitParam(name = "steps", value = "Array of steps", allowMultiple = true,
-            required = true, dataType = "StepDTO", paramType = "body"),
-        @ApiImplicitParam(name = "Authorization", value = "add here your token",
-            paramType = "header", dataType = "string", required = true)
-
-    })
-    @Secured({"ROLE_ADMIN", "ROLE_TEST_ENGINEER", "ROLE_TEST_LEAD"})
-    @RequestMapping(value = "/projects/{projectId}/suits/{suitId}/cases/{caseId}/steps", method = RequestMethod.PUT, consumes = "application/json")
-    public ResponseEntity<Void> updateSteps(@PathVariable("projectId") long projectId,
-                                            @PathVariable("suitId") long suitId,
-                                            @PathVariable("caseId") long caseId,
-                                            @RequestBody @Valid List<StepDTO> steps) {
-        stepService.cascadeUpdateSteps(projectId, suitId, caseId, steps);
+                                           @RequestBody @Valid StepUpdateDTO stepUpdateDTO) {
+        stepService.updateStep(projectId, suitId, caseId, stepId, stepUpdateDTO);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }

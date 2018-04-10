@@ -1,5 +1,6 @@
 package com.epam.test_generator.dto;
 
+import com.epam.test_generator.controllers.step.response.StepDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
