@@ -27,7 +27,7 @@ public class TokenService {
      * @return user's token
      */
     public Token createToken(User user, Integer minutes) {
-        Token token = new Token(minutes);
+        Token token = Token.withExpiryDuration(minutes);
         token.setUser(user);
         return tokenDAO.save(token);
     }

@@ -25,7 +25,7 @@ public class TokenDAOTest {
 
     @Test
     public void findByToken_SimpleToke_Ok() {
-        Token token = new Token(15);
+        Token token = Token.withExpiryDuration(15);
         token.setToken("token");
         sut.save(token);
         Token byToken = sut.findByToken("token");

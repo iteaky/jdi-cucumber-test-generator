@@ -13,7 +13,7 @@ import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
 /**
- * This class represents token essence. Token is a special key that is used for user identification.
+ * This class represents token entity. Token is a special key that is used for user identification.
  */
 @Entity
 public class Token implements TokenTrait {
@@ -23,7 +23,7 @@ public class Token implements TokenTrait {
     private Long id;
 
     @NotNull
-    private String token;
+    private String tokenString;
 
     @OneToOne
     private User user;
@@ -31,11 +31,13 @@ public class Token implements TokenTrait {
     @NotNull
     private Date expiryDate;
 
-    public Token(Integer minutes) {
-        this.token = UUID.randomUUID().toString();
+    public static Token withExpiryDuration(Integer minutes) {
+        Token token = new Token();
+        token.tokenString = UUID.randomUUID().toString();
         Calendar now = Calendar.getInstance();
         now.add(Calendar.MINUTE, minutes);
-        this.expiryDate = now.getTime();
+        token.expiryDate = now.getTime();
+        return token;
     }
 
     public Long getId() {
@@ -43,11 +45,11 @@ public class Token implements TokenTrait {
     }
 
     public String getToken() {
-        return token;
+        return tokenString;
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public void setToken(String tokenString) {
+        this.tokenString = tokenString;
     }
 
     public User getUser() {
@@ -68,7 +70,4 @@ public class Token implements TokenTrait {
         this.expiryDate = now.getTime();
     }
 
-    public Token getInstance() {
-        return this;
-    }
 }

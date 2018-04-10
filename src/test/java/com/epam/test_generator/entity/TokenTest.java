@@ -9,17 +9,17 @@ import static org.junit.Assert.assertTrue;
 public class TokenTest {
 
     private final int LONG_EXPIRATION_DURATION = 60;
-    private final int ZERO_EXPIRATION_DURATION = -1;
+    private final int NEGATIVE_EXPIRATION_DURATION = -1;
 
     @Test
     public void isExpired_NotExpiredToken_False() {
-        Token token = new Token(LONG_EXPIRATION_DURATION);
+        Token token = Token.withExpiryDuration(LONG_EXPIRATION_DURATION);
         assertFalse(token.isExpired());
     }
 
     @Test
     public void isExpired_ExpiredToken_True() {
-        Token token = new Token(ZERO_EXPIRATION_DURATION);
+        Token token = Token.withExpiryDuration(NEGATIVE_EXPIRATION_DURATION);
         assertTrue(token.isExpired());
     }
 
